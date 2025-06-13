@@ -1,0 +1,58 @@
+{
+  "expo": {
+    "name": "firstapp",
+    "slug": "firstapp",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "scheme": "firstapp",
+    "icon": "./assets/images/logo.png",
+    "userInterfaceStyle": "automatic",
+    "jsEngine": "hermes",
+    "newArchEnabled": true,
+
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.yourcompany.firstapp",
+      "buildNumber": "1.0.0"
+    },
+
+    "android": {
+      "package": "com.yourcompany.firstapp",
+      "versionCode": 1,
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/logo.png",
+        "backgroundColor": "#ffffff"
+      },
+      "permissions": [],
+      "edgeToEdgeEnabled": true
+    },
+
+    "web": {
+      "favicon": "./assets/images/logo.png",
+      "bundler": "metro",
+      "output": "static"
+    },
+
+    "plugins": [
+      "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/images/logo.png",
+          "resizeMode": "contain",
+          "backgroundColor": "#ffffff"
+        }
+      ]
+    ],
+
+    "experiments": {
+      "typedRoutes": true
+    },
+
+    "extra": {
+      "eas": {
+        "projectId": "your-eas-project-id"
+      }
+    }
+  }
+}
