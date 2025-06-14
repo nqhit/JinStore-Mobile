@@ -5,7 +5,7 @@ import Constants from 'expo-constants';
 import { useFonts } from 'expo-font';
 import { router, Stack } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { ActivityIndicator, Platform, StatusBar, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, Dimensions, Platform, StatusBar, StyleSheet, View } from 'react-native';
 import 'react-native-reanimated';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Provider, useDispatch } from 'react-redux';
@@ -146,7 +146,9 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: '#8B5CF6',
+    backgroundColor: '#FFFFFF',
+    paddingHorizontal: 15,
+    width: Dimensions.get('screen').width,
   },
   loadingContainer: {
     flex: 1,

@@ -43,7 +43,7 @@ export const styles = StyleSheet.create({
   input: {
     width: '100%',
     height: 50,
-    paddingHorizontal: 16,
+    paddingHorizontal: 15,
     marginBottom: 16,
     fontSize: 16,
     backgroundColor: '#fff',

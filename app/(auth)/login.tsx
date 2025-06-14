@@ -14,11 +14,11 @@ import {
 
 import { login } from '@/server/auth.server';
 
+import { styles } from '@/assets/styles/Screen/LoginScreen.styles';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDispatch } from 'react-redux';
-import { styles } from '../../assets/styles/LoginScreen.styles';
 
 interface loginFormData {
   usernameOrEmail: string;
@@ -103,7 +103,6 @@ const LoginScreen = () => {
           <ScrollView
             contentContainerStyle={{
               flexGrow: 1,
-              paddingHorizontal: 20,
               justifyContent: 'center',
             }}
             keyboardShouldPersistTaps="handled"

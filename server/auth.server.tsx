@@ -1,3 +1,5 @@
+import { API_BASE_URL } from '@/config/config';
+import { userType } from '@/interfaces/user.type';
 import axios from 'axios';
 import { Alert } from 'react-native';
 import { Dispatch } from 'redux';
@@ -13,7 +15,6 @@ import {
   registerSuccess,
 } from '../redux/authSlice';
 
-const API_BASE_URL = 'http://192.168.1.8:1000/api';
 axios.defaults.baseURL = API_BASE_URL;
 
 interface loginFormData {
@@ -28,27 +29,6 @@ interface registerFormData {
   confirmPassword: string;
 }
 
-// FIXED: Updated interface based on actual API response
-interface LoginResponse {
-  _id: string;
-  accessToken: string;
-  refreshToken: string;
-  email: string;
-  fullname: string;
-  username: string;
-  isAdmin: boolean;
-  isActive: boolean;
-  avatar: {
-    publicId: string;
-    url: string;
-  };
-  address: any[];
-  authProvider: string;
-  createdAt: string;
-  updatedAt: string;
-  __v: number;
-}
-
 const defaultHeaders = {
   Accept: 'application/json',
   'Content-Type': 'application/json',
@@ -59,10 +39,10 @@ const authHeaders = (accessToken: string) => ({
   ...defaultHeaders,
 });
 
-export const login = async (user: loginFormData, dispatch: Dispatch): Promise<LoginResponse> => {
+export const login = async (user: loginFormData, dispatch: Dispatch): Promise<userType> => {
   dispatch(loginStart());
   try {
-    const res = await axios.post<LoginResponse>(`/mobile/login`, user);
+    const res = await axios.post<userType>(`/mobile/login`, user);
 
     // FIXED: Response is direct user object, not wrapped in data
     if (res.data && res.data._id) {
