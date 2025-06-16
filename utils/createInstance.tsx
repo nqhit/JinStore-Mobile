@@ -1,5 +1,7 @@
 import { API_BASE_URL } from '@/config/config';
+import { userType } from '@/interfaces/user.type';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Dispatch } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
 
@@ -7,104 +9,107 @@ axios.defaults.baseURL = API_BASE_URL;
 
 const refreshToken = async () => {
   try {
-    const refreshToken = await AsyncStorage.getItem('refreshToken');
+    const token = await AsyncStorage.getItem('refreshToken');
 
-    if (!refreshToken) {
+    if (!token) {
       throw new Error('Không có refresh token');
     }
 
-    const res = await axios.post(`/mobile/refresh`, { refreshToken }, { withCredentials: true });
+    const refreshToken = JSON.parse(token);
+
+    const res = await axios.post(`/mobile/refresh`, { refreshToken });
 
     // Lưu token mới vào AsyncStorage
     const { accessToken, refreshToken: newRefreshToken } = res.data;
 
-    await AsyncStorage.setItem('accessToken', accessToken);
+    await AsyncStorage.setItem('accessToken', JSON.stringify(accessToken));
     if (newRefreshToken) {
-      await AsyncStorage.setItem('refreshToken', newRefreshToken);
+      await AsyncStorage.setItem('refreshToken', JSON.stringify(newRefreshToken));
     }
 
     return res.data;
   } catch (err) {
     console.error('Refresh token error:', err);
     // Xóa tất cả auth data khi refresh thất bại
-    await AsyncStorage.multiRemove(['accessToken', 'refreshToken', 'persist:root']);
+    await AsyncStorage.multiRemove(['accessToken', 'refreshToken', 'persist:root', 'user']);
     throw new Error('Phiên đăng nhập đã hết hạn');
   }
 };
 
-export const createAxios = (user, dispatch, stateSuccess) => {
+export const createAxios = (user: userType, dispatch: Dispatch, stateSuccess: any) => {
   const newInstance = axios.create();
 
   newInstance.interceptors.request.use(
     async (config) => {
-      let accessToken = await AsyncStorage.getItem('accessToken');
+      try {
+        const token = await AsyncStorage.getItem('accessToken');
 
-      if (accessToken) {
-        try {
-          const decodedToken = jwtDecode(accessToken);
-          const currentTime = Date.now() / 1000;
-
-          // Kiểm tra token sắp hết hạn (trước 5 phút)
-          if (decodedToken.exp < currentTime + 300) {
-            try {
-              const data = await refreshToken();
-              accessToken = data.accessToken;
-
-              // Cập nhật user state với token mới
-              if (dispatch && stateSuccess) {
-                dispatch(stateSuccess({ ...user, accessToken }));
-              }
-            } catch (refreshError) {
-              console.error('Token refresh failed:', refreshError);
-              await AsyncStorage.multiRemove(['accessToken', 'refreshToken', 'persist:root']);
-              return Promise.reject(new Error('Authentication failed'));
-            }
-          }
-        } catch (err) {
-          console.error('Token decode error:', err);
-          await AsyncStorage.multiRemove(['accessToken', 'refreshToken', 'persist:root']);
-          return Promise.reject(new Error('Invalid token'));
+        if (!token) {
+          return config;
         }
 
-        config.headers['Authorization'] = 'Bearer ' + accessToken;
+        let accessToken = JSON.parse(token);
+        if (accessToken) {
+          const decodedToken = jwtDecode(accessToken);
+
+          if (!decodedToken || typeof decodedToken.exp !== 'number') {
+            throw new Error('Invalid token format');
+          }
+
+          const currentTime = Date.now() / 1000;
+
+          // Kiểm tra token sắp hết hạn
+          if (decodedToken.exp < currentTime + 300) {
+            console.log('Token sắp hết hạn, đang refresh...');
+            const data = await refreshToken();
+            accessToken = data.accessToken;
+
+            dispatch(stateSuccess({ ...user, accessToken }));
+          }
+
+          // Set authorization header
+          config.headers = config.headers || {};
+          config.headers['Authorization'] = `Bearer ${accessToken}`;
+        }
+      } catch (err: any) {
+        console.error('Token processing error:', {
+          message: err.message,
+          stack: err.stack,
+        });
+
+        await AsyncStorage.multiRemove(['accessToken', 'refreshToken']);
+
+        console.warn('Proceeding without token due to error');
       }
 
       return config;
     },
-    (err) => Promise.reject(err),
+    (err) => Promise.reject(err.message),
   );
 
-  // Response interceptor để xử lý 401 errors
   newInstance.interceptors.response.use(
     (response) => response,
     async (error) => {
       const originalRequest = error.config;
 
-      if (error.response?.status === 401 && !originalRequest._retry) {
+      if ((error.response?.status === 401 || error.response?.status === 403) && !originalRequest._retry) {
         originalRequest._retry = true;
-
         try {
           const data = await refreshToken();
           const newAccessToken = data.accessToken;
 
-          // Cập nhật header và retry request
-          originalRequest.headers['Authorization'] = 'Bearer ' + newAccessToken;
+          dispatch(stateSuccess({ ...user, accessToken: newAccessToken }));
+          originalRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
 
-          if (dispatch && stateSuccess) {
-            dispatch(stateSuccess({ ...user, accessToken: newAccessToken }));
-          }
-
-          return newInstance(originalRequest);
-        } catch (refreshError) {
-          console.error('Token refresh failed on 401:', refreshError);
-          await AsyncStorage.multiRemove(['accessToken', 'refreshToken', 'persist:root']);
-          return Promise.reject(new Error('Authentication failed'));
+          return newInstance(originalRequest); // gửi lại request cũ
+        } catch (err) {
+          console.error('Lỗi khi refresh token:', err);
+          return Promise.reject(err);
         }
       }
 
       return Promise.reject(error);
     },
   );
-
   return newInstance;
 };

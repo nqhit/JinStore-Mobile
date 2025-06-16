@@ -70,7 +70,6 @@ const styles = StyleSheet.create({
   },
   productList: {
     paddingTop: 20,
-    paddingRight: 15,
   },
   Outstanding: {
     flexDirection: 'row',
@@ -86,11 +85,12 @@ const styles = StyleSheet.create({
   },
   seeMore: {
     color: '#8B5CF6',
+    marginRight: 10,
   },
   productListContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    justifyContent: 'center',
+    alignItems: 'flex-start',
   },
 });
 

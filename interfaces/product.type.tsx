@@ -18,5 +18,11 @@ export interface productType {
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
+  averageRating: number;
   __v: number;
+}
+
+export interface productToCartType {
+  productId: string;
+  quantity: number;
 }

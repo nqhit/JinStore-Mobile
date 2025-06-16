@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createSlice } from '@reduxjs/toolkit';
 
 const authSlice = createSlice({
@@ -33,6 +34,10 @@ const authSlice = createSlice({
       state.login.isFetching = false;
       state.login.currentUser = action.payload;
       state.login.error = false;
+      // Lưu vào AsyncStorage
+      AsyncStorage.setItem('user', JSON.stringify(action.payload.user));
+      AsyncStorage.setItem('accessToken', JSON.stringify(action.payload.accessToken));
+      AsyncStorage.setItem('refreshToken', JSON.stringify(action.payload.refreshToken));
     },
     loginFailed: (state) => {
       state.login.isFetching = false;

@@ -1,56 +1,27 @@
 import { useColorScheme } from '@/hooks/useColorScheme';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import Constants from 'expo-constants';
 import { useFonts } from 'expo-font';
 import { router, Stack } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { ActivityIndicator, Dimensions, Platform, StatusBar, StyleSheet, View } from 'react-native';
 import 'react-native-reanimated';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { Provider, useDispatch } from 'react-redux';
+import Toast, { BaseToast } from 'react-native-toast-message';
+import { Provider, useSelector } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
-import { loginSuccess } from '../redux/authSlice';
 import { persistor, store } from '../store/store';
 
 function AppWithStore() {
   const colorScheme = useColorScheme();
-  const dispatch = useDispatch();
-  const [loadingUser, setLoadingUser] = useState(false);
+  const user = useSelector((state: any) => state.auth.login.currentUser);
 
+  // Điều hướng sang (tabs) nếu user đã login
   useEffect(() => {
-    const loadUser = async () => {
-      try {
-        const userString = await AsyncStorage.getItem('user');
-        if (userString) {
-          setLoadingUser(true);
-          const userData = JSON.parse(userString);
-
-          // Verify user data structure
-          if (userData && userData._id) {
-            dispatch(loginSuccess(userData));
-            router.replace('/(tabs)');
-          } else {
-            console.log('Invalid user data in storage, clearing...');
-            await AsyncStorage.removeItem('user');
-          }
-        }
-      } catch (error) {
-        console.error('Error loading user from storage:', error);
-        await AsyncStorage.removeItem('user'); // Clear corrupted data
-      }
-      setLoadingUser(false);
-    };
-    loadUser();
-  }, [dispatch]);
-
-  if (loadingUser) {
-    return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#8B5CF6" />
-      </View>
-    );
-  }
+    if (user && user._id) {
+      router.replace('/(tabs)');
+    }
+  }, [user]);
 
   const customLightTheme = {
     ...DefaultTheme,
@@ -85,28 +56,10 @@ function AppWithStore() {
                 animation: 'slide_from_right',
               }}
             >
-              <Stack.Screen name="index" options={{ headerShown: false }} />
-              <Stack.Screen
-                name="(auth)"
-                options={{
-                  headerShown: false,
-                  gestureEnabled: false,
-                }}
-              />
-              <Stack.Screen
-                name="(tabs)"
-                options={{
-                  headerShown: false,
-                  gestureEnabled: false,
-                }}
-              />
-              <Stack.Screen
-                name="+not-found"
-                options={{
-                  title: 'Oops!',
-                  presentation: 'modal',
-                }}
-              />
+              <Stack.Screen name="index" />
+              <Stack.Screen name="(auth)" options={{ gestureEnabled: false }} />
+              <Stack.Screen name="(tabs)" options={{ gestureEnabled: false }} />
+              <Stack.Screen name="+not-found" options={{ title: 'Oops!', presentation: 'modal' }} />
             </Stack>
           </View>
         </ThemeProvider>
@@ -120,6 +73,18 @@ export default function RootLayout() {
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
   });
 
+  const toastConfig = {
+    success: (props: any) => (
+      <BaseToast
+        {...props}
+        style={{ borderLeftColor: '#4CAF50', backgroundColor: '#F0FFF0', paddingVertical: 0 }}
+        contentContainerStyle={{ paddingHorizontal: 15, paddingVertical: 10 }}
+        text1Style={{ fontSize: 16, fontWeight: '500', color: '#2E7D32' }}
+        text2Style={{ fontSize: 12, color: '#4CAF50' }}
+      />
+    ),
+  };
+
   if (!loaded) {
     return (
       <View style={styles.loadingContainer}>
@@ -129,13 +94,20 @@ export default function RootLayout() {
   }
 
   return (
-    <>
-      <Provider store={store}>
-        <PersistGate loading={null} persistor={persistor}>
-          <AppWithStore />
-        </PersistGate>
-      </Provider>
-    </>
+    <Provider store={store}>
+      <PersistGate loading={<LoadingScreen />} persistor={persistor}>
+        <AppWithStore />
+        <Toast config={toastConfig} />
+      </PersistGate>
+    </Provider>
+  );
+}
+
+function LoadingScreen() {
+  return (
+    <View style={styles.loadingContainer}>
+      <ActivityIndicator size="large" color="#8B5CF6" />
+    </View>
   );
 }
 
