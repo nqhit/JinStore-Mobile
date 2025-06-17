@@ -10,6 +10,8 @@ export default function IndexPage() {
   useEffect(() => {
     if (user && user._id) {
       router.replace('/(tabs)');
+    } else {
+      router.replace('/(auth)/login');
     }
   }, [user]);
 }

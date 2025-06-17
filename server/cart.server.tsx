@@ -38,3 +38,14 @@ export const addItemToCart = async (
     throw error;
   }
 };
+
+export const getCart = async (accessToken: string, axiosJWT: any) => {
+  try {
+    const response = await axiosJWT.get(`/carts`, {
+      headers: authHeaders(accessToken),
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};

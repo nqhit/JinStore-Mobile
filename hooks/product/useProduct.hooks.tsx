@@ -8,7 +8,7 @@ function useProduct({ getProductsAll, setProducts }: any) {
     } catch (error) {
       throw error;
     }
-  }, []);
+  }, [getProductsAll, setProducts]);
   return { fetchProduct };
 }
 

@@ -52,6 +52,24 @@ const styles = StyleSheet.create({
     color: '#8B5CF6',
     fontWeight: '500',
   },
+  cartButton: {
+    position: 'relative',
+    marginRight: 5,
+  },
+  cartItemCount: {
+    position: 'absolute',
+    top: -5,
+    right: -5,
+    backgroundColor: '#8B5CF6',
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
+    alignContent: 'center',
+    textAlign: 'center',
+  },
 
   //COMMENT: BODY
   body: {
@@ -68,16 +86,19 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
     backgroundColor: '#8B5CF6',
   },
-  productList: {
-    paddingTop: 20,
-  },
-  Outstanding: {
+
+  //Danh sách danh mục
+  cateList: {},
+
+  // Section in body
+  sectionHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     marginTop: 20,
+    marginBottom: 5,
   },
-  OutstandingTitle: {
+  sectionTitle: {
     fontSize: 26,
     fontWeight: '600',
     color: '#000',
@@ -88,6 +109,12 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   productListContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+    marginLeft: -10,
+  },
+  categoryListContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'flex-start',

@@ -47,7 +47,7 @@ function ProductCard({ product }: { product: productType }) {
   };
 
   return (
-    <View style={styles.product}>
+    <TouchableOpacity style={styles.product}>
       <View style={styles.productImage}>
         <Image source={{ uri: product.images[0]?.url }} style={styles.productImage} />
       </View>
@@ -81,7 +81,7 @@ function ProductCard({ product }: { product: productType }) {
           <Text style={styles.productButtonText}>Mua ngay</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 }
 

@@ -1,44 +1,86 @@
 import styles from '@/assets/styles/Screen/HomeScreen.styles';
+import CategoryCard from '@/components/categories/categoryCard';
 import ProductCard from '@/components/products/ProductCard';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { socket } from '@/config/socket';
+import useCart from '@/hooks/cart/useCart.hooks';
+import useCategory from '@/hooks/category/useCategory.hooks';
 import useProduct from '@/hooks/product/useProduct.hooks';
 import useUser from '@/hooks/user/useUser.hooks';
+import { categoryType } from '@/interfaces/category.type';
 import { productType } from '@/interfaces/product.type';
 import { userType } from '@/interfaces/user.type';
+import { loginSuccess } from '@/redux/authSlice';
+import { getCart } from '@/server/cart.server';
+import { getCategoriesAll } from '@/server/category.server';
 import { getProductsAll } from '@/server/product.server';
 import { getInfoUser } from '@/server/user.server';
+import { createAxios } from '@/utils/createInstance';
 import { AntDesign } from '@expo/vector-icons';
 import { useCallback, useEffect, useState } from 'react';
 import { FlatList, Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useDispatch, useSelector } from 'react-redux';
 
 export default function HomeScreen() {
+  const user = useSelector((state: any) => state.auth.login.currentUser);
+  const id = user?._id;
+  const accessToken = user?.accessToken;
+  const dispatch = useDispatch();
+  const axiosJWT = createAxios(user, dispatch, loginSuccess);
+
+  const [lengthItems, setLengthItems] = useState(0);
   const [userInfo, setUserInfo] = useState<userType | null>(null);
-  const [products, setProducts] = useState<productType[]>([]); // ✅ Thêm type annotation
+  const [products, setProducts] = useState<productType[]>([]);
+  const [categories, setCategories] = useState<categoryType[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const { fetchInfoUser } = useUser({ getInfoUser, setUserInfo, setLoading, setError });
   const { fetchProduct } = useProduct({ getProductsAll, setProducts });
+  const { fetchCartItems } = useCart({ getCart, setLengthItems, accessToken, axiosJWT });
+  const { fetchCategories } = useCategory({ getCategoriesAll, setCategories });
 
   const handleFetchData = useCallback(() => {
     fetchInfoUser();
     fetchProduct();
-  }, [fetchInfoUser, fetchProduct]);
+    fetchCartItems();
+    fetchCategories();
+  }, [fetchInfoUser, fetchProduct, fetchCartItems, fetchCategories]);
+
+  useEffect(() => {
+    if (!user || !id) return;
+
+    if (!socket.connected) {
+      socket.connect();
+    }
+
+    socket.emit('joinUser', id);
+
+    socket.on('cartUpdated', (data) => {
+      console.log(data.message);
+      setLengthItems(data.itemCount);
+    });
+
+    return () => {
+      socket.off('cartUpdated');
+      socket.disconnect();
+    };
+  }, [user, id]);
 
   useEffect(() => {
     handleFetchData();
   }, [handleFetchData]);
 
-  // ✅ Filter products có rating > 4
   const featuredProducts = products.filter((product: productType) => product.averageRating > 4);
+  const featuredCategories = categories.filter((categories: categoryType) => categories.status === 'active');
 
-  // ✅ Render item cho FlatList
   const renderProductItem = ({ item }: { item: productType }) => <ProductCard product={item} />;
+  const renderCategoryItem = ({ item }: { item: categoryType }) => <CategoryCard category={item} />;
 
-  // ✅ KeyExtractor cho FlatList
-  const keyExtractor = (item: productType, index: number) => item._id?.toString() || index.toString();
+  const keyExtractorProduct = (item: productType, index: number) => item._id?.toString() || index.toString();
+  const keyExtractorCategory = (item: categoryType, index: number) => item._id?.toString() || index.toString();
 
   // FIXED: Added loading and error states
   if (loading) {
@@ -96,17 +138,37 @@ export default function HomeScreen() {
               <TouchableOpacity>
                 <AntDesign name="search1" size={30} color="#000" />
               </TouchableOpacity>
-              <TouchableOpacity>
+              <TouchableOpacity style={styles.cartButton}>
                 <AntDesign name="shoppingcart" size={30} color="#000" />
+                <Text style={styles.cartItemCount}>{lengthItems}</Text>
               </TouchableOpacity>
             </View>
           </View>
           <View style={styles.body}>
             <Image style={styles.bannerImage} source={require('@/assets/images/banner/banner17.png')} />
 
-            <View style={styles.productList}>
-              <View style={styles.Outstanding}>
-                <ThemedText style={styles.OutstandingTitle}>Sản phẩm nổi bật</ThemedText>
+            <View>
+              <View style={styles.sectionHeader}>
+                <ThemedText style={styles.sectionTitle}>Danh mục</ThemedText>
+                <TouchableOpacity>
+                  <ThemedText type="link" style={styles.seeMore}>
+                    Xem thêm
+                  </ThemedText>
+                </TouchableOpacity>
+              </View>
+              <View style={styles.categoryListContainer}>
+                <FlatList
+                  data={featuredCategories}
+                  renderItem={renderCategoryItem}
+                  keyExtractor={keyExtractorCategory}
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                />
+              </View>
+            </View>
+            <View>
+              <View style={styles.sectionHeader}>
+                <ThemedText style={styles.sectionTitle}>Sản phẩm nổi bật</ThemedText>
                 <TouchableOpacity>
                   <ThemedText type="link" style={styles.seeMore}>
                     Xem thêm
@@ -117,7 +179,7 @@ export default function HomeScreen() {
                 <FlatList
                   data={featuredProducts}
                   renderItem={renderProductItem}
-                  keyExtractor={keyExtractor}
+                  keyExtractor={keyExtractorProduct}
                   horizontal
                   showsHorizontalScrollIndicator={false}
                 />
