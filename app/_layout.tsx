@@ -2,26 +2,17 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import Constants from 'expo-constants';
 import { useFonts } from 'expo-font';
-import { router, Stack } from 'expo-router';
-import { useEffect } from 'react';
+import { Stack } from 'expo-router';
 import { ActivityIndicator, Dimensions, Platform, StatusBar, StyleSheet, View } from 'react-native';
 import 'react-native-reanimated';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Toast, { BaseToast } from 'react-native-toast-message';
-import { Provider, useSelector } from 'react-redux';
+import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import { persistor, store } from '../store/store';
 
 function AppWithStore() {
   const colorScheme = useColorScheme();
-  const user = useSelector((state: any) => state.auth.login.currentUser);
-
-  // Điều hướng sang (tabs) nếu user đã login
-  useEffect(() => {
-    if (user && user._id) {
-      router.replace('/(tabs)');
-    }
-  }, [user]);
 
   const customLightTheme = {
     ...DefaultTheme,

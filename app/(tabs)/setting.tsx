@@ -6,7 +6,7 @@ import { createAxios } from '@/utils/createInstance';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { router } from 'expo-router';
 import { useCallback, useState } from 'react';
-import { Text, TouchableOpacity } from 'react-native';
+import { ActivityIndicator, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
 import { logoutSuccess } from '../../redux/authSlice';
@@ -25,7 +25,12 @@ export default function HomeScreen() {
     try {
       const res = await logOut(dispatch, id, accessToken, axiosJWT_V2);
       if (res.success) {
-        await AsyncStorage.removeItem('user');
+        await AsyncStorage.multiRemove([
+          'user',
+          'accessToken',
+          'refreshToken',
+          'persist:root', // Nếu bạn dùng redux-persist
+        ]);
         router.replace('/(auth)/login');
       }
     } catch {
@@ -34,6 +39,16 @@ export default function HomeScreen() {
       setLoading(false);
     }
   }, [dispatch, id, accessToken, axiosJWT_V2]);
+
+  // Hiển thị loading trong khi kiểm tra
+  if (loading) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
+
   return (
     <SafeAreaProvider style={{ flex: 1 }}>
       <Text>Profile</Text>

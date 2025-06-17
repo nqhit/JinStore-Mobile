@@ -74,6 +74,10 @@ export default function HomeScreen() {
   }, [handleFetchData]);
 
   const featuredProducts = products.filter((product: productType) => product.averageRating > 4);
+
+  const NewProducts = products.filter(
+    (product: productType) => new Date(product.createdAt) > new Date(new Date().setDate(new Date().getDate() - 7)),
+  );
   const featuredCategories = categories.filter((categories: categoryType) => categories.status === 'active');
 
   const renderProductItem = ({ item }: { item: productType }) => <ProductCard product={item} />;
@@ -187,6 +191,28 @@ export default function HomeScreen() {
                 />
               </View>
             </View>
+
+            {NewProducts.length > 0 && (
+              <View>
+                <View style={styles.sectionHeader}>
+                  <ThemedText style={styles.sectionTitle}>Hàng mới về</ThemedText>
+                  <TouchableOpacity>
+                    <ThemedText type="link" style={styles.seeMore}>
+                      Xem thêm
+                    </ThemedText>
+                  </TouchableOpacity>
+                </View>
+                <View style={styles.productListContainer}>
+                  <FlatList
+                    data={NewProducts}
+                    renderItem={renderProductItem}
+                    keyExtractor={keyExtractorProduct}
+                    horizontal
+                    showsHorizontalScrollIndicator={false}
+                  />
+                </View>
+              </View>
+            )}
           </View>
         </ThemedView>
       </ScrollView>

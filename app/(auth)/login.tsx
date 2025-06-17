@@ -1,9 +1,10 @@
 import { ThemedText } from '@/components/ThemedText';
 import { AntDesign } from '@expo/vector-icons';
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   ActivityIndicator,
   Alert,
+  BackHandler,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -16,7 +17,7 @@ import { login } from '@/server/auth.server';
 
 import { styles } from '@/assets/styles/Screen/LoginScreen.styles';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { router } from 'expo-router';
+import { router, useFocusEffect, useNavigation } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDispatch } from 'react-redux';
 
@@ -35,6 +36,7 @@ const validatePassword = (password: string): boolean => {
 };
 
 const LoginScreen = () => {
+  const navigation = useNavigation();
   const dispatch = useDispatch();
   const [email, setEmail] = useState<loginFormData['usernameOrEmail']>('');
   const [password, setPassword] = useState<loginFormData['password']>('');
@@ -45,11 +47,26 @@ const LoginScreen = () => {
     return validateEmail(email) && validatePassword(password);
   }, [email, password]);
 
+  useEffect(() => {
+    navigation.setOptions({
+      gestureEnabled: false,
+    });
+  }, [navigation]);
+
+  useFocusEffect(
+    useCallback(() => {
+      const onBackPress = () => true; // <- return true để chặn
+      const subscription = BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+      return () => subscription.remove();
+    }, []),
+  );
+
   const handleNavigateToRegister = useCallback(() => {
     if (isNavigating) return;
 
     setIsNavigating(true);
-    router.push('/register');
+    router.replace('/register');
 
     setTimeout(() => {
       setIsNavigating(false);
@@ -75,6 +92,8 @@ const LoginScreen = () => {
       if (userData && userData._id) {
         try {
           await AsyncStorage.setItem('user', JSON.stringify(userData));
+          await AsyncStorage.setItem('accessToken', JSON.stringify(userData.accessToken));
+          await AsyncStorage.setItem('refreshToken', JSON.stringify(userData.refreshToken));
 
           router.replace('/(tabs)');
         } catch (storageError) {

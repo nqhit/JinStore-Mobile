@@ -1,3 +1,4 @@
+import { styles } from '@/assets/styles/Screen/LoginScreen.styles';
 import { ThemedText } from '@/components/ThemedText';
 import { AntDesign } from '@expo/vector-icons';
 import { router } from 'expo-router';
@@ -13,7 +14,6 @@ import {
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { styles } from '../../assets/styles/Screen/LoginScreen.styles';
 
 interface RegisterFormData {
   fullName: string;
@@ -76,7 +76,7 @@ const RegisterScreen = () => {
     if (isNavigating) return;
 
     setIsNavigating(true);
-    router.push('/login');
+    router.replace('/login');
 
     // Reset navigation state after a delay
     setTimeout(() => {
@@ -86,7 +86,7 @@ const RegisterScreen = () => {
 
   return (
     <>
-      <SafeAreaView style={{ flex: 1 }}>
+      <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
         <KeyboardAvoidingView
           style={{ flex: 1 }}
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -95,7 +95,6 @@ const RegisterScreen = () => {
           <ScrollView
             contentContainerStyle={{
               flexGrow: 1,
-              paddingHorizontal: 20,
               justifyContent: 'center',
             }}
             keyboardShouldPersistTaps="handled"

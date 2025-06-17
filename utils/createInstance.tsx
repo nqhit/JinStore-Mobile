@@ -4,6 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Dispatch } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
+import Toast from 'react-native-toast-message';
 
 axios.defaults.baseURL = API_BASE_URL;
 
@@ -41,47 +42,47 @@ export const createAxios = (user: userType, dispatch: Dispatch, stateSuccess: an
 
   newInstance.interceptors.request.use(
     async (config) => {
-      try {
-        const token = await AsyncStorage.getItem('accessToken');
+      const token = await AsyncStorage.getItem('accessToken');
 
-        if (!token) {
-          return config;
-        }
-
-        let accessToken = JSON.parse(token);
-        if (accessToken) {
-          const decodedToken = jwtDecode(accessToken);
-
-          if (!decodedToken || typeof decodedToken.exp !== 'number') {
-            throw new Error('Invalid token format');
-          }
-
-          const currentTime = Date.now() / 1000;
-
-          // Kiểm tra token sắp hết hạn
-          if (decodedToken.exp < currentTime + 300) {
-            console.log('Token sắp hết hạn, đang refresh...');
-            const data = await refreshToken();
-            accessToken = data.accessToken;
-
-            dispatch(stateSuccess({ ...user, accessToken }));
-          }
-
-          // Set authorization header
-          config.headers = config.headers || {};
-          config.headers['Authorization'] = `Bearer ${accessToken}`;
-        }
-      } catch (err: any) {
-        console.error('Token processing error:', {
-          message: err.message,
-          stack: err.stack,
-        });
-
-        await AsyncStorage.multiRemove(['accessToken', 'refreshToken']);
-
-        console.warn('Proceeding without token due to error');
+      if (!token) {
+        return config;
       }
 
+      let accessToken = JSON.parse(token);
+      if (accessToken) {
+        const decodedToken = jwtDecode(accessToken);
+
+        if (!decodedToken || typeof decodedToken.exp !== 'number') {
+          throw new Error('Invalid token format');
+        }
+
+        const currentTime = Date.now() / 1000;
+
+        if (decodedToken.exp < currentTime + 300) {
+          try {
+            console.log('Token sắp hết hạn, đang refresh...');
+            const refreshData = await refreshToken();
+
+            const updatedUserData = {
+              ...user,
+              accessToken: refreshData.accessToken,
+            };
+
+            await AsyncStorage.setItem('user', JSON.stringify(updatedUserData));
+            dispatch(stateSuccess(updatedUserData));
+
+            config.headers = config.headers || {};
+            config.headers['Authorization'] = `Bearer ${accessToken}`;
+          } catch {
+            Toast.show({
+              type: 'info',
+              text1: 'Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại!',
+              position: 'bottom',
+              visibilityTime: 800,
+            });
+          }
+        }
+      }
       return config;
     },
     (err) => Promise.reject(err.message),
