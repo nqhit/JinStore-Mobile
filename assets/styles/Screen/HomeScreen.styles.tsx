@@ -2,11 +2,19 @@ import { Dimensions, StyleSheet } from 'react-native';
 
 const { width: screenWidth } = Dimensions.get('window');
 const styles = StyleSheet.create({
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   container: {
     flex: 1,
     backgroundColor: '#fff',
   },
-  contentContainer: {},
+  contentContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   // COMMENT: HEADER
   header: {
     flexDirection: 'row',

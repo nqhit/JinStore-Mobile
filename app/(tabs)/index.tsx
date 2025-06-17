@@ -19,7 +19,7 @@ import { getInfoUser } from '@/server/user.server';
 import { createAxios } from '@/utils/createInstance';
 import { AntDesign } from '@expo/vector-icons';
 import { useCallback, useEffect, useState } from 'react';
-import { FlatList, Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, FlatList, Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -86,10 +86,12 @@ export default function HomeScreen() {
   if (loading) {
     return (
       <SafeAreaView style={{ flex: 1 }} edges={['top', 'bottom']}>
-        <View style={styles.container}>
-          <ThemedView style={styles.contentContainer} lightColor="white" darkColor="black">
-            <ThemedText>Đang tải...</ThemedText>
-          </ThemedView>
+        <View style={styles.loadingContainer}>
+          <Image
+            source={require('@/assets/images/logo.png')}
+            style={{ width: 200, height: 200, resizeMode: 'contain' }}
+          />
+          <ActivityIndicator size="large" color="#8B5CF6" />
         </View>
       </SafeAreaView>
     );
@@ -140,7 +142,7 @@ export default function HomeScreen() {
               </TouchableOpacity>
               <TouchableOpacity style={styles.cartButton}>
                 <AntDesign name="shoppingcart" size={30} color="#000" />
-                <Text style={styles.cartItemCount}>{lengthItems}</Text>
+                <Text style={styles.cartItemCount}>{lengthItems > 9 ? '9+' : lengthItems}</Text>
               </TouchableOpacity>
             </View>
           </View>
