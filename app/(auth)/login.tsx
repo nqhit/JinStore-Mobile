@@ -95,7 +95,7 @@ const LoginScreen = () => {
           await AsyncStorage.setItem('accessToken', JSON.stringify(userData.accessToken));
           await AsyncStorage.setItem('refreshToken', JSON.stringify(userData.refreshToken));
 
-          router.replace('/(tabs)');
+          router.replace('/(tabs)/home');
         } catch (storageError) {
           console.error('AsyncStorage error:', storageError);
           Alert.alert('Lỗi', 'Không thể lưu thông tin đăng nhập');

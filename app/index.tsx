@@ -83,7 +83,7 @@ export default function IndexPage() {
           await AsyncStorage.setItem('user', JSON.stringify(updatedUserData));
           dispatch(loginSuccess(updatedUserData));
 
-          router.replace('/(tabs)');
+          router.replace('/(tabs)/home');
         } else {
           // Token còn hợp lệ
           console.log('Token còn hợp lệ');
@@ -92,7 +92,7 @@ export default function IndexPage() {
           dispatch(loginSuccess({ ...userData, accessToken }));
 
           // Điều hướng đến tabs
-          router.replace('/(tabs)');
+          router.replace('/(tabs)/home');
         }
       } catch (tokenError) {
         console.error('Token validation error:', tokenError);
@@ -107,7 +107,7 @@ export default function IndexPage() {
 
           await AsyncStorage.setItem('user', JSON.stringify(updatedUserData));
           dispatch(loginSuccess(updatedUserData));
-          router.replace('/(tabs)');
+          router.replace('/(tabs)/home');
         } catch (refreshError) {
           console.error('Fallback refresh failed:', refreshError);
           router.replace('/(auth)/login');

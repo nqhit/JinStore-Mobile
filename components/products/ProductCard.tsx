@@ -9,7 +9,7 @@ import { StarRatingDisplay } from 'react-native-star-rating-widget';
 import Toast from 'react-native-toast-message';
 import { useDispatch, useSelector } from 'react-redux';
 
-function ProductCard({ product }: { product: productType }) {
+function ProductCard({ product, handleRouterStore }: { handleRouterStore: () => void; product: productType }) {
   const user = useSelector((state: any) => state.auth.login.currentUser);
   const accessToken = user?.accessToken;
   const dispatch = useDispatch();
@@ -47,7 +47,7 @@ function ProductCard({ product }: { product: productType }) {
   };
 
   return (
-    <TouchableOpacity style={styles.product}>
+    <TouchableOpacity style={styles.product} onPress={handleRouterStore}>
       <View style={styles.productImage}>
         <Image source={{ uri: product.images[0]?.url }} style={styles.productImage} />
       </View>

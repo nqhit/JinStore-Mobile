@@ -1,15 +1,17 @@
+import { socket } from '@/config/socket';
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { persistor, store } from '@/redux/store';
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import Constants from 'expo-constants';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
+import { useEffect } from 'react';
 import { ActivityIndicator, Dimensions, Platform, StatusBar, StyleSheet, View } from 'react-native';
 import 'react-native-reanimated';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Toast, { BaseToast } from 'react-native-toast-message';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
-import { persistor, store } from '../store/store';
 
 function AppWithStore() {
   const colorScheme = useColorScheme();
@@ -49,6 +51,7 @@ function AppWithStore() {
             >
               <Stack.Screen name="index" />
               <Stack.Screen name="(auth)" options={{ gestureEnabled: false }} />
+              <Stack.Screen name="(search)" options={{ gestureEnabled: false }} />
               <Stack.Screen name="(tabs)" options={{ gestureEnabled: false }} />
               <Stack.Screen name="+not-found" options={{ title: 'Oops!', presentation: 'modal' }} />
             </Stack>
@@ -75,6 +78,12 @@ export default function RootLayout() {
       />
     ),
   };
+
+  useEffect(() => {
+    if (!socket.connected) {
+      socket.connect();
+    }
+  }, []);
 
   if (!loaded) {
     return (

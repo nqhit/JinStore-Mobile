@@ -1,7 +1,6 @@
 import { Stack } from 'expo-router';
-import 'react-native-reanimated';
 
-export default function RootLayout() {
+export default function AUthLayout() {
   return (
     <Stack
       screenOptions={{
@@ -19,7 +18,7 @@ export default function RootLayout() {
       <Stack.Screen
         name="register"
         options={{
-          gestureEnabled: false,
+          gestureEnabled: true,
         }}
       />
     </Stack>

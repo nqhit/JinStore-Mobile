@@ -18,6 +18,7 @@ import { getProductsAll } from '@/server/product.server';
 import { getInfoUser } from '@/server/user.server';
 import { createAxios } from '@/utils/createInstance';
 import { AntDesign } from '@expo/vector-icons';
+import { router } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -36,6 +37,7 @@ export default function HomeScreen() {
   const [categories, setCategories] = useState<categoryType[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [search, setSearch] = useState(false);
 
   const { fetchInfoUser } = useUser({ getInfoUser, setUserInfo, setLoading, setError });
   const { fetchProduct } = useProduct({ getProductsAll, setProducts });
@@ -49,12 +51,12 @@ export default function HomeScreen() {
     fetchCategories();
   }, [fetchInfoUser, fetchProduct, fetchCartItems, fetchCategories]);
 
+  const handleRouterStore = useCallback(() => {
+    router.push('/store');
+  }, []);
+
   useEffect(() => {
     if (!user || !id) return;
-
-    if (!socket.connected) {
-      socket.connect();
-    }
 
     socket.emit('joinUser', id);
 
@@ -80,8 +82,12 @@ export default function HomeScreen() {
   );
   const featuredCategories = categories.filter((categories: categoryType) => categories.status === 'active');
 
-  const renderProductItem = ({ item }: { item: productType }) => <ProductCard product={item} />;
-  const renderCategoryItem = ({ item }: { item: categoryType }) => <CategoryCard category={item} />;
+  const renderProductItem = ({ item }: { item: productType }) => (
+    <ProductCard handleRouterStore={handleRouterStore} product={item} />
+  );
+  const renderCategoryItem = ({ item }: { item: categoryType }) => (
+    <CategoryCard handleRouterStore={handleRouterStore} category={item} />
+  );
 
   const keyExtractorProduct = (item: productType, index: number) => item._id?.toString() || index.toString();
   const keyExtractorCategory = (item: categoryType, index: number) => item._id?.toString() || index.toString();
@@ -108,7 +114,7 @@ export default function HomeScreen() {
           <ThemedView style={styles.contentContainer} lightColor="white" darkColor="black">
             <ThemedText>Lỗi: {error}</ThemedText>
             <TouchableOpacity
-              onPress={handleFetchData} // ✅ Sử dụng handleFetchData thay vì chỉ fetchInfoUser
+              onPress={handleFetchData}
               style={{ marginTop: 10, padding: 10, backgroundColor: '#EA4335', borderRadius: 5 }}
             >
               <Text style={{ color: 'white', textAlign: 'center' }}>Thử lại</Text>
@@ -141,9 +147,6 @@ export default function HomeScreen() {
               </View>
             </View>
             <View style={styles.headerRight}>
-              <TouchableOpacity>
-                <AntDesign name="search1" size={30} color="#000" />
-              </TouchableOpacity>
               <TouchableOpacity style={styles.cartButton}>
                 <AntDesign name="shoppingcart" size={30} color="#000" />
                 <Text style={styles.cartItemCount}>{lengthItems > 9 ? '9+' : lengthItems}</Text>
