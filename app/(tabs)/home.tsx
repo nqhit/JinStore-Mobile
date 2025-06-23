@@ -1,75 +1,44 @@
 import styles from '@/assets/styles/Screen/HomeScreen.styles';
 import CategoryCard from '@/components/categories/categoryCard';
+import IconShoppingCart from '@/components/IconShoppingCart';
 import ProductCard from '@/components/products/ProductCard';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import { socket } from '@/config/socket';
-import useCart from '@/hooks/cart/useCart.hooks';
 import useCategory from '@/hooks/category/useCategory.hooks';
 import useProduct from '@/hooks/product/useProduct.hooks';
 import useUser from '@/hooks/user/useUser.hooks';
 import { categoryType } from '@/interfaces/category.type';
 import { productType } from '@/interfaces/product.type';
 import { userType } from '@/interfaces/user.type';
-import { loginSuccess } from '@/redux/authSlice';
-import { getCart } from '@/server/cart.server';
 import { getCategoriesAll } from '@/server/category.server';
 import { getProductsAll } from '@/server/product.server';
 import { getInfoUser } from '@/server/user.server';
-import { createAxios } from '@/utils/createInstance';
-import { AntDesign } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useDispatch, useSelector } from 'react-redux';
 
 export default function HomeScreen() {
-  const user = useSelector((state: any) => state.auth.login.currentUser);
-  const id = user?._id;
-  const accessToken = user?.accessToken;
-  const dispatch = useDispatch();
-  const axiosJWT = createAxios(user, dispatch, loginSuccess);
-
-  const [lengthItems, setLengthItems] = useState(0);
   const [userInfo, setUserInfo] = useState<userType | null>(null);
   const [products, setProducts] = useState<productType[]>([]);
   const [categories, setCategories] = useState<categoryType[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [search, setSearch] = useState(false);
 
   const { fetchInfoUser } = useUser({ getInfoUser, setUserInfo, setLoading, setError });
   const { fetchProduct } = useProduct({ getProductsAll, setProducts });
-  const { fetchCartItems } = useCart({ getCart, setLengthItems, accessToken, axiosJWT });
+
   const { fetchCategories } = useCategory({ getCategoriesAll, setCategories });
 
   const handleFetchData = useCallback(() => {
     fetchInfoUser();
     fetchProduct();
-    fetchCartItems();
     fetchCategories();
-  }, [fetchInfoUser, fetchProduct, fetchCartItems, fetchCategories]);
+  }, [fetchInfoUser, fetchProduct, fetchCategories]);
 
   const handleRouterStore = useCallback(() => {
-    router.push('/store');
+    router.push('/details/ProductDetail');
   }, []);
-
-  useEffect(() => {
-    if (!user || !id) return;
-
-    socket.emit('joinUser', id);
-
-    socket.on('cartUpdated', (data) => {
-      console.log(data.message);
-      setLengthItems(data.itemCount);
-    });
-
-    return () => {
-      socket.off('cartUpdated');
-      socket.disconnect();
-    };
-  }, [user, id]);
 
   useEffect(() => {
     handleFetchData();
@@ -83,7 +52,7 @@ export default function HomeScreen() {
   const featuredCategories = categories.filter((categories: categoryType) => categories.status === 'active');
 
   const renderProductItem = ({ item }: { item: productType }) => (
-    <ProductCard handleRouterStore={handleRouterStore} product={item} />
+    <ProductCard handleRouterDetail={handleRouterStore} product={item} />
   );
   const renderCategoryItem = ({ item }: { item: categoryType }) => (
     <CategoryCard handleRouterStore={handleRouterStore} category={item} />
@@ -126,7 +95,7 @@ export default function HomeScreen() {
   }
 
   return (
-    <>
+    <SafeAreaView style={{ flex: 1 }} edges={['top', 'bottom']}>
       <ScrollView
         style={styles.container}
         contentContainerStyle={styles.contentContainer}
@@ -146,12 +115,7 @@ export default function HomeScreen() {
                 <Text style={styles.SubText}>Let&#39;s go shopping</Text>
               </View>
             </View>
-            <View style={styles.headerRight}>
-              <TouchableOpacity style={styles.cartButton}>
-                <AntDesign name="shoppingcart" size={30} color="#000" />
-                <Text style={styles.cartItemCount}>{lengthItems > 9 ? '9+' : lengthItems}</Text>
-              </TouchableOpacity>
-            </View>
+            <IconShoppingCart />
           </View>
           <View style={styles.body}>
             <Image style={styles.bannerImage} source={require('@/assets/images/banner/banner17.png')} />
@@ -219,6 +183,6 @@ export default function HomeScreen() {
           </View>
         </ThemedView>
       </ScrollView>
-    </>
+    </SafeAreaView>
   );
 }

@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'; // ✅ đúng cho React Native
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { FLUSH, PAUSE, PERSIST, persistReducer, persistStore, PURGE, REGISTER, REHYDRATE } from 'redux-persist';
-import authReducer from '../redux/authSlice';
+import authReducer from './slices/authSlice';
 
 const persistConfig = {
   key: 'root',

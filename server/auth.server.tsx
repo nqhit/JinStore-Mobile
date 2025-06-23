@@ -13,7 +13,7 @@ import {
   registerFailed,
   registerStart,
   registerSuccess,
-} from '../redux/authSlice';
+} from '../redux/slices/authSlice';
 
 axios.defaults.baseURL = API_BASE_URL;
 

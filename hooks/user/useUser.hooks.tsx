@@ -1,4 +1,4 @@
-import { loginSuccess } from '@/redux/authSlice';
+import { loginSuccess } from '@/redux/slices/authSlice';
 import { createAxios } from '@/utils/createInstance';
 import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';

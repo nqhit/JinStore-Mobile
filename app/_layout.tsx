@@ -1,3 +1,4 @@
+import Loading from '@/components/loading';
 import { socket } from '@/config/socket';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { persistor, store } from '@/redux/store';
@@ -6,13 +7,13 @@ import Constants from 'expo-constants';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import { useEffect } from 'react';
-import { ActivityIndicator, Dimensions, Platform, StatusBar, StyleSheet, View } from 'react-native';
+import { Dimensions, Platform, StatusBar, StyleSheet, View } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import 'react-native-reanimated';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Toast, { BaseToast } from 'react-native-toast-message';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
-
 function AppWithStore() {
   const colorScheme = useColorScheme();
 
@@ -51,7 +52,6 @@ function AppWithStore() {
             >
               <Stack.Screen name="index" />
               <Stack.Screen name="(auth)" options={{ gestureEnabled: false }} />
-              <Stack.Screen name="(search)" options={{ gestureEnabled: false }} />
               <Stack.Screen name="(tabs)" options={{ gestureEnabled: false }} />
               <Stack.Screen name="+not-found" options={{ title: 'Oops!', presentation: 'modal' }} />
             </Stack>
@@ -86,28 +86,18 @@ export default function RootLayout() {
   }, []);
 
   if (!loaded) {
-    return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#8B5CF6" />
-      </View>
-    );
+    return <Loading />;
   }
 
   return (
     <Provider store={store}>
-      <PersistGate loading={<LoadingScreen />} persistor={persistor}>
-        <AppWithStore />
+      <PersistGate loading={<Loading />} persistor={persistor}>
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <AppWithStore />
+        </GestureHandlerRootView>
         <Toast config={toastConfig} />
       </PersistGate>
     </Provider>
-  );
-}
-
-function LoadingScreen() {
-  return (
-    <View style={styles.loadingContainer}>
-      <ActivityIndicator size="large" color="#8B5CF6" />
-    </View>
   );
 }
 
@@ -119,12 +109,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FFFFFF',
-    paddingHorizontal: 15,
     width: Dimensions.get('screen').width,
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
 });

@@ -7,13 +7,14 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { router } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { ActivityIndicator, Text, TouchableOpacity, View } from 'react-native';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
-import { logoutSuccess } from '../../redux/authSlice';
+import { logoutSuccess } from '../../redux/slices/authSlice';
 
-export default function HomeScreen() {
+export default function ProfileScreen() {
   const [loading, setLoading] = useState(false);
 
+  const insets = useSafeAreaInsets();
   const user = useSelector((state: any) => state.auth.login.currentUser);
   const id = user?._id;
   const accessToken = user?.accessToken;
@@ -50,11 +51,11 @@ export default function HomeScreen() {
   }
 
   return (
-    <SafeAreaProvider style={{ flex: 1 }}>
+    <View style={{ flex: 1, paddingTop: insets.top, paddingBottom: insets.bottom }}>
       <Text>Profile</Text>
       <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
         <ThemedText style={{ color: '#000' }}>Logout</ThemedText>
       </TouchableOpacity>
-    </SafeAreaProvider>
+    </View>
   );
 }

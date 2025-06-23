@@ -4,7 +4,7 @@ function useProduct({ getProductsAll, setProducts }: any) {
   const fetchProduct = useCallback(async () => {
     try {
       const res = await getProductsAll();
-      setProducts(res);
+      setProducts(res.data);
     } catch (error) {
       throw error;
     }

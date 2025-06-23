@@ -1,12 +1,13 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { CartItem } from '@/interfaces/cart.type';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 const itemSlice = createSlice({
   name: 'cart',
   initialState: {
-    itemCart: [],
+    itemCart: [] as CartItem[],
     add: {
       isFetching: false,
-      error: null,
+      error: null as string | null,
       success: false,
     },
   },
@@ -16,23 +17,21 @@ const itemSlice = createSlice({
       state.add.error = null;
       state.add.success = false;
     },
-    addSuccess: (state, action) => {
+    addSuccess: (state, action: PayloadAction<CartItem>) => {
       state.add.isFetching = false;
       state.add.success = true;
       state.add.error = null;
-      state.item.push(action.payload);
+      state.itemCart.push(action.payload);
     },
-    addFailed: (state, action) => {
+    addFailed: (state, action: PayloadAction<string>) => {
       state.add.isFetching = false;
       state.add.error = action.payload;
       state.add.success = false;
     },
 
     //NOTE: Reset trạng thái (tùy chọn)
-    resetAddState: (state) => {
-      state.add.isFetching = false;
-      state.add.error = null;
-      state.add.success = false;
+    resetAddState(state) {
+      state.add = { isFetching: false, error: null, success: false };
     },
   },
 });

@@ -1,6 +1,6 @@
 // app/index.tsx
 import { API_BASE_URL } from '@/config/config';
-import { loginSuccess } from '@/redux/authSlice'; // Import action để restore state
+import { loginSuccess } from '@/redux/slices/authSlice'; // Import action để restore state
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { router } from 'expo-router';
@@ -41,9 +41,8 @@ export default function IndexPage() {
       return res.data;
     } catch (err) {
       console.error('Refresh token error:', err);
-      // Xóa tất cả auth data khi refresh thất bại
       await AsyncStorage.multiRemove(['accessToken', 'refreshToken', 'persist:root', 'user']);
-      throw new Error('Phiên đăng nhập đã hết hạn');
+      console.log('Phiên đăng nhập đã hết hạn');
     }
   };
 

@@ -1,16 +1,15 @@
-import styles from '@/assets/styles/products/ProductCard.styles';
+import styles from '@/assets/styles/products/ProductStore.styles';
 import { productType } from '@/interfaces/product.type';
 import { loginSuccess } from '@/redux/slices/authSlice';
 import { addItemToCart } from '@/server/cart.server';
 import { createAxios } from '@/utils/createInstance';
 import { router } from 'expo-router';
-import { memo } from 'react';
 import { Alert, Image, Text, TouchableOpacity, View } from 'react-native';
 import { StarRatingDisplay } from 'react-native-star-rating-widget';
 import Toast from 'react-native-toast-message';
 import { useDispatch, useSelector } from 'react-redux';
 
-function ProductCard({
+function ProductStore({
   product,
   handleRouterDetail = () => {},
 }: {
@@ -92,4 +91,4 @@ function ProductCard({
   );
 }
 
-export default memo(ProductCard);
+export default ProductStore;

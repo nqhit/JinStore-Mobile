@@ -3,6 +3,7 @@ import { userType } from '@/interfaces/user.type';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Dispatch } from '@reduxjs/toolkit';
 import axios from 'axios';
+import { router } from 'expo-router';
 import { jwtDecode } from 'jwt-decode';
 import Toast from 'react-native-toast-message';
 
@@ -33,7 +34,7 @@ const refreshToken = async () => {
     console.error('Refresh token error:', err);
     // Xóa tất cả auth data khi refresh thất bại
     await AsyncStorage.multiRemove(['accessToken', 'refreshToken', 'persist:root', 'user']);
-    throw new Error('Phiên đăng nhập đã hết hạn');
+    console.error('Phiên đăng nhập đã hết hạn');
   }
 };
 
@@ -80,6 +81,7 @@ export const createAxios = (user: userType, dispatch: Dispatch, stateSuccess: an
               position: 'bottom',
               visibilityTime: 800,
             });
+            router.push('/(auth)/login');
           }
         }
       }

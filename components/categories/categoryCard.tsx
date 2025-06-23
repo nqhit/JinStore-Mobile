@@ -1,5 +1,6 @@
 import styles from '@/assets/styles/category/categoryCard.styles';
 import { categoryType } from '@/interfaces/category.type';
+import { memo } from 'react';
 import { Image, Text, TouchableOpacity } from 'react-native';
 
 function CategoryCard({ category, handleRouterStore }: { category: categoryType; handleRouterStore: () => void }) {
@@ -17,4 +18,4 @@ function CategoryCard({ category, handleRouterStore }: { category: categoryType;
   );
 }
 
-export default CategoryCard;
+export default memo(CategoryCard);

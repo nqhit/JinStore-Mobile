@@ -3,25 +3,16 @@ const { width: screenWidth } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   product: {
-    width: screenWidth / 2,
+    width: screenWidth / 2 - 20,
     minHeight: 200,
-    margin: 10,
     backgroundColor: '#fff',
     borderRadius: 10,
     borderColor: '#ccc',
     borderWidth: 1,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3,
-    elevation: 2,
   },
   productImage: {
     width: '100%',
-    height: 140,
+    height: 100,
     resizeMode: 'contain',
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,

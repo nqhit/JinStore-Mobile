@@ -1,6 +1,6 @@
 import { API_BASE_URL } from '@/config/config';
 import { productToCartType } from '@/interfaces/product.type';
-import { addFailed, addStart, addSuccess } from '@/redux/itemCartSlice';
+import { addFailed, addStart, addSuccess } from '@/redux/slices/itemCartSlice';
 import axios from 'axios';
 import { Dispatch } from 'redux';
 

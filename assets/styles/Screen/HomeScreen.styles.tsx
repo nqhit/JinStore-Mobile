@@ -8,6 +8,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   container: {
+    paddingHorizontal: 15,
     flex: 1,
     backgroundColor: '#fff',
   },
@@ -35,14 +36,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     marginLeft: 10,
   },
-  headerRight: {
-    flex: 1,
-    height: '100%',
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-    gap: 20,
-  },
+
   tinyLogo: {
     width: 50,
     height: 50,
@@ -59,24 +53,6 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: '#8B5CF6',
     fontWeight: '500',
-  },
-  cartButton: {
-    position: 'relative',
-    marginRight: 5,
-  },
-  cartItemCount: {
-    position: 'absolute',
-    top: -5,
-    right: -5,
-    backgroundColor: '#8B5CF6',
-    width: 20,
-    height: 20,
-    borderRadius: 10,
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
-    alignContent: 'center',
-    textAlign: 'center',
   },
 
   //COMMENT: BODY
