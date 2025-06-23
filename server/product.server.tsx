@@ -15,9 +15,9 @@ const authHeaders = (accessToken: string) => ({
 });
 
 // NOTE: Lấy danh sách sản phẩm
-export const getProductsAll = async (): Promise<productType[]> => {
+export const getProductsAll = async (page: number, limit: number): Promise<productType[]> => {
   try {
-    const response = await axios.get(`/products`, {
+    const response = await axios.get(`/products?page=${page}&size=${limit}`, {
       timeout: 10000,
       headers: defaultHeaders,
     });

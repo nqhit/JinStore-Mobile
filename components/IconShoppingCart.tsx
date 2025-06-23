@@ -61,7 +61,6 @@ function IconShoppingCart() {
 
 const styles = StyleSheet.create({
   headerRight: {
-    flex: 1,
     height: '100%',
     flexDirection: 'row',
     justifyContent: 'flex-end',

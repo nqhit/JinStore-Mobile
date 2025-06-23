@@ -19,10 +19,10 @@ export default function IndexPage() {
       const token = await AsyncStorage.getItem('refreshToken');
 
       if (!token) {
-        throw new Error('Không có refresh token');
+        console.error('Không có refresh token');
       }
 
-      const refreshToken = JSON.parse(token);
+      const refreshToken = JSON.parse(token as string);
 
       const res = await axios.post(
         `/mobile/refresh`,

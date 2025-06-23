@@ -22,6 +22,17 @@ export interface productType {
   __v: number;
 }
 
+export interface productResType extends productType {
+  pagination: {
+    page: number;
+    limit: number;
+    totalProducts: number;
+    totalPage: number;
+    hasNextPage: boolean;
+    hasPrevPage: boolean;
+  };
+}
+
 export interface productToCartType {
   productId: string;
   quantity: number;

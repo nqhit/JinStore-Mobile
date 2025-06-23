@@ -1,5 +1,5 @@
 // ./(tabs)/index.tsx
-import styles from '@/assets/styles/Screen/SettingScreen.styles';
+import styles from '@/assets/styles/Screen/ProfileScreen.styles';
 import { ThemedText } from '@/components/ThemedText';
 import { logOut } from '@/server/auth.server';
 import { createAxios } from '@/utils/createInstance';
