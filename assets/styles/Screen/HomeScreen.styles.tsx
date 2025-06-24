@@ -46,8 +46,8 @@ const styles = StyleSheet.create({
   },
   TextName: {
     fontSize: 16,
-    color: '#1f2937',
     fontWeight: '600',
+    color: '#000',
   },
   SubText: {
     fontSize: 13,
@@ -91,6 +91,7 @@ const styles = StyleSheet.create({
   seeMore: {
     color: '#8B5CF6',
     marginRight: 10,
+    fontSize: 16,
   },
   productListContainer: {
     flexDirection: 'row',

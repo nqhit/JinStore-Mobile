@@ -1,5 +1,4 @@
 import { styles } from '@/assets/styles/Screen/LoginScreen.styles';
-import { ThemedText } from '@/components/ThemedText';
 import { AntDesign } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import React, { useCallback, useMemo, useState } from 'react';
@@ -9,6 +8,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  Text,
   TextInput,
   TouchableOpacity,
   View,
@@ -103,9 +103,7 @@ const RegisterScreen = () => {
             <View style={styles.container}>
               {/* Main Content */}
               <View style={styles.contentContainer}>
-                <ThemedText type="title" style={styles.title}>
-                  Đăng ký
-                </ThemedText>
+                <Text style={styles.title}>Đăng ký</Text>
 
                 {/* Full Name Input */}
                 <TextInput
@@ -166,7 +164,7 @@ const RegisterScreen = () => {
                   {isLoading ? (
                     <ActivityIndicator size="small" color="#FFFFFF" />
                   ) : (
-                    <ThemedText style={styles.loginButtonText}>Đăng ký</ThemedText>
+                    <Text style={styles.loginButtonText}>Đăng ký</Text>
                   )}
                 </TouchableOpacity>
               </View>
@@ -175,17 +173,13 @@ const RegisterScreen = () => {
               <View style={styles.footer}>
                 <TouchableOpacity style={styles.socialLoginButton}>
                   <AntDesign name="google" size={20} color="#EA4335" style={styles.socialIcon} />
-                  <ThemedText type="link" style={styles.socialLoginButtonText}>
-                    Register with Google
-                  </ThemedText>
+                  <Text style={styles.socialLoginButtonText}>Register with Google</Text>
                 </TouchableOpacity>
 
                 <View style={styles.registerContainer}>
-                  <ThemedText>Đã có tài khoản? </ThemedText>
+                  <Text>Đã có tài khoản? </Text>
                   <TouchableOpacity onPress={handleNavigateToLogin} disabled={isNavigating} activeOpacity={0.7}>
-                    <ThemedText style={[styles.registerLink, isNavigating && { opacity: 0.5 }]}>
-                      Đăng nhập ngay
-                    </ThemedText>
+                    <Text style={[styles.registerLink, isNavigating && { opacity: 0.5 }]}>Đăng nhập ngay</Text>
                   </TouchableOpacity>
                 </View>
               </View>

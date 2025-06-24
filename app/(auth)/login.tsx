@@ -1,4 +1,3 @@
-import { ThemedText } from '@/components/ThemedText';
 import { AntDesign } from '@expo/vector-icons';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
@@ -8,6 +7,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  Text,
   TextInput,
   TouchableOpacity,
   View,
@@ -129,9 +129,7 @@ const LoginScreen = () => {
           >
             <View style={styles.container}>
               <View style={styles.contentContainer}>
-                <ThemedText type="title" darkColor="#000" style={styles.title}>
-                  Đăng nhập
-                </ThemedText>
+                <Text style={styles.title}>Đăng nhập</Text>
 
                 <TextInput
                   style={styles.input}
@@ -162,31 +160,25 @@ const LoginScreen = () => {
                   {isLoading ? (
                     <ActivityIndicator size="small" color="#FFFFFF" />
                   ) : (
-                    <ThemedText style={styles.loginButtonText}>Đăng nhập</ThemedText>
+                    <Text style={styles.loginButtonText}>Đăng nhập</Text>
                   )}
                 </TouchableOpacity>
 
                 <TouchableOpacity style={styles.forgotPasswordContainer}>
-                  <ThemedText type="link" style={styles.forgotPasswordText}>
-                    Quên mật khẩu?
-                  </ThemedText>
+                  <Text style={styles.forgotPasswordText}>Quên mật khẩu?</Text>
                 </TouchableOpacity>
               </View>
 
               <View style={styles.footer}>
                 <TouchableOpacity style={styles.socialLoginButton}>
                   <AntDesign name="google" size={20} color="#EA4335" style={styles.socialIcon} />
-                  <ThemedText type="link" style={styles.socialLoginButtonText}>
-                    Login with Google
-                  </ThemedText>
+                  <Text style={styles.socialLoginButtonText}>Login with Google</Text>
                 </TouchableOpacity>
 
                 <View style={styles.registerContainer}>
-                  <ThemedText darkColor="#000">Chưa có tài khoản? </ThemedText>
+                  <Text>Chưa có tài khoản? </Text>
                   <TouchableOpacity onPress={handleNavigateToRegister} disabled={isNavigating} activeOpacity={0.7}>
-                    <ThemedText darkColor="#000" style={[styles.registerLink, isNavigating && { opacity: 0.5 }]}>
-                      Đăng ký ngay
-                    </ThemedText>
+                    <Text style={[styles.registerLink, isNavigating && { opacity: 0.5 }]}>Đăng ký ngay</Text>
                   </TouchableOpacity>
                 </View>
               </View>

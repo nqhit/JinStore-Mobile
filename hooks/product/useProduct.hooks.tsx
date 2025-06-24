@@ -2,7 +2,16 @@ import { productType } from '@/interfaces/product.type';
 import { useCallback } from 'react';
 
 function useProduct({ getProductsAll, setProducts }: any) {
-  const fetchProduct = useCallback(
+  const fetchProduct = useCallback(async () => {
+    try {
+      const res = await getProductsAll();
+      setProducts(res.data);
+    } catch (error) {
+      throw error;
+    }
+  }, [getProductsAll, setProducts]);
+
+  const fetchProductPagi = useCallback(
     async (page: number, limit: number) => {
       try {
         const res = await getProductsAll(page, limit);
@@ -14,7 +23,7 @@ function useProduct({ getProductsAll, setProducts }: any) {
     },
     [getProductsAll, setProducts],
   );
-  return { fetchProduct };
+  return { fetchProduct, fetchProductPagi };
 }
 
 export default useProduct;

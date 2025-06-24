@@ -16,13 +16,13 @@ function ProductListStore() {
   const [loadingMore, setLoadingMore] = useState(false); // Tách riêng loading cho load more
   const [refreshing, setRefreshing] = useState(false);
   const [hasNextPage, setHasNextPage] = useState(true);
-  const { fetchProduct } = useProduct({ getProductsAll, setProducts });
+  const { fetchProductPagi } = useProduct({ getProductsAll, setProducts });
   const insets = useSafeAreaInsets();
 
   const handleFetchData = useCallback(async () => {
     try {
       setLoading(true);
-      const fetch = await fetchProduct(1, limit);
+      const fetch = await fetchProductPagi(1, limit);
       setHasNextPage(fetch.pagination.hasNextPage);
       setPage(1);
     } catch (error) {
@@ -30,14 +30,14 @@ function ProductListStore() {
     } finally {
       setLoading(false);
     }
-  }, [fetchProduct, limit]);
+  }, [fetchProductPagi, limit]);
 
   const loadMore = async () => {
     if (loadingMore || !hasNextPage) return; // Dùng loadingMore thay vì loading
     try {
       setLoadingMore(true);
       const nextPage = page + 1;
-      const fetched = await fetchProduct(nextPage, limit);
+      const fetched = await fetchProductPagi(nextPage, limit);
       setHasNextPage(fetched.pagination.hasNextPage);
       setPage(nextPage);
     } catch (error) {
@@ -76,7 +76,7 @@ function ProductListStore() {
   );
 
   return (
-    <View style={{ paddingTop: 10, flex: 1 }}>
+    <View style={{ marginTop: 10, flex: 1 }}>
       {loading && products.length === 0 ? ( // Chỉ show loading ban đầu khi chưa có data
         <Loading />
       ) : (
@@ -91,6 +91,7 @@ function ProductListStore() {
           onRefresh={onRefresh}
           contentContainerStyle={{
             paddingBottom: insets.bottom,
+            backgroundColor: 'white',
           }}
           ListFooterComponent={loadingMore && hasNextPage ? <Loading /> : null} // Dùng loadingMore
           columnWrapperStyle={{

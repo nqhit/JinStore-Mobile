@@ -1,7 +1,6 @@
 import styles from '@/assets/styles/Screen/StoreScreen.styles';
 import IconShoppingCart from '@/components/IconShoppingCart';
 import ProductListStore from '@/components/products/ProductListStore';
-import { ThemedText } from '@/components/ThemedText';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from 'expo-router';
 import { memo, useLayoutEffect, useRef } from 'react';
@@ -35,10 +34,9 @@ function StoreScreen() {
     >
       {/* Header cũ */}
       <View style={styles.staticHeader}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Ionicons name="chevron-back" size={26} color="black" />
+        <TouchableOpacity style={styles.searchFilter} onPress={onOpen}>
+          <Ionicons name="options-outline" size={26} color="black" />
         </TouchableOpacity>
-
         <View style={styles.searchBar}>
           <Ionicons name="search" size={20} color="#666" />
           <TextInput placeholder="Tìm kiếm..." style={styles.searchInput} />
@@ -51,13 +49,7 @@ function StoreScreen() {
 
       <View style={styles.body}>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <ThemedText style={{ flex: 1 }} type="title">
-            Danh sách sản phẩm
-          </ThemedText>
-          {/* Thêm onPress={onOpen} cho button filter này */}
-          <TouchableOpacity style={styles.searchFilter} onPress={onOpen}>
-            <Ionicons name="options-outline" size={26} color="black" />
-          </TouchableOpacity>
+          <Text style={{ flex: 1, fontSize: 32, fontWeight: 'bold' }}>Danh sách sản phẩm</Text>
         </View>
         <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
           <ProductListStore />

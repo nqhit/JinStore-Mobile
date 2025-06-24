@@ -2,8 +2,6 @@ import styles from '@/assets/styles/Screen/HomeScreen.styles';
 import CategoryCard from '@/components/categories/categoryCard';
 import IconShoppingCart from '@/components/IconShoppingCart';
 import ProductCard from '@/components/products/ProductCard';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
 import useCategory from '@/hooks/category/useCategory.hooks';
 import useProduct from '@/hooks/product/useProduct.hooks';
 import useUser from '@/hooks/user/useUser.hooks';
@@ -80,28 +78,28 @@ export default function HomeScreen() {
     return (
       <SafeAreaView style={{ flex: 1 }} edges={['top', 'bottom']}>
         <View style={styles.container}>
-          <ThemedView style={styles.contentContainer} lightColor="white" darkColor="black">
-            <ThemedText>Lỗi: {error}</ThemedText>
+          <View style={styles.contentContainer}>
+            <Text>Lỗi: {error}</Text>
             <TouchableOpacity
               onPress={handleFetchData}
               style={{ marginTop: 10, padding: 10, backgroundColor: '#EA4335', borderRadius: 5 }}
             >
               <Text style={{ color: 'white', textAlign: 'center' }}>Thử lại</Text>
             </TouchableOpacity>
-          </ThemedView>
+          </View>
         </View>
       </SafeAreaView>
     );
   }
 
   return (
-    <SafeAreaView style={{ flex: 1 }} edges={['top', 'bottom']}>
+    <SafeAreaView style={{ flex: 1 }} edges={['top']}>
       <ScrollView
         style={styles.container}
         contentContainerStyle={styles.contentContainer}
         showsVerticalScrollIndicator={false}
       >
-        <ThemedView lightColor="white" darkColor="black">
+        <View>
           <View style={styles.header}>
             <View style={styles.headerLeft}>
               <Image
@@ -111,7 +109,7 @@ export default function HomeScreen() {
                 }}
               />
               <View style={styles.headerInfo}>
-                <ThemedText style={styles.TextName}>{userInfo?.fullname || 'Người dùng'}</ThemedText>
+                <Text style={styles.TextName}>{userInfo?.fullname || 'Người dùng'}</Text>
                 <Text style={styles.SubText}>Let&#39;s go shopping</Text>
               </View>
             </View>
@@ -122,11 +120,9 @@ export default function HomeScreen() {
 
             <View>
               <View style={styles.sectionHeader}>
-                <ThemedText style={styles.sectionTitle}>Danh mục</ThemedText>
+                <Text style={styles.sectionTitle}>Danh mục</Text>
                 <TouchableOpacity>
-                  <ThemedText type="link" style={styles.seeMore}>
-                    Xem thêm
-                  </ThemedText>
+                  <Text style={styles.seeMore}>Xem thêm</Text>
                 </TouchableOpacity>
               </View>
               <View style={styles.categoryListContainer}>
@@ -141,11 +137,9 @@ export default function HomeScreen() {
             </View>
             <View>
               <View style={styles.sectionHeader}>
-                <ThemedText style={styles.sectionTitle}>Sản phẩm nổi bật</ThemedText>
+                <Text style={styles.sectionTitle}>Sản phẩm nổi bật</Text>
                 <TouchableOpacity>
-                  <ThemedText type="link" style={styles.seeMore}>
-                    Xem thêm
-                  </ThemedText>
+                  <Text style={styles.seeMore}>Xem thêm</Text>
                 </TouchableOpacity>
               </View>
               <View style={styles.productListContainer}>
@@ -162,11 +156,9 @@ export default function HomeScreen() {
             {NewProducts.length > 0 && (
               <View>
                 <View style={styles.sectionHeader}>
-                  <ThemedText style={styles.sectionTitle}>Hàng mới về</ThemedText>
+                  <Text style={styles.sectionTitle}>Hàng mới về</Text>
                   <TouchableOpacity>
-                    <ThemedText type="link" style={styles.seeMore}>
-                      Xem thêm
-                    </ThemedText>
+                    <Text style={styles.seeMore}>Xem thêm</Text>
                   </TouchableOpacity>
                 </View>
                 <View style={styles.productListContainer}>
@@ -181,7 +173,7 @@ export default function HomeScreen() {
               </View>
             )}
           </View>
-        </ThemedView>
+        </View>
       </ScrollView>
     </SafeAreaView>
   );

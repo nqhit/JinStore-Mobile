@@ -35,6 +35,8 @@ export const styles = StyleSheet.create({
 
   // Title text
   title: {
+    fontSize: 32,
+    fontWeight: '700',
     marginBottom: 24,
     textAlign: 'center',
     lineHeight: 36,
@@ -111,6 +113,5 @@ export const styles = StyleSheet.create({
   socialLoginButtonText: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#000',
   },
 });

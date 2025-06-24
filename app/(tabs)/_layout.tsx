@@ -9,9 +9,9 @@ export default function TabLayout() {
         lazy: true,
         headerShown: false,
         animationEnabled: false,
-        tabBarInactiveTintColor: '#000000',
         tabBarActiveTintColor: '#8B5CF6',
-        tabBarActiveBackgroundColor: '#FFFFFF',
+        tabBarInactiveTintColor: '#8E8E93',
+        tabBarStyle: { backgroundColor: '#FFFFFF' },
         unmountOnBlur: route.name === 'some-tab-you-want-to-unmount' ? true : false,
       })}
     >
