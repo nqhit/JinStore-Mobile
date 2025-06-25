@@ -1,7 +1,7 @@
 import { API_BASE_URL } from '@/config/config';
 import { productToCartType } from '@/interfaces/product.type';
 import { addFailed, addStart, addSuccess } from '@/redux/slices/itemCartSlice';
-import axios from 'axios';
+import axios, { AxiosInstance } from 'axios';
 import { Dispatch } from 'redux';
 
 axios.defaults.baseURL = API_BASE_URL;
@@ -20,7 +20,7 @@ export const addItemToCart = async (
   formData: productToCartType,
   dispatch: Dispatch,
   accessToken: string,
-  axiosJWT: any,
+  axiosJWT: AxiosInstance,
 ) => {
   dispatch(addStart());
   try {
@@ -39,7 +39,7 @@ export const addItemToCart = async (
   }
 };
 
-export const getCart = async (accessToken: string, axiosJWT: any) => {
+export const getCart = async (accessToken: string, axiosJWT: AxiosInstance) => {
   try {
     const response = await axiosJWT.get(`/carts`, {
       headers: authHeaders(accessToken),
@@ -47,5 +47,16 @@ export const getCart = async (accessToken: string, axiosJWT: any) => {
     return response.data;
   } catch (error) {
     throw error;
+  }
+};
+
+export const updateItemInCart = async (formData: productToCartType, accessToken: string, axiosJWT: AxiosInstance) => {
+  try {
+    const response = await axiosJWT.patch(`/carts/update`, formData, {
+      headers: authHeaders(accessToken),
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Lỗi khi cập nhật số lượng đơn hàng:', (error as Error).message);
   }
 };

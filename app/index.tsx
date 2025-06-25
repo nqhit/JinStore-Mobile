@@ -20,6 +20,7 @@ export default function IndexPage() {
 
       if (!token) {
         console.error('Không có refresh token');
+        return null;
       }
 
       const refreshToken = JSON.parse(token as string);
@@ -27,8 +28,12 @@ export default function IndexPage() {
       const res = await axios.post(
         `/mobile/refresh`,
         { refreshToken },
-        { headers: { 'Content-Type': 'application/json' } },
+        { headers: { 'Content-Type': 'application/json' }, timeout: 10000 },
       );
+
+      if (!res || !res.data) {
+        console.error('Invalid response from server');
+      }
 
       // Lưu token mới vào AsyncStorage
       const { accessToken, refreshToken: newRefreshToken } = res.data;
@@ -74,6 +79,13 @@ export default function IndexPage() {
 
           const refreshData = await refreshToken();
 
+          if (!refreshData || !refreshData.accessToken) {
+            console.error('Refresh token failed');
+            await AsyncStorage.multiRemove(['accessToken', 'refreshToken', 'user']);
+            router.replace('/(auth)/login');
+            return;
+          }
+
           const updatedUserData = {
             ...userData,
             accessToken: refreshData.accessToken,
@@ -84,13 +96,10 @@ export default function IndexPage() {
 
           router.replace('/(tabs)/home');
         } else {
-          // Token còn hợp lệ
           console.log('Token còn hợp lệ');
 
-          // Restore Redux state
           dispatch(loginSuccess({ ...userData, accessToken }));
 
-          // Điều hướng đến tabs
           router.replace('/(tabs)/home');
         }
       } catch (tokenError) {
@@ -99,6 +108,9 @@ export default function IndexPage() {
         // Thử refresh token as fallback
         try {
           const refreshData = await refreshToken();
+          if (!refreshData || !refreshData.accessToken) {
+            console.error('Refresh token failed or returned invalid data');
+          }
           const updatedUserData = {
             ...userData,
             accessToken: refreshData.accessToken,

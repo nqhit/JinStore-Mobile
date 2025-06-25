@@ -1,4 +1,6 @@
 import { styles } from '@/assets/styles/Screen/LoginScreen.styles';
+import FText from '@/components/Text';
+import TextInput from '@/components/TextInput';
 import { AntDesign } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import React, { useCallback, useMemo, useState } from 'react';
@@ -8,13 +10,10 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
-  Text,
-  TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-
 interface RegisterFormData {
   fullName: string;
   email: string;
@@ -103,7 +102,7 @@ const RegisterScreen = () => {
             <View style={styles.container}>
               {/* Main Content */}
               <View style={styles.contentContainer}>
-                <Text style={styles.title}>Đăng ký</Text>
+                <FText style={styles.title}>Đăng ký</FText>
 
                 {/* Full Name Input */}
                 <TextInput
@@ -164,7 +163,7 @@ const RegisterScreen = () => {
                   {isLoading ? (
                     <ActivityIndicator size="small" color="#FFFFFF" />
                   ) : (
-                    <Text style={styles.loginButtonText}>Đăng ký</Text>
+                    <FText style={styles.loginButtonText}>Đăng ký</FText>
                   )}
                 </TouchableOpacity>
               </View>
@@ -173,13 +172,13 @@ const RegisterScreen = () => {
               <View style={styles.footer}>
                 <TouchableOpacity style={styles.socialLoginButton}>
                   <AntDesign name="google" size={20} color="#EA4335" style={styles.socialIcon} />
-                  <Text style={styles.socialLoginButtonText}>Register with Google</Text>
+                  <FText style={styles.socialLoginButtonText}>Register with Google</FText>
                 </TouchableOpacity>
 
                 <View style={styles.registerContainer}>
-                  <Text>Đã có tài khoản? </Text>
+                  <FText>Đã có tài khoản? </FText>
                   <TouchableOpacity onPress={handleNavigateToLogin} disabled={isNavigating} activeOpacity={0.7}>
-                    <Text style={[styles.registerLink, isNavigating && { opacity: 0.5 }]}>Đăng nhập ngay</Text>
+                    <FText style={[styles.registerLink, isNavigating && { opacity: 0.5 }]}>Đăng nhập ngay</FText>
                   </TouchableOpacity>
                 </View>
               </View>

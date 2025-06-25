@@ -1,14 +1,15 @@
+import FText from '@/components/Text';
 import { Link, Stack } from 'expo-router';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 export default function NotFoundScreen() {
   return (
     <>
       <Stack.Screen options={{ title: 'Oops!' }} />
       <View style={styles.container}>
-        <Text>This screen does not exist.</Text>
+        <FText>This screen does not exist.</FText>
         <Link href="/home" style={styles.link}>
-          <Text>Go to home screen!</Text>
+          <FText>Go to home screen!</FText>
         </Link>
       </View>
     </>

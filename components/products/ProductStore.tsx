@@ -1,10 +1,12 @@
 import styles from '@/assets/styles/products/ProductStore.styles';
+import FText from '@/components/Text';
 import { productType } from '@/interfaces/product.type';
 import { loginSuccess } from '@/redux/slices/authSlice';
 import { addItemToCart } from '@/server/cart.server';
 import { createAxios } from '@/utils/createInstance';
 import { router } from 'expo-router';
-import { Alert, Image, Text, TouchableOpacity, View } from 'react-native';
+import { memo } from 'react';
+import { Alert, Image, TouchableOpacity, View } from 'react-native';
 import { StarRatingDisplay } from 'react-native-star-rating-widget';
 import Toast from 'react-native-toast-message';
 import { useDispatch, useSelector } from 'react-redux';
@@ -58,15 +60,12 @@ function ProductStore({
         <Image source={{ uri: product.images[0]?.url }} style={styles.productImage} />
       </View>
       <View style={styles.productInfo}>
-        <Text numberOfLines={1} ellipsizeMode="tail" style={styles.productCategory}>
+        <FText numberOfLines={1} ellipsizeMode="tail" style={styles.productCategory}>
           {product._idCategory.name}
-        </Text>
-        <Text numberOfLines={1} ellipsizeMode="tail" style={styles.productTitle}>
+        </FText>
+        <FText numberOfLines={1} ellipsizeMode="tail" style={styles.productTitle}>
           {product.name}
-        </Text>
-        <Text numberOfLines={2} ellipsizeMode="tail" style={styles.productDescription}>
-          {product.description}
-        </Text>
+        </FText>
         <StarRatingDisplay
           maxStars={5}
           starSize={20}
@@ -74,21 +73,21 @@ function ProductStore({
           rating={product.averageRating}
         />
         <View style={styles.productPriceContainer}>
-          <Text style={styles.productPrice}>
+          <FText style={styles.productPrice}>
             {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(
               product.price * (1 - product.discount / 100),
             )}
-          </Text>
-          <Text style={styles.productPriceOld}>
+          </FText>
+          <FText style={styles.productPriceOld}>
             {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(product.price)}
-          </Text>
+          </FText>
         </View>
         <TouchableOpacity style={styles.productButton} onPress={() => handleAddToCart(product)}>
-          <Text style={styles.productButtonText}>Thêm vào giỏ hàng</Text>
+          <FText style={styles.productButtonText}>Thêm vào giỏ hàng</FText>
         </TouchableOpacity>
       </View>
     </TouchableOpacity>
   );
 }
 
-export default ProductStore;
+export default memo(ProductStore);

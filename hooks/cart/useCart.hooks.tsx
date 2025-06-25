@@ -1,16 +1,23 @@
+// hooks/useCart.ts
+import { getCart } from '@/server/cart.server';
 import { useCallback } from 'react';
 
-function useCart({ getCart, setLengthItems, accessToken, axiosJWT }: any) {
+interface UseCartParams {
+  accessToken: string;
+  axiosJWT: any;
+}
+
+function useCart({ accessToken, axiosJWT }: UseCartParams) {
   const fetchCartItems = useCallback(async () => {
     try {
       const res = await getCart(accessToken, axiosJWT);
-      const count = res?.itemCount || 0;
-      setLengthItems(count);
+      return res;
     } catch (err) {
       console.error('Lỗi khi lấy giỏ hàng:', err);
-      setLengthItems(0);
+      return null;
     }
   }, []);
+
   return { fetchCartItems };
 }
 

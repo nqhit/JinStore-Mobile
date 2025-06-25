@@ -14,6 +14,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Toast, { BaseToast } from 'react-native-toast-message';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
+
 function AppWithStore() {
   const colorScheme = useColorScheme();
 
@@ -107,6 +108,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#8B5CF6',
   },
   container: {
+    fontSize: 14,
     flex: 1,
     backgroundColor: '#FFFFFF',
     width: Dimensions.get('screen').width,

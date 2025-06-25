@@ -27,14 +27,9 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   productTitle: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: 'bold',
     marginBottom: 5,
-  },
-  productDescription: {
-    fontSize: 14,
-    marginBottom: 5,
-    color: '#666',
   },
   productPriceContainer: {
     flexDirection: 'row',
@@ -58,7 +53,7 @@ const styles = StyleSheet.create({
   },
   productButtonText: {
     color: '#fff',
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: 'bold',
   },
 });

@@ -1,7 +1,8 @@
 import styles from '@/assets/styles/Screen/HomeScreen.styles';
-import CategoryCard from '@/components/categories/categoryCard';
+import CategoryCard from '@/components/categories/CategoryCard';
 import IconShoppingCart from '@/components/IconShoppingCart';
 import ProductCard from '@/components/products/ProductCard';
+import FText from '@/components/Text';
 import useCategory from '@/hooks/category/useCategory.hooks';
 import useProduct from '@/hooks/product/useProduct.hooks';
 import useUser from '@/hooks/user/useUser.hooks';
@@ -13,7 +14,7 @@ import { getProductsAll } from '@/server/product.server';
 import { getInfoUser } from '@/server/user.server';
 import { router } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
-import { ActivityIndicator, FlatList, Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, FlatList, Image, ScrollView, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function HomeScreen() {
@@ -29,8 +30,8 @@ export default function HomeScreen() {
   const { fetchCategories } = useCategory({ getCategoriesAll, setCategories });
 
   const handleFetchData = useCallback(() => {
-    fetchInfoUser();
     fetchProduct();
+    fetchInfoUser();
     fetchCategories();
   }, [fetchInfoUser, fetchProduct, fetchCategories]);
 
@@ -79,12 +80,12 @@ export default function HomeScreen() {
       <SafeAreaView style={{ flex: 1 }} edges={['top', 'bottom']}>
         <View style={styles.container}>
           <View style={styles.contentContainer}>
-            <Text>Lỗi: {error}</Text>
+            <FText>Lỗi: {error}</FText>
             <TouchableOpacity
               onPress={handleFetchData}
               style={{ marginTop: 10, padding: 10, backgroundColor: '#EA4335', borderRadius: 5 }}
             >
-              <Text style={{ color: 'white', textAlign: 'center' }}>Thử lại</Text>
+              <FText style={{ color: 'white', textAlign: 'center' }}>Thử lại</FText>
             </TouchableOpacity>
           </View>
         </View>
@@ -109,8 +110,8 @@ export default function HomeScreen() {
                 }}
               />
               <View style={styles.headerInfo}>
-                <Text style={styles.TextName}>{userInfo?.fullname || 'Người dùng'}</Text>
-                <Text style={styles.SubText}>Let&#39;s go shopping</Text>
+                <FText style={styles.TextName}>{userInfo?.fullname || 'Người dùng'}</FText>
+                <FText style={styles.SubText}>Let&#39;s go shopping</FText>
               </View>
             </View>
             <IconShoppingCart />
@@ -120,9 +121,9 @@ export default function HomeScreen() {
 
             <View>
               <View style={styles.sectionHeader}>
-                <Text style={styles.sectionTitle}>Danh mục</Text>
+                <FText style={styles.sectionTitle}>Danh mục</FText>
                 <TouchableOpacity>
-                  <Text style={styles.seeMore}>Xem thêm</Text>
+                  <FText style={styles.seeMore}>Xem thêm</FText>
                 </TouchableOpacity>
               </View>
               <View style={styles.categoryListContainer}>
@@ -137,9 +138,9 @@ export default function HomeScreen() {
             </View>
             <View>
               <View style={styles.sectionHeader}>
-                <Text style={styles.sectionTitle}>Sản phẩm nổi bật</Text>
+                <FText style={styles.sectionTitle}>Sản phẩm nổi bật</FText>
                 <TouchableOpacity>
-                  <Text style={styles.seeMore}>Xem thêm</Text>
+                  <FText style={styles.seeMore}>Xem thêm</FText>
                 </TouchableOpacity>
               </View>
               <View style={styles.productListContainer}>
@@ -156,9 +157,9 @@ export default function HomeScreen() {
             {NewProducts.length > 0 && (
               <View>
                 <View style={styles.sectionHeader}>
-                  <Text style={styles.sectionTitle}>Hàng mới về</Text>
+                  <FText style={styles.sectionTitle}>Hàng mới về</FText>
                   <TouchableOpacity>
-                    <Text style={styles.seeMore}>Xem thêm</Text>
+                    <FText style={styles.seeMore}>Xem thêm</FText>
                   </TouchableOpacity>
                 </View>
                 <View style={styles.productListContainer}>

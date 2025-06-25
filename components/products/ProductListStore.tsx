@@ -77,8 +77,10 @@ function ProductListStore() {
 
   return (
     <View style={{ marginTop: 10, flex: 1 }}>
-      {loading && products.length === 0 ? ( // Chỉ show loading ban đầu khi chưa có data
-        <Loading />
+      {loading && products.length === 0 ? (
+        <View style={{ marginTop: 10, flex: 1 }}>
+          <Loading />
+        </View>
       ) : (
         <FlatList
           numColumns={2}

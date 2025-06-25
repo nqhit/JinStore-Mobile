@@ -1,13 +1,14 @@
 import { socket } from '@/config/socket';
 import useCart from '@/hooks/cart/useCart.hooks';
 import { loginSuccess } from '@/redux/slices/authSlice';
-import { getCart } from '@/server/cart.server';
 import { createAxios } from '@/utils/createInstance';
 import { AntDesign } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
+
+import Text from '@/components/Text';
 
 function IconShoppingCart() {
   const user = useSelector((state: any) => state.auth.login.currentUser);
@@ -18,10 +19,12 @@ function IconShoppingCart() {
 
   const [lengthItems, setLengthItems] = useState(0);
 
-  const { fetchCartItems } = useCart({ getCart, setLengthItems, accessToken, axiosJWT });
+  const { fetchCartItems } = useCart({ accessToken, axiosJWT });
 
   const handleFetchData = useCallback(() => {
-    fetchCartItems();
+    fetchCartItems().then((res) => {
+      setLengthItems(res?.itemCount || 0);
+    });
   }, [fetchCartItems]);
 
   const handleRouterCart = useCallback(() => {
@@ -37,6 +40,10 @@ function IconShoppingCart() {
     if (!user || !id) return;
 
     socket.emit('joinUser', id);
+
+    socket.on('connect', () => {
+      console.log('Connected to server');
+    });
 
     socket.on('cartUpdated', (data) => {
       console.log(data.message);
@@ -79,7 +86,7 @@ const styles = StyleSheet.create({
     height: 20,
     borderRadius: 10,
     color: '#fff',
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: '600',
     alignContent: 'center',
     textAlign: 'center',

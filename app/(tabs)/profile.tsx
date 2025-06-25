@@ -1,12 +1,12 @@
 // ./(tabs)/index.tsx
 import styles from '@/assets/styles/Screen/ProfileScreen.styles';
-import { ThemedText } from '@/components/ThemedText';
+import FText from '@/components/Text';
 import { logOut } from '@/server/auth.server';
 import { createAxios } from '@/utils/createInstance';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { router } from 'expo-router';
 import { useCallback, useState } from 'react';
-import { ActivityIndicator, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
 import { logoutSuccess } from '../../redux/slices/authSlice';
@@ -52,9 +52,9 @@ export default function ProfileScreen() {
 
   return (
     <View style={{ flex: 1, paddingTop: insets.top, paddingBottom: insets.bottom }}>
-      <Text>Profile</Text>
+      <FText>Profile</FText>
       <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-        <ThemedText style={{ color: '#000' }}>Logout</ThemedText>
+        <FText style={{ color: '#000' }}>Logout</FText>
       </TouchableOpacity>
     </View>
   );

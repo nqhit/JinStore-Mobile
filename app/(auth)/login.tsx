@@ -7,8 +7,6 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
-  Text,
-  TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -16,6 +14,8 @@ import {
 import { login } from '@/server/auth.server';
 
 import { styles } from '@/assets/styles/Screen/LoginScreen.styles';
+import FText from '@/components/Text';
+import FTextInput from '@/components/TextInput';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { router, useFocusEffect, useNavigation } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -129,9 +129,9 @@ const LoginScreen = () => {
           >
             <View style={styles.container}>
               <View style={styles.contentContainer}>
-                <Text style={styles.title}>Đăng nhập</Text>
+                <FText style={styles.title}>Đăng nhập</FText>
 
-                <TextInput
+                <FTextInput
                   style={styles.input}
                   placeholder="Email"
                   placeholderTextColor="#999"
@@ -142,7 +142,7 @@ const LoginScreen = () => {
                   autoCorrect={false}
                 />
 
-                <TextInput
+                <FTextInput
                   style={styles.input}
                   placeholder="Mật khẩu"
                   placeholderTextColor="#999"
@@ -160,25 +160,25 @@ const LoginScreen = () => {
                   {isLoading ? (
                     <ActivityIndicator size="small" color="#FFFFFF" />
                   ) : (
-                    <Text style={styles.loginButtonText}>Đăng nhập</Text>
+                    <FText style={styles.loginButtonText}>Đăng nhập</FText>
                   )}
                 </TouchableOpacity>
 
                 <TouchableOpacity style={styles.forgotPasswordContainer}>
-                  <Text style={styles.forgotPasswordText}>Quên mật khẩu?</Text>
+                  <FText style={styles.forgotPasswordText}>Quên mật khẩu?</FText>
                 </TouchableOpacity>
               </View>
 
               <View style={styles.footer}>
                 <TouchableOpacity style={styles.socialLoginButton}>
                   <AntDesign name="google" size={20} color="#EA4335" style={styles.socialIcon} />
-                  <Text style={styles.socialLoginButtonText}>Login with Google</Text>
+                  <FText style={styles.socialLoginButtonText}>Login with Google</FText>
                 </TouchableOpacity>
 
                 <View style={styles.registerContainer}>
-                  <Text>Chưa có tài khoản? </Text>
+                  <FText>Chưa có tài khoản? </FText>
                   <TouchableOpacity onPress={handleNavigateToRegister} disabled={isNavigating} activeOpacity={0.7}>
-                    <Text style={[styles.registerLink, isNavigating && { opacity: 0.5 }]}>Đăng ký ngay</Text>
+                    <FText style={[styles.registerLink, isNavigating && { opacity: 0.5 }]}>Đăng ký ngay</FText>
                   </TouchableOpacity>
                 </View>
               </View>

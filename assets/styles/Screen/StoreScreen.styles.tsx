@@ -58,10 +58,6 @@ const styles = StyleSheet.create({
     borderRadius: 3,
   },
   modalStyle: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
     backgroundColor: '#fff',
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,

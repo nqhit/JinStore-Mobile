@@ -1,20 +1,41 @@
 import styles from '@/assets/styles/Screen/StoreScreen.styles';
 import IconShoppingCart from '@/components/IconShoppingCart';
 import ProductListStore from '@/components/products/ProductListStore';
+import FText from '@/components/Text';
+import TextInput from '@/components/TextInput';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from 'expo-router';
-import { memo, useLayoutEffect, useRef } from 'react';
-import { Easing, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { memo, useCallback, useLayoutEffect, useMemo, useRef } from 'react';
+import { Easing, TouchableOpacity, View } from 'react-native';
 import { Modalize } from 'react-native-modalize';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-
+import { SafeAreaView } from 'react-native-safe-area-context';
 function StoreScreen() {
   const modalRef = useRef<Modalize>(null);
   const navigation = useNavigation();
-  const insets = useSafeAreaInsets();
-  const onOpen = () => {
+
+  const onOpen = useCallback(() => {
     modalRef.current?.open();
-  };
+  }, []);
+
+  const onClose = useCallback(() => {
+    modalRef.current?.close();
+  }, []);
+
+  const filterOptions = useMemo(() => ['Giá: Thấp đến cao', 'Giá: Cao đến thấp', 'Mới nhất'], []);
+
+  const openAnimationConfig = useMemo(
+    () => ({
+      timing: { duration: 300, easing: Easing.bezier(0.25, 0.46, 0.45, 0.94) },
+    }),
+    [],
+  );
+
+  const closeAnimationConfig = useMemo(
+    () => ({
+      timing: { duration: 250, easing: Easing.bezier(0.25, 0.46, 0.45, 0.94) },
+    }),
+    [],
+  );
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -23,15 +44,7 @@ function StoreScreen() {
   }, [navigation]);
 
   return (
-    <View
-      style={{
-        flex: 1,
-        backgroundColor: '#fff',
-        position: 'relative',
-        paddingTop: insets.top,
-        paddingBottom: insets.bottom,
-      }}
-    >
+    <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }} edges={['top', 'bottom']}>
       {/* Header cũ */}
       <View style={styles.staticHeader}>
         <TouchableOpacity style={styles.searchFilter} onPress={onOpen}>
@@ -49,7 +62,7 @@ function StoreScreen() {
 
       <View style={styles.body}>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <Text style={{ flex: 1, fontSize: 32, fontWeight: 'bold' }}>Danh sách sản phẩm</Text>
+          <FText style={{ flex: 1, fontSize: 32, fontWeight: 'bold' }}>Danh sách sản phẩm</FText>
         </View>
         <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
           <ProductListStore />
@@ -63,28 +76,24 @@ function StoreScreen() {
         handleStyle={styles.modalHandle}
         modalStyle={styles.modalStyle}
         overlayStyle={styles.modalOverlay}
-        openAnimationConfig={{
-          timing: { duration: 300, easing: Easing.bezier(0.25, 0.46, 0.45, 0.94) },
-        }}
-        closeAnimationConfig={{
-          timing: { duration: 250, easing: Easing.bezier(0.25, 0.46, 0.45, 0.94) },
-        }}
+        openAnimationConfig={openAnimationConfig}
+        closeAnimationConfig={closeAnimationConfig}
       >
         <View style={styles.modalContent}>
-          <Text style={styles.modalTitle}>Bộ lọc sản phẩm</Text>
+          <FText style={styles.modalTitle}>Bộ lọc sản phẩm</FText>
 
-          {['Giá: Thấp đến cao', 'Giá: Cao đến thấp', 'Mới nhất'].map((item, index) => (
+          {filterOptions.map((item, index) => (
             <TouchableOpacity key={index} style={styles.filterOption} activeOpacity={0.8}>
-              <Text style={styles.filterText}>{item}</Text>
+              <FText style={styles.filterText}>{item}</FText>
             </TouchableOpacity>
           ))}
 
-          <TouchableOpacity style={styles.closeButton} onPress={() => modalRef.current?.close()} activeOpacity={0.8}>
-            <Text style={styles.closeButtonText}>Áp dụng</Text>
+          <TouchableOpacity style={styles.closeButton} onPress={onClose} activeOpacity={0.8}>
+            <FText style={styles.closeButtonText}>Áp dụng</FText>
           </TouchableOpacity>
         </View>
       </Modalize>
-    </View>
+    </SafeAreaView>
   );
 }
 export default memo(StoreScreen);
