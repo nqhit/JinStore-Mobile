@@ -8,7 +8,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 
-import Text from '@/components/Text';
+import FText from '@/components/Text';
 
 function IconShoppingCart() {
   const user = useSelector((state: any) => state.auth.login.currentUser);
@@ -60,7 +60,7 @@ function IconShoppingCart() {
     <View style={styles.headerRight}>
       <TouchableOpacity style={styles.cartButton} onPress={handleRouterCart}>
         <AntDesign name="shoppingcart" size={30} color="#000" />
-        <Text style={styles.cartItemCount}>{lengthItems > 9 ? '9+' : lengthItems}</Text>
+        <FText style={styles.cartItemCount}>{lengthItems > 9 ? '9+' : lengthItems}</FText>
       </TouchableOpacity>
     </View>
   );

@@ -2,7 +2,7 @@ import styles from '@/assets/styles/Screen/StoreScreen.styles';
 import IconShoppingCart from '@/components/IconShoppingCart';
 import ProductListStore from '@/components/products/ProductListStore';
 import FText from '@/components/Text';
-import TextInput from '@/components/TextInput';
+import FTextInput from '@/components/TextInput';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from 'expo-router';
 import { memo, useCallback, useLayoutEffect, useMemo, useRef } from 'react';
@@ -52,7 +52,7 @@ function StoreScreen() {
         </TouchableOpacity>
         <View style={styles.searchBar}>
           <Ionicons name="search" size={20} color="#666" />
-          <TextInput placeholder="Tìm kiếm..." style={styles.searchInput} />
+          <FTextInput placeholder="Tìm kiếm..." style={styles.searchInput} />
         </View>
 
         <IconShoppingCart />

@@ -1,6 +1,6 @@
 import { styles } from '@/assets/styles/Screen/LoginScreen.styles';
 import FText from '@/components/Text';
-import TextInput from '@/components/TextInput';
+import FTextInput from '@/components/TextInput';
 import { AntDesign } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import React, { useCallback, useMemo, useState } from 'react';
@@ -105,7 +105,7 @@ const RegisterScreen = () => {
                 <FText style={styles.title}>Đăng ký</FText>
 
                 {/* Full Name Input */}
-                <TextInput
+                <FTextInput
                   style={styles.input}
                   placeholder="Họ và tên"
                   placeholderTextColor="#999"
@@ -117,7 +117,7 @@ const RegisterScreen = () => {
                 />
 
                 {/* Email Input */}
-                <TextInput
+                <FTextInput
                   style={styles.input}
                   placeholder="Email"
                   placeholderTextColor="#999"
@@ -130,7 +130,7 @@ const RegisterScreen = () => {
                 />
 
                 {/* Password Input */}
-                <TextInput
+                <FTextInput
                   style={styles.input}
                   placeholder="Mật khẩu"
                   placeholderTextColor="#999"
@@ -142,7 +142,7 @@ const RegisterScreen = () => {
                 />
 
                 {/* Confirm Password Input */}
-                <TextInput
+                <FTextInput
                   style={styles.input}
                   placeholder="Xác nhận mật khẩu"
                   placeholderTextColor="#999"

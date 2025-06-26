@@ -66,7 +66,7 @@ export default function HomeScreen() {
       <SafeAreaView style={{ flex: 1 }} edges={['top', 'bottom']}>
         <View style={styles.loadingContainer}>
           <Image
-            source={require('@/assets/images/logo.png')}
+            source={require('@/assets/images/ic_launcher-web.png')}
             style={{ width: 200, height: 200, resizeMode: 'contain' }}
           />
           <ActivityIndicator size="large" color="#8B5CF6" />

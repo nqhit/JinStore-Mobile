@@ -1,4 +1,5 @@
-import { StyleSheet } from 'react-native';
+import { Dimensions, StyleSheet } from 'react-native';
+const { width: screenWidth } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   header: {
@@ -19,7 +20,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     paddingTop: 10,
-    paddingBottom: 10,
     paddingHorizontal: 15,
     gap: 10,
   },
@@ -47,6 +47,61 @@ const styles = StyleSheet.create({
     fontWeight: 'normal',
     flexDirection: 'row',
     alignItems: 'center',
+  },
+
+  footer: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+  },
+
+  totalContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: screenWidth - 30,
+  },
+
+  notiContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: screenWidth - 30,
+  },
+
+  notification: {
+    fontSize: 16,
+    fontWeight: '400',
+    justifyContent: 'center',
+    textAlign: 'center',
+    color: 'red',
+  },
+
+  label: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#000',
+    lineHeight: 32,
+  },
+
+  btnCheckout: {
+    width: '100%',
+    height: 50,
+    backgroundColor: '#8B5CF6',
+    borderRadius: 8,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 10,
+    marginTop: 10,
+  },
+
+  textCheckout: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#fff',
   },
 });
 

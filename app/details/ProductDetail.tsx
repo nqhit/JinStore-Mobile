@@ -1,9 +1,9 @@
-import Text from '@/components/Text';
+import FText from '@/components/Text';
 import { View } from 'react-native';
 function ProductDetail() {
   return (
     <View>
-      <Text>ProductDetail</Text>
+      <FText>ProductDetail</FText>
     </View>
   );
 }

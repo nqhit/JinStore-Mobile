@@ -6,9 +6,9 @@ import useChangeQuantity from '@/hooks/cart/useChangeQuantity.hooks';
 import { CartItemType } from '@/interfaces/cart.type';
 import { loginSuccess } from '@/redux/slices/authSlice';
 import { createAxios } from '@/utils/createInstance';
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { router, useNavigation } from 'expo-router';
-import { memo, useCallback, useEffect, useState } from 'react';
+import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { FlatList, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
@@ -46,8 +46,6 @@ function CartDetails() {
     });
   };
 
-  // Handle select all
-
   const handleSelectAll = useCallback(() => {
     if (isAllSelected) {
       setSelectedItems([]);
@@ -77,6 +75,29 @@ function CartDetails() {
     const id = item._id?.toString() || `temp-${index}`;
     return `${id}-${index}`;
   };
+
+  const calculateSubtotal = useMemo(() => {
+    return data.reduce((total, item) => {
+      if (selectedItems.includes(item._id)) {
+        return total + item.discountPrice * item.quantity;
+      }
+      return total;
+    }, 0);
+  }, [data, selectedItems]);
+
+  const calculateShipping = useMemo(() => {
+    return selectedItems.length > 0 ? (calculateSubtotal >= 500000 ? 0 : 30000) : 0;
+  }, [calculateSubtotal, selectedItems]);
+
+  // Cập nhật hàm tính toán giảm giá từ coupon
+  const calculateCouponDiscount = useMemo(() => {
+    return 0;
+  }, []);
+
+  const calculateTotal = useMemo(() => {
+    return calculateSubtotal + calculateShipping - calculateCouponDiscount;
+  }, [calculateSubtotal, calculateCouponDiscount, calculateShipping]);
+
   useEffect(() => {
     handleFetchData();
   }, [handleFetchData]);
@@ -114,6 +135,29 @@ function CartDetails() {
           showsVerticalScrollIndicator={false}
           keyExtractor={keyExtractorCartItem}
         />
+      </View>
+      <View style={styles.footer}>
+        <View style={styles.totalContainer}>
+          <FText style={styles.label}>Thành tiền: </FText>
+          <FText>{calculateSubtotal.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</FText>
+        </View>
+        <View style={styles.totalContainer}>
+          <FText style={styles.label}>Phí vận chuyển: </FText>
+          <FText>{calculateShipping.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</FText>
+        </View>
+        <View style={styles.totalContainer}>
+          <FText style={styles.label}>Thanh toán:</FText>
+          <FText>{calculateTotal.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</FText>
+        </View>
+        {calculateShipping !== 0 && (
+          <View style={styles.notiContainer}>
+            <FText style={styles.notification}>Miễn phí vận chuyển với đơn hàng trên 500.000đ</FText>
+          </View>
+        )}
+        <TouchableOpacity style={styles.btnCheckout}>
+          <MaterialIcons name="shopping-cart-checkout" size={26} color="white" />
+          <FText style={styles.textCheckout}>Thanh toán</FText>
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );

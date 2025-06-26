@@ -1,12 +1,12 @@
 // components/Text.tsx
 import React from 'react';
-import { Text as RNText, StyleSheet, TextProps } from 'react-native';
+import { StyleSheet, Text, TextProps } from 'react-native';
 
 (Text as any).defaultProps = (Text as any).defaultProps || {};
 (Text as any).defaultProps.allowFontScaling = false;
 
 export default function FText(props: TextProps) {
-  return <RNText {...props} allowFontScaling={false} style={[styles.default, props.style]} />;
+  return <Text {...props} allowFontScaling={false} style={[styles.default, props.style]} />;
 }
 
 const styles = StyleSheet.create({
