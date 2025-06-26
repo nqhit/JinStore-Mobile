@@ -1,4 +1,4 @@
-package com.yourcompany.firstapp
+package com.yourcompany.jinstore
 import expo.modules.splashscreen.SplashScreenManager
 
 import android.os.Build

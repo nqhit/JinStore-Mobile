@@ -1,31 +1,31 @@
 {
   "expo": {
-    "name": "firstapp",
-    "slug": "firstapp",
+    "name": "jinstore",
+    "slug": "jinstore",
     "version": "1.0.0",
     "orientation": "portrait",
-    "scheme": "firstapp",
-    "icon": "./assets/images/logo.png",
+    "scheme": "jinstore",
+    "icon": "./assets/images/ic_launcher-web.png",
     "userInterfaceStyle": "automatic",
     "jsEngine": "hermes",
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.yourcompany.firstapp",
+      "bundleIdentifier": "com.yourcompany.jinstore",
       "buildNumber": "1.0.0"
     },
     "android": {
-      "package": "com.yourcompany.firstapp",
+      "package": "com.yourcompany.jinstore",
       "versionCode": 1,
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/playstore.png",
+        "foregroundImage": "./assets/images/playstore-icon.png",
         "backgroundColor": "#ffffff"
       },
       "permissions": [],
       "edgeToEdgeEnabled": true
     },
     "web": {
-      "favicon": "./assets/images/logo.png",
+      "favicon": "./assets/images/playstore-icon.png",
       "bundler": "metro",
       "output": "static"
     },
@@ -34,7 +34,7 @@
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/logo.png",
+          "image": "./assets/images/playstore-icon.png",
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
         }

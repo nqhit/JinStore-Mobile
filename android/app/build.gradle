@@ -87,9 +87,9 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace 'com.yourcompany.firstapp'
+    namespace 'com.yourcompany.jinstore'
     defaultConfig {
-        applicationId 'com.yourcompany.firstapp'
+        applicationId 'com.yourcompany.jinstore'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
