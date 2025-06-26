@@ -2,9 +2,6 @@
 import React from 'react';
 import { StyleSheet, Text, TextProps } from 'react-native';
 
-(Text as any).defaultProps = (Text as any).defaultProps || {};
-(Text as any).defaultProps.allowFontScaling = false;
-
 export default function FText(props: TextProps) {
   return <Text {...props} allowFontScaling={false} style={[styles.default, props.style]} />;
 }

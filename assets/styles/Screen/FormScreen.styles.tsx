@@ -24,11 +24,12 @@ export const styles = StyleSheet.create({
     paddingTop: 20,
     borderTopWidth: 1,
     borderColor: '#ddd',
+    flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+    gap: 5,
   },
   registerLink: {
-    marginTop: 5,
     fontSize: 16,
     color: '#8B5CF6',
   },

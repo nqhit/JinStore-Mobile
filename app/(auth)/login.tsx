@@ -13,7 +13,7 @@ import {
 
 import { login } from '@/server/auth.server';
 
-import { styles } from '@/assets/styles/Screen/LoginScreen.styles';
+import { styles } from '@/assets/styles/Screen/FormScreen.styles';
 import FText from '@/components/Text';
 import FTextInput from '@/components/TextInput';
 import AsyncStorage from '@react-native-async-storage/async-storage';
