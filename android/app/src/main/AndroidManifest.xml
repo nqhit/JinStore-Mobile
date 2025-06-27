@@ -26,7 +26,7 @@
         <category android:name="android.intent.category.BROWSABLE"/>
         <data android:scheme="firstapp"/>
         <data android:scheme="com.yourcompany.firstapp"/>
-        <data android:scheme="jinstore"/>
+        <data android:scheme="mobile"/>
       </intent-filter>
     </activity>
   </application>

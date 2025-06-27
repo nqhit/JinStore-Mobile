@@ -1,7 +1,7 @@
 import { styles } from '@/assets/styles/Screen/FormScreen.styles';
 import FText from '@/components/Text';
 import FTextInput from '@/components/TextInput';
-import { AntDesign } from '@expo/vector-icons';
+import { AntDesign, Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import React, { useCallback, useMemo, useState } from 'react';
 import {
@@ -75,7 +75,7 @@ const RegisterScreen = () => {
     if (isNavigating) return;
 
     setIsNavigating(true);
-    router.replace('/login');
+    router.back();
 
     // Reset navigation state after a delay
     setTimeout(() => {
@@ -86,6 +86,11 @@ const RegisterScreen = () => {
   return (
     <>
       <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
+        <View style={styles.header}>
+          <TouchableOpacity onPress={() => router.back()}>
+            <Ionicons name="chevron-back" size={26} color="black" />
+          </TouchableOpacity>
+        </View>
         <KeyboardAvoidingView
           style={{ flex: 1 }}
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}

@@ -1,6 +1,20 @@
 import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingTop: 10,
+    justifyContent: 'space-between',
+    backgroundColor: '#fff',
+    paddingHorizontal: 15,
+  },
+
+  logo: {
+    width: 200,
+    height: 200,
+    resizeMode: 'contain',
+  },
   // Layout container
   contentContainer: {
     justifyContent: 'center',

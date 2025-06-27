@@ -1,4 +1,4 @@
-package com.yourcompany.jinstore
+package com.yourcompany.mobile
 
 import android.app.Application
 import android.content.res.Configuration

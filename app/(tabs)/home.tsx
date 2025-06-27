@@ -1,5 +1,5 @@
 import styles from '@/assets/styles/Screen/HomeScreen.styles';
-import CategoryCard from '@/components/categories/CategoryCard';
+import CategoryCard from '@/components/categories/categoryCard';
 import IconShoppingCart from '@/components/IconShoppingCart';
 import ProductCard from '@/components/products/ProductCard';
 import FText from '@/components/Text';

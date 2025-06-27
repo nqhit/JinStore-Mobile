@@ -4,7 +4,6 @@ import {
   ActivityIndicator,
   Alert,
   BackHandler,
-  Image,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -67,7 +66,7 @@ const LoginScreen = () => {
     if (isNavigating) return;
 
     setIsNavigating(true);
-    router.push('/register');
+    router.replace('/register');
 
     setTimeout(() => {
       setIsNavigating(false);
@@ -130,9 +129,7 @@ const LoginScreen = () => {
           >
             <View style={styles.container}>
               <View style={styles.contentContainer}>
-                <View style={styles.header}>
-                  <Image source={require('@/assets/images/logo.png')} style={styles.logo} />
-                </View>
+                <FText style={styles.title}>Đăng nhập</FText>
 
                 <FTextInput
                   style={styles.input}
