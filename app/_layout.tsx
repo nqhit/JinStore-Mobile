@@ -3,11 +3,10 @@ import { socket } from '@/config/socket';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { persistor, store } from '@/redux/store';
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import Constants from 'expo-constants';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import { useEffect } from 'react';
-import { Dimensions, Platform, StatusBar, StyleSheet, View } from 'react-native';
+import { Dimensions, StatusBar, StyleSheet, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import 'react-native-reanimated';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -72,7 +71,7 @@ export default function RootLayout() {
     success: (props: any) => (
       <BaseToast
         {...props}
-        style={{ borderLeftColor: '#4CAF50', backgroundColor: '#F0FFF0', paddingVertical: 0 }}
+        style={{ borderLeftColor: '#4CAF50', backgroundColor: '#F0FFF0', paddingVertical: 0, fontSize: 16 }}
         contentContainerStyle={{ paddingHorizontal: 15, paddingVertical: 10 }}
         text1Style={{ fontSize: 16, fontWeight: '500', color: '#2E7D32' }}
         text2Style={{ fontSize: 12, color: '#4CAF50' }}
@@ -104,7 +103,7 @@ export default function RootLayout() {
 
 const styles = StyleSheet.create({
   statusBarContainer: {
-    height: Platform.OS === 'android' ? Constants.statusBarHeight : 0,
+    // height: Platform.OS === 'android' ? Constants.statusBarHeight : 0,
     backgroundColor: '#8B5CF6',
   },
   container: {
