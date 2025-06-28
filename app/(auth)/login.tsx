@@ -1,7 +1,5 @@
-import { AntDesign } from '@expo/vector-icons';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
-  ActivityIndicator,
   Alert,
   BackHandler,
   Image,
@@ -12,11 +10,12 @@ import {
   View,
 } from 'react-native';
 
+import FormInputGroup from '@/components/Form/FormInput';
 import { login } from '@/server/auth.server';
 
 import { styles } from '@/assets/styles/Screen/FormScreen.styles';
+import ButtonLoginSocial from '@/components/Button/LoginSocial';
 import FText from '@/components/Text';
-import FTextInput from '@/components/TextInput';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { router, useFocusEffect, useNavigation } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -130,42 +129,30 @@ const LoginScreen = () => {
           >
             <View style={styles.container}>
               <View style={styles.contentContainer}>
-                <View style={styles.header}>
+                <View style={styles.headerLogo}>
                   <Image source={require('@/assets/images/logo.png')} style={styles.logo} />
                 </View>
+                <FText style={styles.titleWelcome}>Chào mừng đến với JinStore</FText>
+                <FText style={styles.subtitle}>Trải nghiệm mua sắm tiện lợi, thông minh</FText>
 
-                <FTextInput
-                  style={styles.input}
-                  placeholder="Email"
-                  placeholderTextColor="#999"
-                  value={email}
-                  onChangeText={setEmail}
-                  keyboardType="email-address"
-                  autoCapitalize="none"
-                  autoCorrect={false}
+                <FormInputGroup
+                  inputs={[
+                    {
+                      placeholder: 'Email',
+                      value: email,
+                      onChangeText: setEmail,
+                      keyboardType: 'email-address',
+                    },
+                    {
+                      placeholder: 'Mật khẩu',
+                      value: password,
+                      onChangeText: setPassword,
+                      secureTextEntry: true,
+                    },
+                  ]}
+                  button={{ isFormValid, isLoading, handleFunc: handleLogin }}
+                  text="Đăng nhập"
                 />
-
-                <FTextInput
-                  style={styles.input}
-                  placeholder="Mật khẩu"
-                  placeholderTextColor="#999"
-                  value={password}
-                  onChangeText={setPassword}
-                  secureTextEntry={true}
-                  autoCapitalize="none"
-                />
-
-                <TouchableOpacity
-                  style={[styles.loginButton, (!isFormValid || isLoading) && styles.loginButtonDisabled]}
-                  onPress={handleLogin}
-                  disabled={!isFormValid || isLoading}
-                >
-                  {isLoading ? (
-                    <ActivityIndicator size="small" color="#FFFFFF" />
-                  ) : (
-                    <FText style={styles.loginButtonText}>Đăng nhập</FText>
-                  )}
-                </TouchableOpacity>
 
                 <TouchableOpacity style={styles.forgotPasswordContainer}>
                   <FText style={styles.forgotPasswordText}>Quên mật khẩu?</FText>
@@ -173,10 +160,7 @@ const LoginScreen = () => {
               </View>
 
               <View style={styles.footer}>
-                <TouchableOpacity style={styles.socialLoginButton}>
-                  <AntDesign name="google" size={20} color="#EA4335" style={styles.socialIcon} />
-                  <FText style={styles.socialLoginButtonText}>Login with Google</FText>
-                </TouchableOpacity>
+                <ButtonLoginSocial nameIcon="google" textBtn="Đăng nhập với Google" />
 
                 <View style={styles.registerContainer}>
                   <FText>Chưa có tài khoản? </FText>

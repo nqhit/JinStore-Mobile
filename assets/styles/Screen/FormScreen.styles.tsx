@@ -5,16 +5,29 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingTop: 10,
+    marginBottom: 50,
     justifyContent: 'space-between',
     backgroundColor: '#fff',
     paddingHorizontal: 15,
   },
 
+  welcomeContainer: {
+    flexDirection: 'column',
+  },
+
+  headerLogo: {
+    top: 0,
+    alignItems: 'center',
+    marginTop: 30,
+  },
+
   logo: {
+    top: 0,
     width: 200,
     height: 200,
     resizeMode: 'contain',
   },
+
   // Layout container
   contentContainer: {
     justifyContent: 'center',
@@ -23,10 +36,10 @@ export const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 15,
     flex: 1,
-    paddingTop: 56,
     justifyContent: 'flex-start',
   },
   footer: {
+    marginTop: 10,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -50,53 +63,32 @@ export const styles = StyleSheet.create({
 
   // Title text
   title: {
-    fontSize: 32,
+    flex: 1,
+    fontSize: 24,
     fontWeight: '700',
-    marginBottom: 24,
     textAlign: 'center',
     lineHeight: 36,
-  },
-
-  // Input field
-  input: {
-    width: '100%',
-    height: 50,
-    paddingHorizontal: 15,
-    marginBottom: 16,
-    fontSize: 16,
-    backgroundColor: '#fff',
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 8,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 2,
-  },
-
-  // Login button
-  loginButton: {
-    width: '100%',
-    height: 50,
-    marginTop: 10,
-    backgroundColor: '#8B5CF6',
-    borderRadius: 8,
-    justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 3,
   },
-  loginButtonDisabled: {
-    backgroundColor: '#ccc',
+
+  titleWelcome: {
+    flex: 1,
+    fontSize: 24,
+    fontWeight: '700',
+    textAlign: 'center',
+    lineHeight: 28,
+    alignItems: 'center',
   },
-  loginButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
+
+  subtitle: {
+    flex: 1,
+    fontSize: 18,
+    alignItems: 'center',
+    textAlign: 'center',
+    lineHeight: 24,
+    paddingTop: 5,
+    marginBottom: 15,
+    color: '#8B5CF6',
   },
 
   // Forgot password link
@@ -108,25 +100,5 @@ export const styles = StyleSheet.create({
   forgotPasswordText: {
     fontSize: 14,
     color: '#8B5CF6',
-  },
-
-  // Social login
-  socialLoginButton: {
-    width: '100%',
-    height: 50,
-    margin: 10,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: '#8B5CF6',
-  },
-  socialIcon: {
-    marginRight: 8,
-  },
-  socialLoginButtonText: {
-    fontSize: 16,
-    fontWeight: '600',
   },
 });

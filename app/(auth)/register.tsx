@@ -1,21 +1,12 @@
 import { styles } from '@/assets/styles/Screen/FormScreen.styles';
-import FText from '@/components/Text';
-import FTextInput from '@/components/TextInput';
-import { AntDesign, Ionicons } from '@expo/vector-icons';
-import { router } from 'expo-router';
-import React, { useCallback, useMemo, useState } from 'react';
-import {
-  ActivityIndicator,
-  Alert,
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import ButtonLoginSocial from '@/components/Button/LoginSocial';
+import FormInputGroup from '@/components/Form/FormInput';
+import React, { useMemo, useState } from 'react';
+import { Alert, KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 interface RegisterFormData {
   fullName: string;
+  username: string;
   email: string;
   password: string;
   confirmPassword: string;
@@ -37,11 +28,11 @@ const validateFullName = (name: string): boolean => {
 
 const RegisterScreen = () => {
   const [fullName, setFullName] = useState<RegisterFormData['fullName']>('');
+  const [username, setUsername] = useState<RegisterFormData['username']>('');
   const [email, setEmail] = useState<RegisterFormData['email']>('');
   const [password, setPassword] = useState<RegisterFormData['password']>('');
   const [confirmPassword, setConfirmPassword] = useState<RegisterFormData['confirmPassword']>('');
   const [isLoading, setIsLoading] = useState(false);
-  const [isNavigating, setIsNavigating] = useState(false);
 
   // Memoized validation
   const isFormValid = useMemo(() => {
@@ -65,127 +56,79 @@ const RegisterScreen = () => {
       Alert.alert('Thành công', 'Đăng ký thành công!');
     } catch (error) {
       Alert.alert('Lỗi', 'Đăng ký thất bại. Vui lòng thử lại.');
+      console.error('Registration error:', error);
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Debounced navigation to prevent multiple calls
-  const handleNavigateToLogin = useCallback(() => {
-    if (isNavigating) return;
-
-    setIsNavigating(true);
-    router.back();
-
-    // Reset navigation state after a delay
-    setTimeout(() => {
-      setIsNavigating(false);
-    }, 1000);
-  }, [isNavigating]);
-
   return (
     <>
       <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
-        <View style={styles.header}>
-          <TouchableOpacity onPress={() => router.back()}>
-            <Ionicons name="chevron-back" size={26} color="black" />
-          </TouchableOpacity>
-        </View>
-        <KeyboardAvoidingView
-          style={{ flex: 1 }}
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          keyboardVerticalOffset={Platform.OS === 'ios' ? 60 : 0}
-        >
+        <KeyboardAvoidingView style={{ flex: 1 }} keyboardVerticalOffset={Platform.OS === 'ios' ? 60 : 0}>
           <ScrollView
             contentContainerStyle={{
-              flexGrow: 1,
+              flex: 1,
               justifyContent: 'center',
             }}
             keyboardShouldPersistTaps="handled"
             showsVerticalScrollIndicator={false}
           >
+            {/*             <View style={styles.header}>
+              <TouchableOpacity onPress={() => router.back()}>
+                <Ionicons name="chevron-back" size={26} color="black" />
+              </TouchableOpacity>
+              <FText style={styles.title}>Đăng ký</FText>
+            </View> */}
             <View style={styles.container}>
               {/* Main Content */}
               <View style={styles.contentContainer}>
-                <FText style={styles.title}>Đăng ký</FText>
-
-                {/* Full Name Input */}
-                <FTextInput
-                  style={styles.input}
-                  placeholder="Họ và tên"
-                  placeholderTextColor="#999"
-                  value={fullName}
-                  onChangeText={setFullName}
-                  autoCapitalize="words"
-                  autoCorrect={false}
-                  editable={!isLoading}
+                <FormInputGroup
+                  inputs={[
+                    {
+                      placeholder: 'Họ và tên',
+                      value: fullName,
+                      onChangeText: setFullName,
+                      autoCapitalize: 'words',
+                      editable: !isLoading,
+                    },
+                    {
+                      placeholder: 'Tên đăng nhập',
+                      value: username,
+                      onChangeText: setUsername,
+                      autoCapitalize: 'words',
+                      editable: !isLoading,
+                    },
+                    {
+                      placeholder: 'Email',
+                      value: email,
+                      onChangeText: setEmail,
+                      keyboardType: 'email-address',
+                      editable: !isLoading,
+                    },
+                    {
+                      placeholder: 'Mật khẩu',
+                      value: password,
+                      onChangeText: setPassword,
+                      secureTextEntry: true,
+                      editable: !isLoading,
+                    },
+                    {
+                      placeholder: 'Xác nhận mật khẩu',
+                      value: confirmPassword,
+                      onChangeText: setConfirmPassword,
+                      secureTextEntry: true,
+                      editable: !isLoading,
+                    },
+                  ]}
+                  button={{ isFormValid, isLoading, handleFunc: handleRegister }}
+                  text="Đăng ký"
                 />
-
-                {/* Email Input */}
-                <FTextInput
-                  style={styles.input}
-                  placeholder="Email"
-                  placeholderTextColor="#999"
-                  value={email}
-                  onChangeText={setEmail}
-                  keyboardType="email-address"
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  editable={!isLoading}
-                />
-
-                {/* Password Input */}
-                <FTextInput
-                  style={styles.input}
-                  placeholder="Mật khẩu"
-                  placeholderTextColor="#999"
-                  value={password}
-                  onChangeText={setPassword}
-                  secureTextEntry={true}
-                  autoCapitalize="none"
-                  editable={!isLoading}
-                />
-
-                {/* Confirm Password Input */}
-                <FTextInput
-                  style={styles.input}
-                  placeholder="Xác nhận mật khẩu"
-                  placeholderTextColor="#999"
-                  value={confirmPassword}
-                  onChangeText={setConfirmPassword}
-                  secureTextEntry={true}
-                  autoCapitalize="none"
-                  editable={!isLoading}
-                />
-
-                {/* Register Button */}
-                <TouchableOpacity
-                  style={[styles.loginButton, (!isFormValid || isLoading) && styles.loginButtonDisabled]}
-                  onPress={handleRegister}
-                  disabled={!isFormValid || isLoading}
-                  activeOpacity={0.8}
-                >
-                  {isLoading ? (
-                    <ActivityIndicator size="small" color="#FFFFFF" />
-                  ) : (
-                    <FText style={styles.loginButtonText}>Đăng ký</FText>
-                  )}
-                </TouchableOpacity>
               </View>
 
               {/* Footer */}
               <View style={styles.footer}>
-                <TouchableOpacity style={styles.socialLoginButton}>
-                  <AntDesign name="google" size={20} color="#EA4335" style={styles.socialIcon} />
-                  <FText style={styles.socialLoginButtonText}>Register with Google</FText>
-                </TouchableOpacity>
-
-                <View style={styles.registerContainer}>
-                  <FText>Đã có tài khoản? </FText>
-                  <TouchableOpacity onPress={handleNavigateToLogin} disabled={isNavigating} activeOpacity={0.7}>
-                    <FText style={[styles.registerLink, isNavigating && { opacity: 0.5 }]}>Đăng nhập ngay</FText>
-                  </TouchableOpacity>
-                </View>
+                <ButtonLoginSocial nameIcon="google" textBtn="Đăng ký với Google" />
               </View>
             </View>
           </ScrollView>
