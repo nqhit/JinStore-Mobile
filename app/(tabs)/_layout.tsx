@@ -1,5 +1,6 @@
 import { Tabs } from 'expo-router';
 
+import { COLORS } from '@/constants/Colors';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 export default function TabLayout() {
@@ -9,9 +10,9 @@ export default function TabLayout() {
         lazy: true,
         headerShown: false,
         animationEnabled: false,
-        tabBarActiveTintColor: '#8B5CF6',
-        tabBarInactiveTintColor: '#8E8E93',
-        tabBarStyle: { backgroundColor: '#FFFFFF' },
+        tabBarActiveTintColor: COLORS.primary,
+        tabBarInactiveTintColor: COLORS.gray500,
+        tabBarStyle: { backgroundColor: COLORS.white },
         unmountOnBlur: route.name === 'some-tab-you-want-to-unmount' ? true : false,
       })}
     >

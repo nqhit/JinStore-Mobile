@@ -9,6 +9,7 @@ import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 
 import FText from '@/components/Text';
+import { COLORS } from '@/constants/Colors';
 
 function IconShoppingCart() {
   const user = useSelector((state: any) => state.auth.login.currentUser);
@@ -81,7 +82,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: -5,
     right: -5,
-    backgroundColor: '#8B5CF6',
+    backgroundColor: COLORS.primary,
     width: 20,
     height: 20,
     borderRadius: 10,

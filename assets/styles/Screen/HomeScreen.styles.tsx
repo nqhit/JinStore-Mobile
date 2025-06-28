@@ -1,3 +1,4 @@
+import { COLORS } from '@/constants/Colors';
 import { Dimensions, StyleSheet } from 'react-native';
 
 const { width: screenWidth } = Dimensions.get('window');
@@ -10,7 +11,7 @@ const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 15,
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: COLORS.white,
   },
   contentContainer: {
     justifyContent: 'center',
@@ -42,16 +43,16 @@ const styles = StyleSheet.create({
     height: 50,
     borderRadius: 25,
     borderWidth: 2,
-    borderColor: '#8B5CF6',
+    borderColor: COLORS.primary,
   },
   TextName: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#000',
+    color: COLORS.black,
   },
   SubText: {
     fontSize: 13,
-    color: '#8B5CF6',
+    color: COLORS.primary,
     fontWeight: '500',
   },
 
@@ -68,7 +69,7 @@ const styles = StyleSheet.create({
     height: 200,
     borderRadius: 16,
     resizeMode: 'cover',
-    backgroundColor: '#8B5CF6',
+    backgroundColor: COLORS.primary,
   },
 
   //Danh sách danh mục
@@ -85,11 +86,11 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 26,
     fontWeight: '600',
-    color: '#000',
+    color: COLORS.black,
     justifyContent: 'flex-start',
   },
   seeMore: {
-    color: '#8B5CF6',
+    color: COLORS.primary,
     marginRight: 10,
     fontSize: 16,
   },

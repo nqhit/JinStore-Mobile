@@ -1,3 +1,4 @@
+import { COLORS } from '@/constants/Colors';
 import { Dimensions, StyleSheet } from 'react-native';
 const { width: screenWidth } = Dimensions.get('window');
 
@@ -7,18 +8,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingTop: 10,
     justifyContent: 'space-between',
-    backgroundColor: '#fff',
+    backgroundColor: COLORS.white,
     paddingHorizontal: 15,
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#000',
+    color: COLORS.black,
   },
 
   body: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: COLORS.white,
     paddingTop: 10,
     paddingHorizontal: 15,
     gap: 10,
@@ -30,7 +31,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     padding: 10,
     borderWidth: 1,
-    borderColor: '#8B5CF6',
+    borderColor: COLORS.primary,
     borderRadius: 8,
   },
 
@@ -82,14 +83,14 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#000',
+    color: COLORS.black,
     lineHeight: 32,
   },
 
   btnCheckout: {
     width: '100%',
     height: 50,
-    backgroundColor: '#8B5CF6',
+    backgroundColor: COLORS.primary,
     borderRadius: 8,
     flexDirection: 'row',
     justifyContent: 'center',
@@ -101,7 +102,7 @@ const styles = StyleSheet.create({
   textCheckout: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#fff',
+    color: COLORS.white,
   },
 });
 

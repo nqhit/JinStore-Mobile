@@ -1,3 +1,4 @@
+import { COLORS } from '@/constants/Colors';
 import { AntDesign } from '@expo/vector-icons';
 import { JSX } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
@@ -30,7 +31,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#8B5CF6',
+    borderColor: COLORS.primary,
   },
   socialIcon: {
     marginRight: 8,

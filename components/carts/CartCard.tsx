@@ -1,4 +1,5 @@
 import styles from '@/assets/styles/cart/CartCard.styles';
+import { COLORS } from '@/constants/Colors';
 import { CartItemType } from '@/interfaces/cart.type';
 import { Ionicons } from '@expo/vector-icons';
 import { useCallback } from 'react';
@@ -25,7 +26,7 @@ function CartCard({
         <Ionicons
           name={isSelected ? 'checkbox-sharp' : 'square-outline'}
           size={26}
-          color={isSelected ? '#8B5CF6' : '#8E8E93'}
+          color={isSelected ? COLORS.primary : '#8E8E93'}
         />
       </TouchableOpacity>
       <View style={styles.content}>
@@ -49,7 +50,11 @@ function CartCard({
                 onPress={() => handleQuantityChange(itemCart._id, -1, itemCart.quantity)}
                 disabled={itemCart.quantity === 1}
               >
-                <Ionicons name="remove-circle-outline" size={28} color={itemCart.quantity <= 1 ? '#ccc' : '#8B5CF6'} />
+                <Ionicons
+                  name="remove-circle-outline"
+                  size={28}
+                  color={itemCart.quantity <= 1 ? '#ccc' : COLORS.primary}
+                />
               </TouchableOpacity>
               <FText style={styles.quantity}>{itemCart.quantity}</FText>
               <TouchableOpacity onPress={() => handleQuantityChange(itemCart._id, 1, itemCart.quantity)}>

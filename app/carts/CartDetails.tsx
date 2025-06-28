@@ -1,6 +1,7 @@
 import styles from '@/assets/styles/Screen/CartScreen.styles';
 import CartCard from '@/components/carts/CartCard';
 import FText from '@/components/Text';
+import { COLORS } from '@/constants/Colors';
 import useCart from '@/hooks/cart/useCart.hooks';
 import useChangeQuantity from '@/hooks/cart/useChangeQuantity.hooks';
 import { CartItemType } from '@/interfaces/cart.type';
@@ -103,9 +104,9 @@ function CartDetails() {
   }, [handleFetchData]);
 
   return (
-    <SafeAreaView style={{ flex: 1 }} edges={['bottom', 'left']}>
+    <SafeAreaView style={{ flex: 1 }} edges={['bottom', 'top', 'left', 'right']}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+        <TouchableOpacity onPress={() => router.back()}>
           <Ionicons name="chevron-back" size={26} color="black" />
         </TouchableOpacity>
         <FText style={styles.title}>Giỏ hàng</FText>
@@ -119,7 +120,7 @@ function CartDetails() {
             <Ionicons
               name={selectedItems.length === data.length && data.length > 0 ? 'checkbox-sharp' : 'square-outline'}
               size={26}
-              color={selectedItems.length === data.length && data.length > 0 ? '#8B5CF6' : '#8E8E93'}
+              color={selectedItems.length === data.length && data.length > 0 ? COLORS.primary : '#8E8E93'}
             />
             <FText style={styles.selectAll}>Chọn tất cả ({selectedItems.length})</FText>
           </TouchableOpacity>

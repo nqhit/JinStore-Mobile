@@ -1,3 +1,4 @@
+import { COLORS } from '@/constants/Colors';
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
@@ -7,21 +8,21 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     paddingBottom: 10,
     justifyContent: 'space-between',
-    backgroundColor: '#fff',
+    backgroundColor: COLORS.white,
     paddingHorizontal: 15,
   },
   HeaderBody: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingBottom: 10,
-    backgroundColor: '#fff',
+    backgroundColor: COLORS.white,
   },
 
   searchBar: {
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#7a5af8',
+    borderColor: COLORS.primary500,
     borderRadius: 12,
     paddingHorizontal: 12,
     flex: 1,
@@ -32,7 +33,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#7a5af8',
+    borderColor: COLORS.primary500,
     borderRadius: 12,
     paddingHorizontal: 7,
     height: 40,
@@ -52,18 +53,18 @@ const styles = StyleSheet.create({
   },
 
   modalHandle: {
-    backgroundColor: '#ddd',
+    backgroundColor: COLORS.gray200,
     width: 40,
     height: 5,
     borderRadius: 3,
   },
   modalStyle: {
-    backgroundColor: '#fff',
+    backgroundColor: COLORS.white,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
   },
   modalOverlay: {
-    backgroundColor: 'rgba(0, 0, 0, 0.32)',
+    backgroundColor: COLORS.black_032,
   },
   modalContent: {
     padding: 24,
@@ -72,37 +73,37 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: '700',
     marginBottom: 20,
-    color: '#000',
+    color: COLORS.black,
     textAlign: 'center',
   },
   filterOption: {
     padding: 16,
-    backgroundColor: '#f8f9fa',
+    backgroundColor: COLORS.gray200,
     borderRadius: 12,
     marginBottom: 12,
     borderWidth: 1,
-    borderColor: '#e9ecef',
+    borderColor: COLORS.gray300,
   },
   filterText: {
     fontSize: 16,
-    color: '#495057',
+    color: COLORS.gray500,
     textAlign: 'center',
     fontWeight: '500',
   },
   closeButton: {
     padding: 18,
-    backgroundColor: '#7a5af8',
+    backgroundColor: COLORS.primary500,
     borderRadius: 16,
     alignItems: 'center',
     marginTop: 10,
-    shadowColor: '#7a5af8',
+    shadowColor: COLORS.primary500,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 8,
     elevation: 8,
   },
   closeButtonText: {
-    color: 'white',
+    color: COLORS.white,
     fontWeight: '700',
     fontSize: 16,
   },

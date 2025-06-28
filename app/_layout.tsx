@@ -1,7 +1,3 @@
-import Loading from '@/components/loading';
-import { socket } from '@/config/socket';
-import { useColorScheme } from '@/hooks/useColorScheme';
-import { persistor, store } from '@/redux/store';
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
@@ -14,47 +10,93 @@ import Toast, { BaseToast } from 'react-native-toast-message';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 
+import Loading from '@/components/loading';
+import { socket } from '@/config/socket';
+import { COLORS } from '@/constants/Colors';
+import { useColorScheme } from '@/hooks/useColorScheme';
+import { persistor, store } from '@/redux/store';
+
+const SCREEN_WIDTH = Dimensions.get('screen').width;
+
+// Theme configurations
+const createCustomTheme = (isDark: boolean) => {
+  const baseTheme = isDark ? DarkTheme : DefaultTheme;
+  return {
+    ...baseTheme,
+    colors: {
+      ...baseTheme.colors,
+      primary: COLORS.primary,
+      background: isDark ? COLORS.black : COLORS.white,
+    },
+  };
+};
+
+// Toast configuration
+const createToastConfig = () => ({
+  success: (props: any) => (
+    <BaseToast
+      {...props}
+      style={{
+        borderLeftColor: COLORS.success,
+        backgroundColor: COLORS.success_bg,
+        paddingVertical: 0,
+        fontSize: 16,
+      }}
+      contentContainerStyle={{
+        paddingHorizontal: 15,
+        paddingVertical: 10,
+      }}
+      text1Style={{
+        fontSize: 16,
+        fontWeight: '500',
+        color: COLORS.success_text,
+      }}
+      text2Style={{
+        fontSize: 12,
+        color: COLORS.success,
+      }}
+    />
+  ),
+});
+
+// Stack screen options
+const getStackScreenOptions = () => ({
+  headerShown: false,
+  gestureEnabled: true,
+  animation: 'slide_from_right' as const,
+});
+
+// Custom hook for socket connection
+const useSocketConnection = () => {
+  useEffect(() => {
+    if (!socket.connected) {
+      socket.connect();
+    }
+
+    // Cleanup function to disconnect socket when component unmounts
+    return () => {
+      if (socket.connected) {
+        socket.disconnect();
+      }
+    };
+  }, []);
+};
+
+// App component with store and navigation
 function AppWithStore() {
   const colorScheme = useColorScheme();
 
-  const customLightTheme = {
-    ...DefaultTheme,
-    colors: {
-      ...DefaultTheme.colors,
-      primary: '#8B5CF6',
-      background: '#FFFFFF',
-    },
-  };
+  useSocketConnection();
 
-  const customDarkTheme = {
-    ...DarkTheme,
-    colors: {
-      ...DarkTheme.colors,
-      primary: '#8B5CF6',
-      background: '#000000',
-    },
-  };
+  const theme = createCustomTheme(colorScheme === 'dark');
 
   return (
     <>
-      <View style={styles.statusBarContainer}>
-        <StatusBar translucent barStyle={colorScheme === 'dark' ? 'light-content' : 'dark-content'} />
-      </View>
+      <StatusBarContainer colorScheme={colorScheme} />
       <SafeAreaProvider>
-        <ThemeProvider value={colorScheme === 'dark' ? customDarkTheme : customLightTheme}>
+        <ThemeProvider value={theme}>
           <View style={styles.container}>
-            <Stack
-              screenOptions={{
-                headerShown: false,
-                gestureEnabled: true,
-                animation: 'slide_from_right',
-              }}
-            >
-              <Stack.Screen name="index" />
-              <Stack.Screen name="(auth)" options={{ gestureEnabled: false }} />
-              <Stack.Screen name="(tabs)" options={{ gestureEnabled: false }} />
-              <Stack.Screen name="+not-found" options={{ title: 'Oops!', presentation: 'modal' }} />
-            </Stack>
+            <AppNavigator />
           </View>
         </ThemeProvider>
       </SafeAreaProvider>
@@ -62,37 +104,58 @@ function AppWithStore() {
   );
 }
 
-export default function RootLayout() {
+// Types
+type ColorSchemeName = 'light' | 'dark' | null | undefined;
+
+// Status bar component
+function StatusBarContainer({ colorScheme }: { colorScheme: ColorSchemeName }) {
+  return (
+    <View style={styles.statusBarContainer}>
+      <StatusBar translucent barStyle={colorScheme === 'dark' ? 'light-content' : 'dark-content'} />
+    </View>
+  );
+}
+
+// Navigation stack component
+function AppNavigator() {
+  return (
+    <Stack screenOptions={getStackScreenOptions()}>
+      <Stack.Screen name="index" />
+      <Stack.Screen name="(auth)" options={{ gestureEnabled: false }} />
+      <Stack.Screen name="(tabs)" options={{ gestureEnabled: false }} />
+      <Stack.Screen
+        name="+not-found"
+        options={{
+          title: 'Oops!',
+          presentation: 'modal',
+        }}
+      />
+    </Stack>
+  );
+}
+
+// Font loader hook
+const useFontLoader = () => {
   const [loaded] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
   });
 
-  const toastConfig = {
-    success: (props: any) => (
-      <BaseToast
-        {...props}
-        style={{ borderLeftColor: '#4CAF50', backgroundColor: '#F0FFF0', paddingVertical: 0, fontSize: 16 }}
-        contentContainerStyle={{ paddingHorizontal: 15, paddingVertical: 10 }}
-        text1Style={{ fontSize: 16, fontWeight: '500', color: '#2E7D32' }}
-        text2Style={{ fontSize: 12, color: '#4CAF50' }}
-      />
-    ),
-  };
+  return loaded;
+};
 
-  useEffect(() => {
-    if (!socket.connected) {
-      socket.connect();
-    }
-  }, []);
+// Main root layout component
+export default function RootLayout() {
+  const fontsLoaded = useFontLoader();
+  const toastConfig = createToastConfig();
 
-  if (!loaded) {
+  if (!fontsLoaded) {
     return <Loading />;
   }
 
   return (
     <Provider store={store}>
       <PersistGate loading={<Loading />} persistor={persistor}>
-        <GestureHandlerRootView style={{ flex: 1 }}>
+        <GestureHandlerRootView style={styles.gestureContainer}>
           <AppWithStore />
         </GestureHandlerRootView>
         <Toast config={toastConfig} />
@@ -101,15 +164,17 @@ export default function RootLayout() {
   );
 }
 
+// Styles
 const styles = StyleSheet.create({
   statusBarContainer: {
-    // height: Platform.OS === 'android' ? Constants.statusBarHeight : 0,
-    backgroundColor: '#8B5CF6',
+    backgroundColor: COLORS.primary,
   },
   container: {
-    fontSize: 14,
     flex: 1,
-    backgroundColor: '#FFFFFF',
-    width: Dimensions.get('screen').width,
+    backgroundColor: COLORS.white,
+    width: SCREEN_WIDTH,
+  },
+  gestureContainer: {
+    flex: 1,
   },
 });

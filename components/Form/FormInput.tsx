@@ -1,5 +1,6 @@
 // components/FormInputGroup.tsx
 import FTextInput from '@/components/TextInput';
+import { COLORS } from '@/constants/Colors';
 import React from 'react';
 import { ActivityIndicator, StyleSheet, TouchableOpacity } from 'react-native';
 import FText from '../Text';
@@ -55,7 +56,11 @@ const FormInputGroup: React.FC<FormInputGroupProps> = ({
         onPress={handleFunc}
         disabled={!isFormValid || isLoading}
       >
-        {isLoading ? <ActivityIndicator size="small" color="#FFFFFF" /> : <FText style={styles.btnText}>{text}</FText>}
+        {isLoading ? (
+          <ActivityIndicator size="small" color={COLORS.white} />
+        ) : (
+          <FText style={styles.btnText}>{text}</FText>
+        )}
       </TouchableOpacity>
     </>
   );
@@ -71,11 +76,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     marginBottom: 16,
     fontSize: 16,
-    backgroundColor: '#fff',
+    backgroundColor: COLORS.white,
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: COLORS.gray200,
     borderRadius: 8,
-    shadowColor: '#000',
+    shadowColor: COLORS.black,
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
     shadowRadius: 2,
@@ -87,21 +92,21 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 50,
     marginTop: 10,
-    backgroundColor: '#8B5CF6',
+    backgroundColor: COLORS.primary,
     borderRadius: 8,
     justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: '#000',
+    shadowColor: COLORS.black,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 4,
     elevation: 3,
   },
   btnDisabled: {
-    backgroundColor: '#ccc',
+    backgroundColor: COLORS.gray300,
   },
   btnText: {
-    color: '#fff',
+    color: COLORS.black,
     fontSize: 16,
     fontWeight: '600',
   },

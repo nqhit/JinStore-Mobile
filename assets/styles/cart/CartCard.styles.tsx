@@ -1,3 +1,4 @@
+import { COLORS } from '@/constants/Colors';
 import { Dimensions, StyleSheet } from 'react-native';
 const { width: screenWidth } = Dimensions.get('window');
 
@@ -75,7 +76,7 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-    borderColor: '#ccc',
+    borderColor: COLORS.gray300,
     borderRadius: 10,
   },
 

@@ -1,3 +1,4 @@
+import { COLORS } from '@/constants/Colors';
 import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
@@ -7,7 +8,7 @@ export const styles = StyleSheet.create({
     paddingTop: 10,
     marginBottom: 50,
     justifyContent: 'space-between',
-    backgroundColor: '#fff',
+    backgroundColor: COLORS.white,
     paddingHorizontal: 15,
   },
 
@@ -50,7 +51,7 @@ export const styles = StyleSheet.create({
     marginTop: 10,
     paddingTop: 20,
     borderTopWidth: 1,
-    borderColor: '#ddd',
+    borderColor: COLORS.gray200,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
@@ -58,7 +59,7 @@ export const styles = StyleSheet.create({
   },
   registerLink: {
     fontSize: 16,
-    color: '#8B5CF6',
+    color: COLORS.primary,
   },
 
   // Title text
@@ -88,7 +89,7 @@ export const styles = StyleSheet.create({
     lineHeight: 24,
     paddingTop: 5,
     marginBottom: 15,
-    color: '#8B5CF6',
+    color: COLORS.primary,
   },
 
   // Forgot password link
@@ -99,6 +100,6 @@ export const styles = StyleSheet.create({
   },
   forgotPasswordText: {
     fontSize: 14,
-    color: '#8B5CF6',
+    color: COLORS.primary,
   },
 });

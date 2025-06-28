@@ -1,3 +1,4 @@
+import { COLORS } from '@/constants/Colors';
 import { Dimensions, StyleSheet } from 'react-native';
 const { width: screenWidth } = Dimensions.get('window');
 
@@ -5,9 +6,9 @@ const styles = StyleSheet.create({
   product: {
     width: screenWidth / 2 - 20,
     minHeight: 200,
-    backgroundColor: '#fff',
+    backgroundColor: COLORS.white,
     borderRadius: 10,
-    borderColor: '#ccc',
+    borderColor: COLORS.gray300,
     borderWidth: 1,
   },
   productImage: {
@@ -22,7 +23,7 @@ const styles = StyleSheet.create({
   },
   productCategory: {
     fontSize: 12,
-    color: '#8B5CF6',
+    color: COLORS.primary,
     marginTop: 5,
     marginBottom: 5,
   },
@@ -47,12 +48,12 @@ const styles = StyleSheet.create({
   productButton: {
     marginTop: 10,
     padding: 10,
-    backgroundColor: '#8B5CF6',
+    backgroundColor: COLORS.primary,
     borderRadius: 8,
     alignItems: 'center',
   },
   productButtonText: {
-    color: '#fff',
+    color: COLORS.white,
     fontSize: 14,
     fontWeight: 'bold',
   },
