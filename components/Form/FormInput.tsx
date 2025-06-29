@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.gray300,
   },
   btnText: {
-    color: COLORS.black,
+    color: COLORS.white,
     fontSize: 16,
     fontWeight: '600',
   },
