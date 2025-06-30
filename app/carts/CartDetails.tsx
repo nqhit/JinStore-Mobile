@@ -60,7 +60,7 @@ function CartDetails() {
   };
 
   const handleRouterStore = useCallback(() => {
-    router.push('/(tabs)/store');
+    router.replace('/(tabs)/store');
   }, []);
 
   const renderCartItem = ({ item }: { item: CartItemType }) => (
@@ -120,13 +120,13 @@ function CartDetails() {
             <Ionicons
               name={selectedItems.length === data.length && data.length > 0 ? 'checkbox-sharp' : 'square-outline'}
               size={26}
-              color={selectedItems.length === data.length && data.length > 0 ? COLORS.primary : '#8E8E93'}
+              color={selectedItems.length === data.length && data.length > 0 ? COLORS.primary : COLORS.gray500}
             />
             <FText style={styles.selectAll}>Chọn tất cả ({selectedItems.length})</FText>
           </TouchableOpacity>
           {selectedItems.length > 0 && (
             <TouchableOpacity>
-              <Ionicons name="trash-outline" size={26} color="#8B5CF6" />
+              <Ionicons name="trash-outline" size={26} color={COLORS.primary} />
             </TouchableOpacity>
           )}
         </View>

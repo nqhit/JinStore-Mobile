@@ -13,6 +13,7 @@ export const COLORS = {
   success: '#4CAF50',
   success_bg: '#F0FFF0',
   success_text: '#2E7D32',
+  error: '#F44336',
 
   light: {
     text: '#11181C',

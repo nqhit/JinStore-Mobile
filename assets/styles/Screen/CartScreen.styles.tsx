@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     justifyContent: 'center',
     textAlign: 'center',
-    color: 'red',
+    color: COLORS.error,
   },
 
   label: {
