@@ -1,18 +1,28 @@
 // components/FormInputGroup.tsx
+import FText from '@/components/Text';
 import FTextInput from '@/components/TextInput';
 import { COLORS } from '@/constants/Colors';
 import React from 'react';
-import { ActivityIndicator, StyleSheet, TouchableOpacity } from 'react-native';
-import FText from '../Text';
+import {
+  ActivityIndicator,
+  NativeSyntheticEvent,
+  StyleSheet,
+  TextInputFocusEventData,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 
 interface InputConfig {
   placeholder: string;
   value: string;
   onChangeText: (text: string) => void;
+  onBlur?: (e: NativeSyntheticEvent<TextInputFocusEventData>) => void;
   secureTextEntry?: boolean;
   keyboardType?: 'default' | 'email-address';
   autoCapitalize?: 'none' | 'words';
   editable?: boolean;
+  error?: string;
+  touched?: boolean;
 }
 
 interface ButtonConfig {
@@ -37,19 +47,22 @@ const FormInputGroup: React.FC<FormInputGroupProps> = ({
   return (
     <>
       {inputs.map((input, index) => (
-        <FTextInput
-          key={index}
-          style={styles.input}
-          placeholder={input.placeholder}
-          placeholderTextColor={placeholderTextColor}
-          value={input.value}
-          onChangeText={input.onChangeText}
-          secureTextEntry={input.secureTextEntry}
-          keyboardType={input.keyboardType || 'default'}
-          autoCapitalize={input.autoCapitalize || 'none'}
-          autoCorrect={false}
-          editable={input.editable}
-        />
+        <View style={[styles.inputContainer, input.error && input.touched && { marginBottom: 0 }]} key={index}>
+          <FTextInput
+            style={[styles.input, input.error && input.touched && styles.inputError]}
+            placeholder={input.placeholder}
+            placeholderTextColor={placeholderTextColor}
+            value={input.value}
+            onChangeText={input.onChangeText}
+            onBlur={input.onBlur}
+            secureTextEntry={input.secureTextEntry}
+            keyboardType={input.keyboardType || 'default'}
+            autoCapitalize={input.autoCapitalize || 'none'}
+            autoCorrect={false}
+            editable={input.editable}
+          />
+          {input.error && input.touched && <FText style={styles.errorText}>{input.error}</FText>}
+        </View>
       ))}
       <TouchableOpacity
         style={[styles.btnSuccess, (!isFormValid || isLoading) && styles.btnDisabled]}
@@ -69,12 +82,15 @@ const FormInputGroup: React.FC<FormInputGroupProps> = ({
 export default FormInputGroup;
 
 const styles = StyleSheet.create({
-  // Input field
-  input: {
+  inputContainer: {
     width: '100%',
+    flex: 1,
+    justifyContent: 'flex-start',
+    marginBottom: 20,
+  },
+  input: {
     height: 50,
     paddingHorizontal: 15,
-    marginBottom: 16,
     fontSize: 16,
     backgroundColor: COLORS.white,
     borderWidth: 1,
@@ -91,7 +107,6 @@ const styles = StyleSheet.create({
   btnSuccess: {
     width: '100%',
     height: 50,
-    marginTop: 10,
     backgroundColor: COLORS.primary,
     borderRadius: 8,
     justifyContent: 'center',
@@ -109,5 +124,15 @@ const styles = StyleSheet.create({
     color: COLORS.white,
     fontSize: 16,
     fontWeight: '600',
+  },
+  errorText: {
+    flex: 1,
+    color: COLORS.error,
+    textAlign: 'center',
+    fontSize: 13,
+    lineHeight: 20,
+  },
+  inputError: {
+    borderColor: COLORS.error,
   },
 });

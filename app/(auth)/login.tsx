@@ -1,4 +1,13 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { styles } from '@/assets/styles/Screen/FormScreen.styles';
+import ButtonLoginSocial from '@/components/Button/LoginSocial';
+import FormInputGroup from '@/components/Form/FormInput';
+import FText from '@/components/Text';
+import { login } from '@/server/auth.server';
+import { passwordRegex, validateEmail, validateUsername } from '@/utils/regex';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { router, useFocusEffect, useNavigation } from 'expo-router';
+import { Formik } from 'formik';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   Alert,
   BackHandler,
@@ -9,43 +18,38 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-
-import FormInputGroup from '@/components/Form/FormInput';
-import { login } from '@/server/auth.server';
-
-import { styles } from '@/assets/styles/Screen/FormScreen.styles';
-import ButtonLoginSocial from '@/components/Button/LoginSocial';
-import FText from '@/components/Text';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { router, useFocusEffect, useNavigation } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDispatch } from 'react-redux';
+import * as yup from 'yup';
+
+const LoginSchema = yup.object().shape({
+  usernameOrEmail: yup
+    .string()
+    .test('is-username-or-email', 'Phải là email hoặc tên đăng nhập hợp lệ', (value) => {
+      if (!value) return false;
+      return validateEmail(value) || validateUsername(value);
+    })
+    .required('Vui lòng nhập email hoặc tên đăng nhập'),
+  password: yup
+    .string()
+    .min(8, 'Tối thiểu 8 ký tự')
+    .matches(
+      passwordRegex,
+      'Mật khẩu phải bao gồm 8 ký tự, ít nhất 1 ký tự hoa, 1 ký tự thường, 1 ký tự số, 1 ký tự đặc biệt',
+    )
+    .required('Vui lòng nhập mật khẩu'),
+});
 
 interface loginFormData {
   usernameOrEmail: string;
   password: string;
 }
 
-const validateEmail = (email: string): boolean => {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email.trim());
-};
-
-const validatePassword = (password: string): boolean => {
-  return password.trim().length >= 6;
-};
-
 const LoginScreen = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
-  const [email, setEmail] = useState<loginFormData['usernameOrEmail']>('');
-  const [password, setPassword] = useState<loginFormData['password']>('');
   const [isLoading, setIsLoading] = useState(false);
   const [isNavigating, setIsNavigating] = useState(false);
-
-  const isFormValid = useMemo(() => {
-    return validateEmail(email) && validatePassword(password);
-  }, [email, password]);
 
   useEffect(() => {
     navigation.setOptions({
@@ -73,43 +77,36 @@ const LoginScreen = () => {
     }, 1000);
   }, [isNavigating]);
 
-  const handleLogin = async () => {
-    if (!isFormValid) {
-      Alert.alert('Lỗi', 'Vui lòng kiểm tra lại thông tin đăng nhập');
-      return;
-    }
+  const handleLogin = useCallback(
+    async (values: loginFormData) => {
+      setIsLoading(true);
 
-    setIsLoading(true);
+      try {
+        const userData = await login(values, dispatch);
 
-    const user = {
-      usernameOrEmail: email.trim(),
-      password: password.trim(),
-    };
+        if (userData && userData._id) {
+          try {
+            await AsyncStorage.setItem('user', JSON.stringify(userData));
+            await AsyncStorage.setItem('accessToken', JSON.stringify(userData.accessToken));
+            await AsyncStorage.setItem('refreshToken', JSON.stringify(userData.refreshToken));
 
-    try {
-      const userData = await login(user, dispatch);
-
-      if (userData && userData._id) {
-        try {
-          await AsyncStorage.setItem('user', JSON.stringify(userData));
-          await AsyncStorage.setItem('accessToken', JSON.stringify(userData.accessToken));
-          await AsyncStorage.setItem('refreshToken', JSON.stringify(userData.refreshToken));
-
-          router.replace('/(tabs)/home');
-        } catch (storageError) {
-          console.error('AsyncStorage error:', storageError);
-          Alert.alert('Lỗi', 'Không thể lưu thông tin đăng nhập');
+            router.replace('/(tabs)/home');
+          } catch (storageError) {
+            console.error('AsyncStorage error:', storageError);
+            Alert.alert('Lỗi', 'Không thể lưu thông tin đăng nhập');
+          }
+        } else {
+          console.error('Invalid user data received:', userData);
+          Alert.alert('Lỗi', 'Dữ liệu người dùng không hợp lệ');
         }
-      } else {
-        console.error('Invalid user data received:', userData);
-        Alert.alert('Lỗi', 'Dữ liệu người dùng không hợp lệ');
+      } catch (error) {
+        console.error('Login error in component:', error);
+      } finally {
+        setIsLoading(false);
       }
-    } catch (error) {
-      console.error('Login error in component:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    },
+    [dispatch],
+  );
 
   return (
     <>
@@ -135,25 +132,39 @@ const LoginScreen = () => {
                 <FText style={styles.titleWelcome}>Chào mừng đến với JinStore</FText>
                 <FText style={styles.subtitle}>Trải nghiệm mua sắm tiện lợi, thông minh</FText>
 
-                <FormInputGroup
-                  inputs={[
-                    {
-                      placeholder: 'Email',
-                      value: email,
-                      onChangeText: setEmail,
-                      keyboardType: 'email-address',
-                    },
-                    {
-                      placeholder: 'Mật khẩu',
-                      value: password,
-                      onChangeText: setPassword,
-                      secureTextEntry: true,
-                    },
-                  ]}
-                  button={{ isFormValid, isLoading, handleFunc: handleLogin }}
-                  text="Đăng nhập"
-                />
-
+                <Formik
+                  initialValues={{ usernameOrEmail: '', password: '' }}
+                  validationSchema={LoginSchema}
+                  validateOnMount
+                  onSubmit={(values) => handleLogin(values)}
+                >
+                  {({ handleChange, handleBlur, handleSubmit, values, errors, touched, isValid }) => (
+                    <FormInputGroup
+                      inputs={[
+                        {
+                          placeholder: 'Email',
+                          keyboardType: 'email-address',
+                          value: values.usernameOrEmail,
+                          onChangeText: handleChange('usernameOrEmail'),
+                          onBlur: handleBlur('usernameOrEmail'),
+                          error: errors.usernameOrEmail,
+                          touched: touched.usernameOrEmail,
+                        },
+                        {
+                          placeholder: 'Mật khẩu',
+                          value: values.password,
+                          onChangeText: handleChange('password'),
+                          onBlur: handleBlur('password'),
+                          error: errors.password,
+                          touched: touched.password,
+                          secureTextEntry: true,
+                        },
+                      ]}
+                      button={{ isFormValid: isValid, isLoading, handleFunc: handleSubmit }}
+                      text="Đăng nhập"
+                    />
+                  )}
+                </Formik>
                 <TouchableOpacity style={styles.forgotPasswordContainer}>
                   <FText style={styles.forgotPasswordText}>Quên mật khẩu?</FText>
                 </TouchableOpacity>
