@@ -1,71 +1,75 @@
 import { styles } from '@/assets/styles/Screen/FormScreen.styles';
 import ButtonLoginSocial from '@/components/Button/LoginSocial';
 import FormInputGroup from '@/components/Form/FormInput';
-import React, { useMemo, useState } from 'react';
+import { register } from '@/server/auth.server';
+import { fullnameRegex, passwordRegex, usernameRegex } from '@/utils/regex';
+import { Formik } from 'formik';
+import React, { useCallback, useState } from 'react';
 import { Alert, KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useDispatch } from 'react-redux';
+import * as yup from 'yup';
+
 interface RegisterFormData {
-  fullName: string;
+  fullname: string;
   username: string;
   email: string;
   password: string;
   confirmPassword: string;
 }
 
-// Validation utilities
-const validateEmail = (email: string): boolean => {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email.trim());
-};
+const RegisterSchema = yup.object().shape({
+  fullname: yup.string().trim().matches(fullnameRegex, 'Họ và tên không hợp lệ').required('Vui lòng nhập họ và tên'),
 
-const validatePassword = (password: string): boolean => {
-  return password.trim().length >= 6;
-};
+  username: yup.string().matches(usernameRegex, 'Tên đăng nhập không hợp lệ').required('Vui lòng nhập tên đăng nhập'),
 
-const validateFullName = (name: string): boolean => {
-  return name.trim().length >= 2;
-};
+  email: yup.string().email('Email không hợp lệ').required('Vui lòng nhập email'),
+
+  password: yup
+    .string()
+    .min(8, 'Tối thiểu 8 ký tự')
+    .matches(
+      passwordRegex,
+      'Mật khẩu phải bao gồm 8 ký tự, ít nhất 1 ký tự hoa, 1 ký tự thường, 1 ký tự số, 1 ký tự đặc biệt',
+    )
+    .required('Vui lòng nhập mật khẩu'),
+
+  confirmPassword: yup
+    .string()
+    .oneOf([yup.ref('password')], 'Mật khẩu xác nhận không khớp')
+    .required('Vui lòng nhập lại mật khẩu'),
+});
 
 const RegisterScreen = () => {
-  const [fullName, setFullName] = useState<RegisterFormData['fullName']>('');
-  const [username, setUsername] = useState<RegisterFormData['username']>('');
-  const [email, setEmail] = useState<RegisterFormData['email']>('');
-  const [password, setPassword] = useState<RegisterFormData['password']>('');
-  const [confirmPassword, setConfirmPassword] = useState<RegisterFormData['confirmPassword']>('');
+  const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
 
-  // Memoized validation
-  const isFormValid = useMemo(() => {
-    return (
-      validateFullName(fullName) && validateEmail(email) && validatePassword(password) && password === confirmPassword
-    );
-  }, [fullName, email, password, confirmPassword]);
+  const handleRegister = useCallback(
+    async (values: RegisterFormData) => {
+      if (isLoading) return;
 
-  const handleRegister = async () => {
-    if (isLoading) return;
+      setIsLoading(true);
 
-    if (password !== confirmPassword) {
-      Alert.alert('Lỗi', 'Mật khẩu xác nhận không khớp!');
-      return;
-    }
-
-    setIsLoading(true);
-
-    try {
-      // TODO: Implement actual registration logic
-      Alert.alert('Thành công', 'Đăng ký thành công!');
-    } catch (error) {
-      Alert.alert('Lỗi', 'Đăng ký thất bại. Vui lòng thử lại.');
-      console.error('Registration error:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+      try {
+        await register(values, dispatch);
+      } catch (error) {
+        Alert.alert('Lỗi', 'Đăng ký thất bại. Vui lòng thử lại.');
+        console.error('Registration error:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [isLoading, dispatch],
+  );
 
   return (
     <>
       <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
-        <KeyboardAvoidingView style={{ flex: 1 }} keyboardVerticalOffset={Platform.OS === 'ios' ? 60 : 0}>
+        <KeyboardAvoidingView
+          style={{ flex: 1 }}
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          keyboardVerticalOffset={Platform.OS === 'ios' ? 60 : 0}
+        >
           <ScrollView
             contentContainerStyle={{
               flex: 1,
@@ -74,56 +78,73 @@ const RegisterScreen = () => {
             keyboardShouldPersistTaps="handled"
             showsVerticalScrollIndicator={false}
           >
-            {/*             <View style={styles.header}>
-              <TouchableOpacity onPress={() => router.back()}>
-                <Ionicons name="chevron-back" size={26} color="black" />
-              </TouchableOpacity>
-              <FText style={styles.title}>Đăng ký</FText>
-            </View> */}
             <View style={styles.container}>
-              {/* Main Content */}
               <View style={styles.contentContainer}>
-                <FormInputGroup
-                  inputs={[
-                    {
-                      placeholder: 'Họ và tên',
-                      value: fullName,
-                      onChangeText: setFullName,
-                      autoCapitalize: 'words',
-                      editable: !isLoading,
-                    },
-                    {
-                      placeholder: 'Tên đăng nhập',
-                      value: username,
-                      onChangeText: setUsername,
-                      autoCapitalize: 'words',
-                      editable: !isLoading,
-                    },
-                    {
-                      placeholder: 'Email',
-                      value: email,
-                      onChangeText: setEmail,
-                      keyboardType: 'email-address',
-                      editable: !isLoading,
-                    },
-                    {
-                      placeholder: 'Mật khẩu',
-                      value: password,
-                      onChangeText: setPassword,
-                      secureTextEntry: true,
-                      editable: !isLoading,
-                    },
-                    {
-                      placeholder: 'Xác nhận mật khẩu',
-                      value: confirmPassword,
-                      onChangeText: setConfirmPassword,
-                      secureTextEntry: true,
-                      editable: !isLoading,
-                    },
-                  ]}
-                  button={{ isFormValid, isLoading, handleFunc: handleRegister }}
-                  text="Đăng ký"
-                />
+                <Formik
+                  initialValues={{ fullname: '', username: '', email: '', password: '', confirmPassword: '' }}
+                  validationSchema={RegisterSchema}
+                  validateOnMount
+                  onSubmit={(values) => handleRegister(values)}
+                >
+                  {({ handleChange, handleBlur, handleSubmit, values, errors, touched, isValid }) => (
+                    <FormInputGroup
+                      inputs={[
+                        {
+                          placeholder: 'Họ và tên',
+                          value: values.fullname,
+                          onChangeText: handleChange('fullname'),
+                          onBlur: handleBlur('fullname'),
+                          error: errors.fullname,
+                          touched: touched.fullname,
+                          autoCapitalize: 'words',
+                          editable: !isLoading,
+                        },
+                        {
+                          placeholder: 'Tên đăng nhập',
+                          value: values.username,
+                          onChangeText: handleChange('username'),
+                          onBlur: handleBlur('username'),
+                          error: errors.username,
+                          touched: touched.username,
+                          autoCapitalize: 'words',
+                          editable: !isLoading,
+                        },
+                        {
+                          placeholder: 'Email',
+                          value: values.email,
+                          onChangeText: handleChange('email'),
+                          onBlur: handleBlur('email'),
+                          error: errors.email,
+                          touched: touched.email,
+                          keyboardType: 'email-address',
+                          editable: !isLoading,
+                        },
+                        {
+                          placeholder: 'Mật khẩu',
+                          value: values.password,
+                          onChangeText: handleChange('password'),
+                          onBlur: handleBlur('password'),
+                          error: errors.password,
+                          touched: touched.password,
+                          secureTextEntry: true,
+                          editable: !isLoading,
+                        },
+                        {
+                          placeholder: 'Xác nhận mật khẩu',
+                          value: values.confirmPassword,
+                          onChangeText: handleChange('confirmPassword'),
+                          onBlur: handleBlur('confirmPassword'),
+                          error: errors.confirmPassword,
+                          touched: touched.confirmPassword,
+                          secureTextEntry: true,
+                          editable: !isLoading,
+                        },
+                      ]}
+                      button={{ isFormValid: isValid, isLoading, handleFunc: handleSubmit }}
+                      text="Đăng ký"
+                    />
+                  )}
+                </Formik>
               </View>
 
               {/* Footer */}

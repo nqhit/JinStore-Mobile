@@ -1,6 +1,7 @@
 import { API_BASE_URL } from '@/config/config';
 import { userType } from '@/interfaces/user.type';
 import axios from 'axios';
+import { router } from 'expo-router';
 import { Alert } from 'react-native';
 import { Dispatch } from 'redux';
 import {
@@ -23,7 +24,8 @@ interface loginFormData {
 }
 
 interface registerFormData {
-  fullName: string;
+  fullname: string;
+  username: string;
   email: string;
   password: string;
   confirmPassword: string;
@@ -90,15 +92,15 @@ export const logOut = async (dispatch: Dispatch, id: string, accessToken: string
   }
 };
 
-export const register = async (user: registerFormData, dispatch: Dispatch, navigate: (path: string) => void) => {
+export const register = async (user: registerFormData, dispatch: Dispatch) => {
   dispatch(registerStart());
   try {
-    const res = await axios.post(`/mobile/register`, user);
+    const res = await axios.post(`/auth/register`, user);
 
     if (res.data) {
       dispatch(registerSuccess());
       Alert.alert('Thành công', 'Đăng ký tài khoản thành công!');
-      navigate('/login');
+      router.replace('/login');
     } else {
       throw new Error('Đăng ký thất bại');
     }

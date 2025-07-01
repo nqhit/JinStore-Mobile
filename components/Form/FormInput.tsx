@@ -84,9 +84,7 @@ export default FormInputGroup;
 const styles = StyleSheet.create({
   inputContainer: {
     width: '100%',
-    flex: 1,
-    justifyContent: 'flex-start',
-    marginBottom: 20,
+    marginBottom: 20, // Giảm từ 20 xuống 15
   },
   input: {
     height: 50,
@@ -102,8 +100,15 @@ const styles = StyleSheet.create({
     shadowRadius: 2,
     elevation: 2,
   },
-
-  // Login button
+  inputError: {
+    borderColor: COLORS.error,
+  },
+  errorText: {
+    color: COLORS.error,
+    textAlign: 'center',
+    fontSize: 13,
+    lineHeight: 20,
+  },
   btnSuccess: {
     width: '100%',
     height: 50,
@@ -124,15 +129,5 @@ const styles = StyleSheet.create({
     color: COLORS.white,
     fontSize: 16,
     fontWeight: '600',
-  },
-  errorText: {
-    flex: 1,
-    color: COLORS.error,
-    textAlign: 'center',
-    fontSize: 13,
-    lineHeight: 20,
-  },
-  inputError: {
-    borderColor: COLORS.error,
   },
 });
