@@ -142,7 +142,7 @@ const LoginScreen = () => {
                     <FormInputGroup
                       inputs={[
                         {
-                          placeholder: 'Email',
+                          placeholder: 'Email hoặc tên đăng nhập',
                           keyboardType: 'email-address',
                           value: values.usernameOrEmail,
                           onChangeText: handleChange('usernameOrEmail'),
