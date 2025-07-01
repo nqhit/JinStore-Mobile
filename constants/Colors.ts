@@ -5,14 +5,18 @@ export const COLORS = {
   primary: '#8B5CF6',
   primary500: '#7a5af8',
   white: '#FFFFFF',
+  whiteMint: '#F0FFF0',
+
   black: '#000000',
   black_032: 'rgba(0, 0, 0, 0.32)',
+
   gray200: '#ddd',
   gray300: '#ccc',
   gray500: '#8E8E93',
-  success: '#4CAF50',
-  success_bg: '#F0FFF0',
-  success_text: '#2E7D32',
+
+  greenBase: '#4CAF50',
+  green800: '#2E7D32',
+
   error: '#F44336',
 
   light: {

@@ -8,14 +8,13 @@ import { CartItemType } from '@/interfaces/cart.type';
 import { loginSuccess } from '@/redux/slices/authSlice';
 import { createAxios } from '@/utils/createInstance';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
-import { router, useNavigation } from 'expo-router';
+import { router } from 'expo-router';
 import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { FlatList, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
 
 function CartDetails() {
-  const navigation = useNavigation();
   const user = useSelector((state: any) => state.auth.login.currentUser);
   const accessToken = user?.accessToken;
   const dispatch = useDispatch();

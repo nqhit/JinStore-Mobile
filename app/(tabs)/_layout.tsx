@@ -14,12 +14,13 @@ export default function TabLayout() {
         tabBarInactiveTintColor: COLORS.gray500,
         tabBarStyle: { backgroundColor: COLORS.white },
         unmountOnBlur: route.name === 'some-tab-you-want-to-unmount' ? true : false,
+        tabBarLabelStyle: { fontSize: 13, fontWeight: '500' },
       })}
     >
       <Tabs.Screen
         name="home"
         options={{
-          title: 'Home',
+          title: 'Trang chủ',
           lazy: true,
           tabBarIcon: ({ color, focused }) => (
             <Ionicons name={focused ? 'home-sharp' : 'home-outline'} color={color} size={24} />
@@ -29,7 +30,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="store"
         options={{
-          title: 'Store',
+          title: 'Cửa hàng',
           lazy: true,
           tabBarIcon: ({ color, focused }) => (
             <Ionicons name={focused ? 'storefront-sharp' : 'storefront-outline'} color={color} size={24} />
@@ -39,7 +40,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="profile"
         options={{
-          title: 'Profile',
+          title: 'Hồ sơ',
           lazy: true,
           tabBarIcon: ({ color, focused }) => (
             <Ionicons name={focused ? 'person-sharp' : 'person-outline'} color={color} size={24} />

@@ -37,8 +37,8 @@ const createToastConfig = () => ({
     <BaseToast
       {...props}
       style={{
-        borderLeftColor: COLORS.success,
-        backgroundColor: COLORS.success_bg,
+        borderLeftColor: COLORS.greenBase,
+        backgroundColor: COLORS.whiteMint,
         paddingVertical: 0,
         fontSize: 16,
       }}
@@ -49,11 +49,11 @@ const createToastConfig = () => ({
       text1Style={{
         fontSize: 16,
         fontWeight: '500',
-        color: COLORS.success_text,
+        color: COLORS.green800,
       }}
       text2Style={{
         fontSize: 12,
-        color: COLORS.success,
+        color: COLORS.greenBase,
       }}
     />
   ),
