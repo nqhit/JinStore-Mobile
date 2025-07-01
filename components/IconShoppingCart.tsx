@@ -1,4 +1,4 @@
-import { socket } from '@/config/socket';
+import socket from '@/config/socket';
 import useCart from '@/hooks/cart/useCart.hooks';
 import { loginSuccess } from '@/redux/slices/authSlice';
 import { createAxios } from '@/utils/createInstance';
@@ -53,7 +53,6 @@ function IconShoppingCart() {
 
     return () => {
       socket.off('cartUpdated');
-      socket.disconnect();
     };
   }, [user, id]);
 

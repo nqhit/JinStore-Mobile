@@ -11,7 +11,7 @@ import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 
 import Loading from '@/components/loading';
-import { socket } from '@/config/socket';
+import socket from '@/config/socket';
 import { COLORS } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { persistor, store } from '@/redux/store';

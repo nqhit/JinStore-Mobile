@@ -1,7 +1,11 @@
 // src/socket.ts
-import { io, Socket } from 'socket.io-client';
+import { API_BASE_URL } from '@/config/config';
+import { io } from 'socket.io-client';
 
-export const socket: Socket = io('http://192.168.1.8:8888', {
-  transports: ['websocket'],
-  autoConnect: false,
+const socket = io(API_BASE_URL, {
+  transports: ['websocket', 'polling'],
+  timeout: 20000,
+  forceNew: true,
 });
+
+export default socket;
