@@ -1,6 +1,6 @@
 import { API_BASE_URL } from '@/config/config';
 import { userType } from '@/interfaces/user.type';
-import axios from 'axios';
+import axios, { AxiosInstance } from 'axios';
 import { Alert } from 'react-native';
 
 axios.defaults.baseURL = API_BASE_URL;
@@ -22,7 +22,7 @@ const authHeaders = (accessToken: string) => ({
   ...defaultHeaders,
 });
 
-export const getInfoUser = async (id: string, accessToken: string, axiosJWT: any): Promise<userType> => {
+export const getInfoUser = async (id: string, accessToken: string, axiosJWT: AxiosInstance): Promise<userType> => {
   try {
     if (!id || !accessToken) {
       throw new Error('Missing id or accessToken');

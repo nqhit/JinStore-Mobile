@@ -1,6 +1,6 @@
 import { API_BASE_URL } from '@/config/config';
 import { userType } from '@/interfaces/user.type';
-import axios from 'axios';
+import axios, { AxiosInstance } from 'axios';
 import { router } from 'expo-router';
 import { Alert } from 'react-native';
 import { Dispatch } from 'redux';
@@ -69,19 +69,16 @@ export const login = async (user: loginFormData, dispatch: Dispatch): Promise<us
   }
 };
 
-export const logOut = async (dispatch: Dispatch, id: string, accessToken: string, axiosJWT: any) => {
+export const logOut = async (dispatch: Dispatch, id: string, accessToken: string, axiosJWT: AxiosInstance) => {
   dispatch(logoutStart());
   try {
-    let res;
-    if (id && accessToken && axiosJWT) {
-      res = await axiosJWT.post(
-        `/mobile/logout`,
-        { userId: id },
-        {
-          headers: authHeaders(accessToken),
-        },
-      );
-    }
+    const res = await axiosJWT.post(
+      `/mobile/logout`,
+      { userId: id },
+      {
+        headers: authHeaders(accessToken),
+      },
+    );
     dispatch(logoutSuccess());
     return res.data;
   } catch (error) {
