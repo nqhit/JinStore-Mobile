@@ -29,7 +29,7 @@ function IconShoppingCart() {
   }, [fetchCartItems]);
 
   const handleRouterCart = useCallback(() => {
-    router.navigate('/carts/CartDetails');
+    router.navigate('/(carts)');
   }, []);
 
   useEffect(() => {

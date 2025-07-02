@@ -46,28 +46,34 @@ const FormInputGroup: React.FC<FormInputGroupProps> = ({
 }) => {
   return (
     <>
-      {inputs.map((input, index) => (
-        <View style={[styles.inputContainer, input.error && input.touched && { marginBottom: 0 }]} key={index}>
-          <FTextInput
-            style={[styles.input, input.error && input.touched && styles.inputError]}
-            placeholder={input.placeholder}
-            placeholderTextColor={placeholderTextColor}
-            value={input.value}
-            onChangeText={input.onChangeText}
-            onBlur={input.onBlur}
-            secureTextEntry={input.secureTextEntry}
-            keyboardType={input.keyboardType || 'default'}
-            autoCapitalize={input.autoCapitalize || 'none'}
-            autoCorrect={false}
-            editable={input.editable}
-          />
-          {input.error && input.touched && <FText style={styles.errorText}>{input.error}</FText>}
-        </View>
-      ))}
+      <View style={[styles.inputGroup]}>
+        {inputs.map((input, index) => (
+          <View
+            style={[styles.inputContainer, input.error && input.touched ? { marginBottom: 0 } : { marginBottom: 23.3 }]}
+            key={index}
+          >
+            <FTextInput
+              aria-label="input"
+              style={[styles.input, input.error && input.touched && styles.inputError]}
+              placeholder={input.placeholder}
+              placeholderTextColor={placeholderTextColor}
+              value={input.value}
+              onChangeText={input.onChangeText}
+              onBlur={input.onBlur}
+              secureTextEntry={input.secureTextEntry}
+              keyboardType={input.keyboardType || 'default'}
+              autoCapitalize={input.autoCapitalize || 'none'}
+              autoCorrect={false}
+              editable={input.editable}
+            />
+            {input.error && input.touched && <FText style={styles.errorText}>{input.error}</FText>}
+          </View>
+        ))}
+      </View>
       <TouchableOpacity
-        style={[styles.btnSuccess, (!isFormValid || isLoading) && styles.btnDisabled]}
+        style={[styles.btnSuccess /* , (!isFormValid || isLoading) && styles.btnDisabled */]}
         onPress={handleFunc}
-        disabled={!isFormValid || isLoading}
+        /* disabled={!isFormValid || isLoading} */
       >
         {isLoading ? (
           <ActivityIndicator size="small" color={COLORS.white} />
@@ -82,9 +88,12 @@ const FormInputGroup: React.FC<FormInputGroupProps> = ({
 export default FormInputGroup;
 
 const styles = StyleSheet.create({
-  inputContainer: {
+  inputGroup: {
     width: '100%',
-    marginBottom: 20, // Giảm từ 20 xuống 15
+  },
+  inputContainer: {
+    flexDirection: 'column',
+    width: '100%',
   },
   input: {
     height: 50,
@@ -105,9 +114,9 @@ const styles = StyleSheet.create({
   },
   errorText: {
     color: COLORS.error,
-    textAlign: 'center',
+    textAlign: 'left',
     fontSize: 13,
-    lineHeight: 20,
+    paddingBottom: 5,
   },
   btnSuccess: {
     width: '100%',

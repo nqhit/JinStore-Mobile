@@ -12,8 +12,8 @@ interface SocialType {
 const ButtonLoginSocial = ({ nameIcon, textBtn }: SocialType): JSX.Element => {
   return (
     <TouchableOpacity style={styles.socialLoginButton}>
-      <AntDesign name="google" size={20} color="#EA4335" style={styles.socialIcon} />
-      <FText style={styles.socialLoginButtonText}>Login with Google</FText>
+      <AntDesign name={nameIcon} size={20} color="#EA4335" style={styles.socialIcon} />
+      <FText style={styles.socialLoginButtonText}>{textBtn}</FText>
     </TouchableOpacity>
   );
 };
@@ -25,7 +25,6 @@ const styles = StyleSheet.create({
   socialLoginButton: {
     width: '100%',
     height: 50,
-    margin: 10,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
