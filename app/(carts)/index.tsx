@@ -4,13 +4,14 @@ import FText from '@/components/Text';
 import { COLORS } from '@/constants/Colors';
 import useCart from '@/hooks/cart/useCart.hooks';
 import useChangeQuantity from '@/hooks/cart/useChangeQuantity.hooks';
+import useDeleteItem from '@/hooks/cart/useDeleteItem.hooks';
 import { CartItemType } from '@/interfaces/cart.type';
 import { loginSuccess } from '@/redux/slices/authSlice';
 import { createAxios } from '@/utils/createInstance';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { memo, useCallback, useEffect, useMemo, useState } from 'react';
-import { FlatList, TouchableOpacity, View } from 'react-native';
+import { FlatList, Image, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -20,23 +21,24 @@ function CartDetails() {
   const dispatch = useDispatch();
   const axiosJWT = createAxios(user, dispatch, loginSuccess);
   const [data, setData] = useState<CartItemType[]>([]);
-  const [selectedItems, setSelectedItems] = useState<string[]>([]);
+  const [selectedItems, setSelectedItems] = useState<CartItemType[]>([]);
 
   const isAllSelected = selectedItems.length === data.length;
 
   const { fetchCartItems } = useCart({ accessToken, axiosJWT });
-
-  const handleFetchData = useCallback(() => {
-    fetchCartItems().then((res) => {
-      setData(res?.data || []);
-    });
-  }, [fetchCartItems]);
-
+  const { fetchDeleteItem } = useDeleteItem({ accessToken, axiosJWT });
   const { fetchQuantityChange } = useChangeQuantity({
     accessToken,
     axiosJWT,
   });
 
+  const handleFetchData = useCallback(() => {
+    fetchCartItems().then((res) => {
+      setData(Array.isArray(res?.data) ? res.data : []);
+    });
+  }, [fetchCartItems]);
+
+  // NOTE: Thay đổi số lượng hàng hóa
   const handleChangeQuantity = (itemId: string, change: number, oldQuantity: number) => {
     fetchQuantityChange(itemId, change, oldQuantity).then((res) => {
       const newQuantity = oldQuantity + change;
@@ -46,28 +48,52 @@ function CartDetails() {
     });
   };
 
+  // NOTE: Xóa sản phẩm trong giỏ hàng
+  const handleDeleteItem = (itemId: string) => {
+    fetchDeleteItem(itemId).then((res) => {
+      setData((prevItems) => prevItems.filter((item) => item._id !== itemId));
+      setSelectedItems((prevSelected) => prevSelected.filter((p) => p._id !== itemId));
+    });
+  };
+
   const handleSelectAll = useCallback(() => {
     if (isAllSelected) {
       setSelectedItems([]);
     } else {
-      setSelectedItems(data.map((item) => item._id));
+      setSelectedItems(data.filter((item) => item));
     }
   }, [isAllSelected, data]);
 
-  const handleToggleSelect = (itemId: string) => {
-    setSelectedItems((prev) => (prev.includes(itemId) ? prev.filter((id) => id !== itemId) : [...prev, itemId]));
+  const handleToggleSelect = (item: CartItemType) => {
+    setSelectedItems((prev) => {
+      const exists = prev.find((p) => p._id === item._id);
+      if (exists) {
+        return prev.filter((p) => p._id !== item._id);
+      } else {
+        return [...prev, item];
+      }
+    });
   };
 
-  const handleRouterStore = useCallback(() => {
-    router.replace('/(tabs)/store');
-  }, []);
+  const handleRouterCheckout = useCallback(() => {
+    const selectedIds = selectedItems.map((item) => item._id);
+    router.push({
+      pathname: '/payment',
+      params: {
+        data: JSON.stringify(selectedIds),
+        feeDiscount: JSON.stringify(calculateCouponDiscount),
+        total: JSON.stringify(calculateSubtotal),
+      },
+    });
+  }, [selectedItems]);
 
   const renderCartItem = ({ item }: { item: CartItemType }) => (
     <CartCard
       itemCart={item}
-      isSelected={selectedItems.includes(item._id)}
+      isSelected={selectedItems.some((p) => p._id === item._id)}
       handleQuantityChange={handleChangeQuantity}
-      onToggleSelect={handleToggleSelect}
+      handleDeleteItem={handleDeleteItem}
+      onToggleSelect={() => handleToggleSelect(item)}
     />
   );
 
@@ -78,16 +104,13 @@ function CartDetails() {
 
   const calculateSubtotal = useMemo(() => {
     return data.reduce((total, item) => {
-      if (selectedItems.includes(item._id)) {
+      const isSelected = selectedItems.some((selected) => selected._id === item._id);
+      if (isSelected) {
         return total + item.discountPrice * item.quantity;
       }
       return total;
     }, 0);
   }, [data, selectedItems]);
-
-  const calculateShipping = useMemo(() => {
-    return selectedItems.length > 0 ? (calculateSubtotal >= 500000 ? 0 : 30000) : 0;
-  }, [calculateSubtotal, selectedItems]);
 
   // Cập nhật hàm tính toán giảm giá từ coupon
   const calculateCouponDiscount = useMemo(() => {
@@ -95,16 +118,16 @@ function CartDetails() {
   }, []);
 
   const calculateTotal = useMemo(() => {
-    return calculateSubtotal + calculateShipping - calculateCouponDiscount;
-  }, [calculateSubtotal, calculateCouponDiscount, calculateShipping]);
+    return calculateSubtotal + calculateCouponDiscount;
+  }, [calculateSubtotal, calculateCouponDiscount]);
 
   useEffect(() => {
     handleFetchData();
   }, [handleFetchData]);
 
   return (
-    <SafeAreaView style={{ flex: 1 }} edges={['bottom', 'top', 'left', 'right']}>
-      <View style={styles.header}>
+    <SafeAreaView style={{ flex: 1 }} edges={['bottom', 'left', 'right']}>
+      {/*       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()}>
           <Ionicons name="chevron-back" size={26} color="black" />
         </TouchableOpacity>
@@ -112,7 +135,7 @@ function CartDetails() {
         <TouchableOpacity onPress={handleRouterStore}>
           <Ionicons name={'storefront-outline'} size={24} />
         </TouchableOpacity>
-      </View>
+      </View> */}
       <View style={styles.body}>
         <View style={styles.containerCheckBoxAll}>
           <TouchableOpacity style={styles.btnCheckBoxAll} onPress={handleSelectAll}>
@@ -129,35 +152,42 @@ function CartDetails() {
             </TouchableOpacity>
           )}
         </View>
-        <FlatList
-          data={data}
-          renderItem={renderCartItem}
-          showsVerticalScrollIndicator={false}
-          keyExtractor={keyExtractorCartItem}
-        />
-      </View>
-      <View style={styles.footer}>
-        <View style={styles.totalContainer}>
-          <FText style={styles.label}>Thành tiền: </FText>
-          <FText>{calculateSubtotal.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</FText>
-        </View>
-        <View style={styles.totalContainer}>
-          <FText style={styles.label}>Phí vận chuyển: </FText>
-          <FText>{calculateShipping.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</FText>
-        </View>
-        <View style={styles.totalContainer}>
-          <FText style={styles.label}>Thanh toán:</FText>
-          <FText>{calculateTotal.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</FText>
-        </View>
-        {calculateShipping !== 0 && (
-          <View style={styles.notiContainer}>
-            <FText style={styles.notification}>Miễn phí vận chuyển với đơn hàng trên 500.000đ</FText>
+        {data.length > 0 ? (
+          <>
+            <FlatList
+              data={data}
+              renderItem={renderCartItem}
+              showsVerticalScrollIndicator={false}
+              keyExtractor={keyExtractorCartItem}
+            />
+            <View style={styles.footer}>
+              <View style={styles.totalContainer}>
+                <FText style={styles.label}>Thành tiền: </FText>
+                <FText>{calculateSubtotal.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</FText>
+              </View>
+              <View style={styles.totalContainer}>
+                <FText style={styles.label}>Giảm giá: </FText>
+                <FText>{calculateCouponDiscount.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</FText>
+              </View>
+              <View style={styles.totalContainer}>
+                <FText style={styles.label}>Thanh toán:</FText>
+                <FText>{calculateTotal.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</FText>
+              </View>
+              <TouchableOpacity
+                onPress={handleRouterCheckout}
+                style={[styles.btnCheckout, selectedItems.length === 0 && styles.btnDisabled]}
+                disabled={selectedItems.length === 0}
+              >
+                <MaterialIcons name="shopping-cart-checkout" size={26} color="white" />
+                <FText style={styles.textCheckout}>Thanh toán</FText>
+              </TouchableOpacity>
+            </View>
+          </>
+        ) : (
+          <View style={styles.emptyContainer}>
+            <Image source={require('@/assets/images/cartEmpty.png')} style={styles.emptyImage} />
           </View>
         )}
-        <TouchableOpacity style={styles.btnCheckout}>
-          <MaterialIcons name="shopping-cart-checkout" size={26} color="white" />
-          <FText style={styles.textCheckout}>Thanh toán</FText>
-        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
