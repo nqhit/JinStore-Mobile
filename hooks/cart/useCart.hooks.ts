@@ -1,10 +1,11 @@
 // hooks/useCart.ts
 import { getCart } from '@/server/cart.server';
+import { AxiosInstance } from 'axios';
 import { useCallback } from 'react';
 
 interface UseCartParams {
   accessToken: string;
-  axiosJWT: any;
+  axiosJWT: AxiosInstance;
 }
 
 function useCart({ accessToken, axiosJWT }: UseCartParams) {
