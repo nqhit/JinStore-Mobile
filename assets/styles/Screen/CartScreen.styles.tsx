@@ -23,6 +23,7 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     paddingHorizontal: 15,
     gap: 10,
+    width: screenWidth,
   },
 
   containerCheckBoxAll: {
@@ -51,12 +52,12 @@ const styles = StyleSheet.create({
   },
 
   footer: {
+    borderTopRightRadius: 10,
+    borderTopLeftRadius: 10,
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 15,
     paddingVertical: 10,
-    backgroundColor: COLORS.gray200,
   },
 
   totalContainer: {
@@ -104,6 +105,22 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '600',
     color: COLORS.white,
+  },
+
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  emptyImage: {
+    width: 200,
+    height: 200,
+    resizeMode: 'contain',
+  },
+
+  btnDisabled: {
+    backgroundColor: COLORS.gray300,
   },
 });
 

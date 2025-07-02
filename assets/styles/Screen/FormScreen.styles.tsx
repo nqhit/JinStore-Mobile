@@ -2,73 +2,38 @@ import { COLORS } from '@/constants/Colors';
 import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingTop: 10,
-    marginBottom: 50,
-    justifyContent: 'space-between',
-    backgroundColor: COLORS.white,
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
     paddingHorizontal: 15,
+    height: '100%',
   },
-
-  welcomeContainer: {
-    flexDirection: 'column',
+  content: {
+    flex: 1,
+    gap: 10,
+    height: '100%',
+  },
+  body: {
+    flex: 1,
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    gap: 10,
   },
 
   headerLogo: {
-    top: 0,
+    width: '100%',
+    justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 30,
   },
 
   logo: {
-    top: 0,
-    width: 200,
-    height: 200,
+    width: 150,
+    height: 150,
     resizeMode: 'contain',
   },
-
-  // Layout container
-  contentContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  container: {
-    paddingHorizontal: 15,
+  headerWelcome: {
     flex: 1,
-    justifyContent: 'flex-start',
-  },
-  footer: {
-    marginTop: 10,
     justifyContent: 'center',
-    alignItems: 'center',
-  },
-
-  // Register section
-  registerContainer: {
-    width: '100%',
-    marginTop: 10,
-    paddingTop: 20,
-    borderTopWidth: 1,
-    borderColor: COLORS.gray200,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    gap: 5,
-  },
-  registerLink: {
-    fontSize: 16,
-    color: COLORS.primary,
-  },
-
-  // Title text
-  title: {
-    flex: 1,
-    fontSize: 24,
-    fontWeight: '700',
-    textAlign: 'center',
-    lineHeight: 36,
     alignItems: 'center',
   },
 
@@ -78,28 +43,45 @@ export const styles = StyleSheet.create({
     fontWeight: '700',
     textAlign: 'center',
     lineHeight: 28,
-    alignItems: 'center',
   },
 
   subtitle: {
     flex: 1,
     fontSize: 18,
-    alignItems: 'center',
     textAlign: 'center',
     lineHeight: 24,
-    paddingTop: 5,
-    marginBottom: 15,
     color: COLORS.primary,
   },
 
-  // Forgot password link
   forgotPasswordContainer: {
     width: '100%',
-    marginTop: 20,
     alignItems: 'flex-start',
   },
   forgotPasswordText: {
     fontSize: 14,
     color: COLORS.primary,
+  },
+
+  registerContainer: {
+    flex: 1,
+    width: '100%',
+    marginTop: 10,
+    paddingVertical: 10,
+    borderTopWidth: 1,
+    borderColor: COLORS.gray200,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 5,
+  },
+
+  registerLink: {
+    fontSize: 16,
+    color: COLORS.primary,
+  },
+
+  footer: {
+    flex: 1,
+    marginTop: 10,
   },
 });

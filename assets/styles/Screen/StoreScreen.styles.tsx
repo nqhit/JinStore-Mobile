@@ -2,7 +2,8 @@ import { COLORS } from '@/constants/Colors';
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
-  staticHeader: {
+  header: {
+    position: 'relative',
     flexDirection: 'row',
     alignItems: 'center',
     paddingTop: 10,
@@ -10,6 +11,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     backgroundColor: COLORS.white,
     paddingHorizontal: 15,
+    zIndex: 2,
   },
   HeaderBody: {
     flexDirection: 'row',
@@ -44,6 +46,16 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 0,
     fontSize: 16,
+  },
+
+  searchResults: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    right: 0,
+    left: 0,
+    backgroundColor: COLORS.white,
+    zIndex: 1,
   },
 
   // Body

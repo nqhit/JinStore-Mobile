@@ -4,23 +4,23 @@ const { width: screenWidth } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
+    position: 'relative',
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingTop: 10,
-    paddingBottom: 10,
+    justifyContent: 'flex-start',
     borderWidth: 1,
     borderRadius: 8,
     marginBottom: 10,
     borderColor: '#ccc',
     maxHeight: 120,
-    width: screenWidth - 30,
+    paddingVertical: 10,
     paddingHorizontal: 10,
+    gap: 10,
   },
 
   content: {
     flex: 1,
-    marginHorizontal: 10,
     flexDirection: 'row',
     gap: 10,
   },
@@ -32,10 +32,12 @@ const styles = StyleSheet.create({
   },
 
   info: {
+    flex: 1,
     flexDirection: 'column',
     alignItems: 'flex-start',
     justifyContent: 'space-between',
     gap: 5,
+    width: '100%',
   },
 
   topInfo: {
@@ -45,13 +47,29 @@ const styles = StyleSheet.create({
   },
 
   bottomInfo: {
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'flex-end',
     justifyContent: 'space-between',
-    width: screenWidth / 2 + 10,
+  },
+
+  nameContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+  },
+
+  deleteContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    backgroundColor: COLORS.gray200,
+    borderRadius: 5,
   },
 
   cartItemPriceContainer: {
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     gap: 5,
@@ -60,16 +78,16 @@ const styles = StyleSheet.create({
   cartItemQuantityContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
     gap: 5,
-    backgroundColor: '#F5F5F5',
-    borderRadius: 10,
+    backgroundColor: COLORS.gray200,
+    borderRadius: 5,
   },
 
   name: {
-    fontSize: 18,
-    lineHeight: 26,
-    maxWidth: 215,
-    textTransform: 'uppercase',
+    fontSize: 16,
+    width: 170,
+    textTransform: 'capitalize',
   },
 
   image: {
@@ -81,16 +99,15 @@ const styles = StyleSheet.create({
   },
 
   discountPrice: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: 'bold',
-    lineHeight: 32,
   },
 
   quantity: {
     fontSize: 16,
-    lineHeight: 18,
     fontWeight: 'bold',
-    width: 20,
+    alignContent: 'center',
+    width: 15,
     textAlign: 'center',
   },
 });
