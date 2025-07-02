@@ -1,11 +1,13 @@
 import { styles } from '@/assets/styles/Screen/FormScreen.styles';
 import ButtonLoginSocial from '@/components/Button/LoginSocial';
 import FormInputGroup from '@/components/Form/FormInput';
+import FText from '@/components/Text';
+import { useKeyboardPadding } from '@/hooks/useKeyboardPadding';
 import { register } from '@/server/auth.server';
 import { fullnameRegex, passwordRegex, usernameRegex } from '@/utils/regex';
 import { Formik } from 'formik';
 import React, { useCallback, useState } from 'react';
-import { Alert, KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
+import { Alert, Image, KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDispatch } from 'react-redux';
 import * as yup from 'yup';
@@ -42,6 +44,7 @@ const RegisterSchema = yup.object().shape({
 
 const RegisterScreen = () => {
   const dispatch = useDispatch();
+  const keyboardPadding = useKeyboardPadding(20);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleRegister = useCallback(
@@ -63,99 +66,97 @@ const RegisterScreen = () => {
   );
 
   return (
-    <>
-      <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
-        <KeyboardAvoidingView
-          style={{ flex: 1 }}
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          keyboardVerticalOffset={Platform.OS === 'ios' ? 60 : 0}
+    <SafeAreaView style={styles.container} edges={['left', 'right', 'bottom']}>
+      <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+        <ScrollView
+          contentContainerStyle={{ paddingBottom: keyboardPadding / 2 }}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
         >
-          <ScrollView
-            contentContainerStyle={{
-              flex: 1,
-              justifyContent: 'center',
-            }}
-            keyboardShouldPersistTaps="handled"
-            showsVerticalScrollIndicator={false}
-          >
-            <View style={styles.container}>
-              <View style={styles.contentContainer}>
-                <Formik
-                  initialValues={{ fullname: '', username: '', email: '', password: '', confirmPassword: '' }}
-                  validationSchema={RegisterSchema}
-                  validateOnMount
-                  onSubmit={(values) => handleRegister(values)}
-                >
-                  {({ handleChange, handleBlur, handleSubmit, values, errors, touched, isValid }) => (
-                    <FormInputGroup
-                      inputs={[
-                        {
-                          placeholder: 'Họ và tên',
-                          value: values.fullname,
-                          onChangeText: handleChange('fullname'),
-                          onBlur: handleBlur('fullname'),
-                          error: errors.fullname,
-                          touched: touched.fullname,
-                          autoCapitalize: 'words',
-                          editable: !isLoading,
-                        },
-                        {
-                          placeholder: 'Tên đăng nhập',
-                          value: values.username,
-                          onChangeText: handleChange('username'),
-                          onBlur: handleBlur('username'),
-                          error: errors.username,
-                          touched: touched.username,
-                          autoCapitalize: 'words',
-                          editable: !isLoading,
-                        },
-                        {
-                          placeholder: 'Email',
-                          value: values.email,
-                          onChangeText: handleChange('email'),
-                          onBlur: handleBlur('email'),
-                          error: errors.email,
-                          touched: touched.email,
-                          keyboardType: 'email-address',
-                          editable: !isLoading,
-                        },
-                        {
-                          placeholder: 'Mật khẩu',
-                          value: values.password,
-                          onChangeText: handleChange('password'),
-                          onBlur: handleBlur('password'),
-                          error: errors.password,
-                          touched: touched.password,
-                          secureTextEntry: true,
-                          editable: !isLoading,
-                        },
-                        {
-                          placeholder: 'Xác nhận mật khẩu',
-                          value: values.confirmPassword,
-                          onChangeText: handleChange('confirmPassword'),
-                          onBlur: handleBlur('confirmPassword'),
-                          error: errors.confirmPassword,
-                          touched: touched.confirmPassword,
-                          secureTextEntry: true,
-                          editable: !isLoading,
-                        },
-                      ]}
-                      button={{ isFormValid: isValid, isLoading, handleFunc: handleSubmit }}
-                      text="Đăng ký"
-                    />
-                  )}
-                </Formik>
+          <View style={styles.content}>
+            <View style={styles.body}>
+              <View style={styles.headerLogo}>
+                <Image source={require('@/assets/images/logo.png')} style={styles.logo} />
               </View>
 
-              {/* Footer */}
-              <View style={styles.footer}>
-                <ButtonLoginSocial nameIcon="google" textBtn="Đăng ký với Google" />
+              <View style={styles.headerWelcome}>
+                <FText style={styles.titleWelcome}>Chào mừng đến với JinStore</FText>
+                <FText style={styles.subtitle}>Trải nghiệm mua sắm tiện lợi, thông minh</FText>
               </View>
+              <Formik
+                initialValues={{ fullname: '', username: '', email: '', password: '', confirmPassword: '' }}
+                validationSchema={RegisterSchema}
+                validateOnMount
+                onSubmit={(values) => handleRegister(values)}
+              >
+                {({ handleChange, handleBlur, handleSubmit, values, errors, touched, isValid }) => (
+                  <FormInputGroup
+                    inputs={[
+                      {
+                        placeholder: 'Họ và tên',
+                        value: values.fullname,
+                        onChangeText: handleChange('fullname'),
+                        onBlur: handleBlur('fullname'),
+                        error: errors.fullname,
+                        touched: touched.fullname,
+                        autoCapitalize: 'words',
+                        editable: !isLoading,
+                      },
+                      {
+                        placeholder: 'Tên đăng nhập',
+                        value: values.username,
+                        onChangeText: handleChange('username'),
+                        onBlur: handleBlur('username'),
+                        error: errors.username,
+                        touched: touched.username,
+                        autoCapitalize: 'words',
+                        editable: !isLoading,
+                      },
+                      {
+                        placeholder: 'Email',
+                        value: values.email,
+                        onChangeText: handleChange('email'),
+                        onBlur: handleBlur('email'),
+                        error: errors.email,
+                        touched: touched.email,
+                        keyboardType: 'email-address',
+                        editable: !isLoading,
+                      },
+                      {
+                        placeholder: 'Mật khẩu',
+                        value: values.password,
+                        onChangeText: handleChange('password'),
+                        onBlur: handleBlur('password'),
+                        error: errors.password,
+                        touched: touched.password,
+                        secureTextEntry: true,
+                        editable: !isLoading,
+                      },
+                      {
+                        placeholder: 'Xác nhận mật khẩu',
+                        value: values.confirmPassword,
+                        onChangeText: handleChange('confirmPassword'),
+                        onBlur: handleBlur('confirmPassword'),
+                        error: errors.confirmPassword,
+                        touched: touched.confirmPassword,
+                        secureTextEntry: true,
+                        editable: !isLoading,
+                      },
+                    ]}
+                    button={{ isFormValid: isValid, isLoading, handleFunc: handleSubmit }}
+                    text="Đăng ký"
+                  />
+                )}
+              </Formik>
             </View>
-          </ScrollView>
-        </KeyboardAvoidingView>
-      </SafeAreaView>
-    </>
+
+            <View style={styles.footer}>
+              <ButtonLoginSocial nameIcon="google" textBtn="Đăng ký với Google" />
+            </View>
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 };
 

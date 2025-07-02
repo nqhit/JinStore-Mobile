@@ -46,8 +46,8 @@ interface loginFormData {
 }
 
 const LoginScreen = () => {
-  const navigation = useNavigation();
   const dispatch = useDispatch();
+  const navigation = useNavigation();
   const [isLoading, setIsLoading] = useState(false);
   const [isNavigating, setIsNavigating] = useState(false);
 
@@ -109,82 +109,79 @@ const LoginScreen = () => {
   );
 
   return (
-    <>
-      <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
-        <KeyboardAvoidingView
-          style={{ flex: 1 }}
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          keyboardVerticalOffset={Platform.OS === 'ios' ? 60 : 0}
-        >
-          <ScrollView
-            contentContainerStyle={{
-              flexGrow: 1,
-              justifyContent: 'center',
-            }}
-            keyboardShouldPersistTaps="handled"
-            showsVerticalScrollIndicator={false}
-          >
-            <View style={styles.container}>
-              <View style={styles.contentContainer}>
-                <View style={styles.headerLogo}>
-                  <Image source={require('@/assets/images/logo.png')} style={styles.logo} />
-                </View>
+    <SafeAreaView style={[styles.container, { marginTop: 10 }]} edges={['top', 'left', 'right', 'bottom']}>
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0}
+      >
+        <ScrollView keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
+          <View style={styles.content}>
+            <View style={styles.body}>
+              <View style={styles.headerLogo}>
+                <Image source={require('@/assets/images/logo.png')} style={styles.logo} />
+              </View>
+
+              <View style={styles.headerWelcome}>
                 <FText style={styles.titleWelcome}>Chào mừng đến với JinStore</FText>
                 <FText style={styles.subtitle}>Trải nghiệm mua sắm tiện lợi, thông minh</FText>
+              </View>
 
-                <Formik
-                  initialValues={{ usernameOrEmail: '', password: '' }}
-                  validationSchema={LoginSchema}
-                  validateOnMount
-                  onSubmit={(values) => handleLogin(values)}
-                >
-                  {({ handleChange, handleBlur, handleSubmit, values, errors, touched, isValid }) => (
-                    <FormInputGroup
-                      inputs={[
-                        {
-                          placeholder: 'Email hoặc tên đăng nhập',
-                          keyboardType: 'email-address',
-                          value: values.usernameOrEmail,
-                          onChangeText: handleChange('usernameOrEmail'),
-                          onBlur: handleBlur('usernameOrEmail'),
-                          error: errors.usernameOrEmail,
-                          touched: touched.usernameOrEmail,
-                        },
-                        {
-                          placeholder: 'Mật khẩu',
-                          value: values.password,
-                          onChangeText: handleChange('password'),
-                          onBlur: handleBlur('password'),
-                          error: errors.password,
-                          touched: touched.password,
-                          secureTextEntry: true,
-                        },
-                      ]}
-                      button={{ isFormValid: isValid, isLoading, handleFunc: handleSubmit }}
-                      text="Đăng nhập"
-                    />
-                  )}
-                </Formik>
-                <TouchableOpacity style={styles.forgotPasswordContainer}>
+              <Formik
+                initialValues={{ usernameOrEmail: '', password: '' }}
+                validationSchema={LoginSchema}
+                validateOnMount
+                onSubmit={(values) => handleLogin(values)}
+              >
+                {({ handleChange, handleBlur, handleSubmit, values, errors, touched, isValid }) => (
+                  <FormInputGroup
+                    inputs={[
+                      {
+                        placeholder: 'Email hoặc tên đăng nhập',
+                        keyboardType: 'email-address',
+                        value: values.usernameOrEmail,
+                        onChangeText: handleChange('usernameOrEmail'),
+                        onBlur: handleBlur('usernameOrEmail'),
+                        error: errors.usernameOrEmail,
+                        touched: touched.usernameOrEmail,
+                      },
+                      {
+                        placeholder: 'Mật khẩu',
+                        value: values.password,
+                        onChangeText: handleChange('password'),
+                        onBlur: handleBlur('password'),
+                        error: errors.password,
+                        touched: touched.password,
+                        secureTextEntry: true,
+                      },
+                    ]}
+                    button={{ isFormValid: isValid, isLoading, handleFunc: handleSubmit }}
+                    text="Đăng nhập"
+                  />
+                )}
+              </Formik>
+
+              <View style={styles.forgotPasswordContainer}>
+                <TouchableOpacity>
                   <FText style={styles.forgotPasswordText}>Quên mật khẩu?</FText>
                 </TouchableOpacity>
               </View>
-
-              <View style={styles.footer}>
-                <ButtonLoginSocial nameIcon="google" textBtn="Đăng nhập với Google" />
-
-                <View style={styles.registerContainer}>
-                  <FText>Chưa có tài khoản? </FText>
-                  <TouchableOpacity onPress={handleNavigateToRegister} disabled={isNavigating} activeOpacity={0.7}>
-                    <FText style={[styles.registerLink, isNavigating && { opacity: 0.5 }]}>Đăng ký ngay</FText>
-                  </TouchableOpacity>
-                </View>
-              </View>
             </View>
-          </ScrollView>
-        </KeyboardAvoidingView>
-      </SafeAreaView>
-    </>
+
+            <View style={styles.footer}>
+              <ButtonLoginSocial nameIcon="google" textBtn="Đăng nhập với Google" />
+            </View>
+
+            <View style={styles.registerContainer}>
+              <FText>Chưa có tài khoản? </FText>
+              <TouchableOpacity onPress={handleNavigateToRegister} disabled={isNavigating} activeOpacity={0.7}>
+                <FText style={[styles.registerLink, isNavigating && { opacity: 0.5 }]}>Đăng ký ngay</FText>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 };
 

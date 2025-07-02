@@ -1,4 +1,6 @@
-import { Stack } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
+import { router, Stack } from 'expo-router';
+import { TouchableOpacity } from 'react-native';
 
 export default function AuthLayout() {
   return (
@@ -7,7 +9,13 @@ export default function AuthLayout() {
         headerTitleAlign: 'center',
         gestureEnabled: false,
         animation: 'slide_from_right',
-        /* headerLeft */
+        headerLeft: () => {
+          return (
+            <TouchableOpacity onPress={() => router.back()}>
+              <Ionicons name="chevron-back" size={26} color="black" />
+            </TouchableOpacity>
+          );
+        },
       }}
     >
       <Stack.Screen
