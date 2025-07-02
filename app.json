@@ -18,7 +18,7 @@
       "package": "com.yourcompany.mobile",
       "versionCode": 1,
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/ic_launcher.png",
+        "foregroundImage": "./assets/images/logo36x36.png",
         "backgroundColor": "#ffffff"
       },
       "permissions": [],
@@ -34,7 +34,7 @@
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/ic_playstore.png",
+          "image": "./assets/images/ic_launcher.png",
           "resizeMode": "cover",
           "backgroundColor": "#ffffff"
         }
