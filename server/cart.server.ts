@@ -60,3 +60,14 @@ export const updateItemInCart = async (formData: productToCartType, accessToken:
     console.error('Lỗi khi cập nhật số lượng đơn hàng:', (error as Error).message);
   }
 };
+
+export const deleteItemInCart = async (id: string, accessToken: string, axiosJWT: AxiosInstance) => {
+  try {
+    const response = await axiosJWT.delete(`/carts/remove/${id}`, {
+      headers: authHeaders(accessToken),
+    });
+    return response.data;
+  } catch {
+    console.log('Lỗi khi xóa đơn hàng');
+  }
+};
