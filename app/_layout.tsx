@@ -92,7 +92,9 @@ function AppWithStore() {
 
   return (
     <>
-      <StatusBarContainer colorScheme={colorScheme} />
+      <View style={styles.statusBarContainer}>
+        <StatusBar backgroundColor={COLORS.primary} barStyle="dark-content" />
+      </View>
       <SafeAreaProvider>
         <ThemeProvider value={theme}>
           <View style={styles.container}>
@@ -104,18 +106,6 @@ function AppWithStore() {
   );
 }
 
-// Types
-type ColorSchemeName = 'light' | 'dark' | null | undefined;
-
-// Status bar component
-function StatusBarContainer({ colorScheme }: { colorScheme: ColorSchemeName }) {
-  return (
-    <View style={styles.statusBarContainer}>
-      <StatusBar translucent barStyle={colorScheme === 'dark' ? 'light-content' : 'dark-content'} />
-    </View>
-  );
-}
-
 // Navigation stack component
 function AppNavigator() {
   return (
@@ -123,6 +113,7 @@ function AppNavigator() {
       <Stack.Screen name="index" />
       <Stack.Screen name="(auth)" options={{ gestureEnabled: false }} />
       <Stack.Screen name="(tabs)" options={{ gestureEnabled: false }} />
+      <Stack.Screen name="(carts)" options={{ gestureEnabled: false }} />
       <Stack.Screen
         name="+not-found"
         options={{

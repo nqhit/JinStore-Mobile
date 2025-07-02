@@ -46,7 +46,7 @@ function StoreScreen() {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }} edges={['top', 'bottom']}>
       {/* Header cũ */}
-      <View style={styles.staticHeader}>
+      <View style={styles.header}>
         <TouchableOpacity style={styles.searchFilter} onPress={onOpen}>
           <Ionicons name="options-outline" size={26} color="black" />
         </TouchableOpacity>
