@@ -1,10 +1,11 @@
 import styles from '@/assets/styles/Screen/CartScreen.styles';
-import CartCard from '@/components/carts/CartCard';
+import CartItem from '@/components/carts/CartItem';
 import FText from '@/components/Text';
 import { COLORS } from '@/constants/Colors';
 import useCart from '@/hooks/cart/useCart.hooks';
 import useChangeQuantity from '@/hooks/cart/useChangeQuantity.hooks';
 import useDeleteItem from '@/hooks/cart/useDeleteItem.hooks';
+import { useHideTabBar } from '@/hooks/useHideTabBar';
 import { CartItemType } from '@/interfaces/cart.type';
 import { loginSuccess } from '@/redux/slices/authSlice';
 import { createAxios } from '@/utils/createInstance';
@@ -15,7 +16,12 @@ import { FlatList, Image, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
 
+const formatCurrency = (value: number) => {
+  return value.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+};
+
 function CartDetails() {
+  useHideTabBar();
   const user = useSelector((state: any) => state.auth.login.currentUser);
   const accessToken = user?.accessToken;
   const dispatch = useDispatch();
@@ -75,20 +81,8 @@ function CartDetails() {
     });
   };
 
-  const handleRouterCheckout = useCallback(() => {
-    const selectedIds = selectedItems.map((item) => item._id);
-    router.push({
-      pathname: '/payment',
-      params: {
-        data: JSON.stringify(selectedIds),
-        feeDiscount: JSON.stringify(calculateCouponDiscount),
-        total: JSON.stringify(calculateSubtotal),
-      },
-    });
-  }, [selectedItems]);
-
   const renderCartItem = ({ item }: { item: CartItemType }) => (
-    <CartCard
+    <CartItem
       itemCart={item}
       isSelected={selectedItems.some((p) => p._id === item._id)}
       handleQuantityChange={handleChangeQuantity}
@@ -118,8 +112,24 @@ function CartDetails() {
   }, []);
 
   const calculateTotal = useMemo(() => {
-    return calculateSubtotal + calculateCouponDiscount;
+    return calculateSubtotal - calculateCouponDiscount;
   }, [calculateSubtotal, calculateCouponDiscount]);
+
+  const handleRouterCheckout = useCallback(() => {
+    const selectedIds = selectedItems.map((item) => item);
+    router.push({
+      pathname: '/payment',
+      params: {
+        data: JSON.stringify(selectedIds),
+        feeDiscount: calculateCouponDiscount,
+        total: calculateSubtotal,
+      },
+    });
+  }, [selectedItems, calculateCouponDiscount, calculateSubtotal]);
+
+  const handleRouterCoupon = useCallback(() => {
+    router.push('/coupon');
+  }, []);
 
   useEffect(() => {
     handleFetchData();
@@ -137,21 +147,6 @@ function CartDetails() {
         </TouchableOpacity>
       </View> */}
       <View style={styles.body}>
-        <View style={styles.containerCheckBoxAll}>
-          <TouchableOpacity style={styles.btnCheckBoxAll} onPress={handleSelectAll}>
-            <Ionicons
-              name={selectedItems.length === data.length && data.length > 0 ? 'checkbox-sharp' : 'square-outline'}
-              size={26}
-              color={selectedItems.length === data.length && data.length > 0 ? COLORS.primary : COLORS.gray500}
-            />
-            <FText style={styles.selectAll}>Chọn tất cả ({selectedItems.length})</FText>
-          </TouchableOpacity>
-          {selectedItems.length > 0 && (
-            <TouchableOpacity>
-              <Ionicons name="trash-outline" size={26} color={COLORS.primary} />
-            </TouchableOpacity>
-          )}
-        </View>
         {data.length > 0 ? (
           <>
             <FlatList
@@ -160,34 +155,62 @@ function CartDetails() {
               showsVerticalScrollIndicator={false}
               keyExtractor={keyExtractorCartItem}
             />
-            <View style={styles.footer}>
-              <View style={styles.totalContainer}>
-                <FText style={styles.label}>Thành tiền: </FText>
-                <FText>{calculateSubtotal.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</FText>
-              </View>
-              <View style={styles.totalContainer}>
-                <FText style={styles.label}>Giảm giá: </FText>
-                <FText>{calculateCouponDiscount.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</FText>
-              </View>
-              <View style={styles.totalContainer}>
-                <FText style={styles.label}>Thanh toán:</FText>
-                <FText>{calculateTotal.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</FText>
-              </View>
-              <TouchableOpacity
-                onPress={handleRouterCheckout}
-                style={[styles.btnCheckout, selectedItems.length === 0 && styles.btnDisabled]}
-                disabled={selectedItems.length === 0}
-              >
-                <MaterialIcons name="shopping-cart-checkout" size={26} color="white" />
-                <FText style={styles.textCheckout}>Thanh toán</FText>
-              </TouchableOpacity>
-            </View>
           </>
         ) : (
           <View style={styles.emptyContainer}>
             <Image source={require('@/assets/images/cartEmpty.png')} style={styles.emptyImage} />
           </View>
         )}
+      </View>
+      <View style={styles.footer}>
+        <TouchableOpacity onPress={handleRouterCoupon}>
+          <View style={styles.footerTop}>
+            <View style={styles.discountContainer}>
+              <MaterialIcons name="discount" size={24} color={COLORS.primary} />
+              <FText style={styles.discountText}>Khuyến mãi</FText>
+            </View>
+            <View style={styles.discountContainer}>
+              <View style={styles.couponLeft}>
+                <FText>{formatCurrency(calculateCouponDiscount)}</FText>
+              </View>
+              <View>
+                <Ionicons name="chevron-forward" size={24} color={COLORS.primary} />
+              </View>
+            </View>
+          </View>
+        </TouchableOpacity>
+        <View style={styles.footerBottom}>
+          <View style={styles.containerCheckBoxAll}>
+            <TouchableOpacity style={styles.btnCheckBoxAll} onPress={handleSelectAll}>
+              <Ionicons
+                name={selectedItems.length === data.length && data.length > 0 ? 'checkbox-sharp' : 'square-outline'}
+                size={26}
+                color={selectedItems.length === data.length && data.length > 0 ? COLORS.primary : COLORS.gray500}
+              />
+              <View>
+                <FText style={styles.selectAll}>Tất cả ({selectedItems.length})</FText>
+              </View>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.footerLeft}>
+            <View style={styles.totalContainer}>
+              <FText style={styles.total}>{formatCurrency(calculateTotal)}</FText>
+              {selectedItems.length > 0 && (
+                <View style={styles.amountSaveContainer}>
+                  <FText style={styles.saveText}>Tiết kiệm: </FText>
+                  <FText style={styles.amountSave}>{calculateCouponDiscount}</FText>
+                </View>
+              )}
+            </View>
+            <TouchableOpacity
+              onPress={handleRouterCheckout}
+              style={[styles.btnCheckout, selectedItems.length === 0 && styles.btnDisabled]}
+              disabled={selectedItems.length === 0}
+            >
+              <FText style={styles.textCheckout}>Thanh toán </FText>
+            </TouchableOpacity>
+          </View>
+        </View>
       </View>
     </SafeAreaView>
   );

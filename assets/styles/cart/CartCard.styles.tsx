@@ -64,8 +64,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-end',
-    backgroundColor: COLORS.gray200,
-    borderRadius: 5,
   },
 
   cartItemPriceContainer: {
@@ -81,7 +79,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     gap: 5,
     backgroundColor: COLORS.gray200,
-    borderRadius: 5,
+    borderRadius: 10,
   },
 
   name: {

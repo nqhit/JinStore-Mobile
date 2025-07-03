@@ -1,4 +1,4 @@
-import { API_BASE_URL } from '@/config/config';
+import { api_url } from '@/config';
 import { userType } from '@/interfaces/user.type';
 import axios, { AxiosInstance } from 'axios';
 import { router } from 'expo-router';
@@ -16,7 +16,7 @@ import {
   registerSuccess,
 } from '../redux/slices/authSlice';
 
-axios.defaults.baseURL = API_BASE_URL;
+axios.defaults.baseURL = api_url;
 
 interface loginFormData {
   usernameOrEmail: string;
@@ -84,12 +84,18 @@ export const logOut = async (dispatch: Dispatch, id: string, accessToken: string
   } catch (error) {
     if (axios.isAxiosError(error)) {
       console.error('Logout error:', error.response?.data?.message);
+      Alert.alert('Lỗi', 'Đăng xuất thất bại');
     }
     dispatch(logoutFailed());
+    throw error;
   }
 };
 
 export const register = async (user: registerFormData, dispatch: Dispatch) => {
+  if (user.password !== user.confirmPassword) {
+    Alert.alert('Lỗi', 'Mật khẩu xác nhận không khớp');
+    return;
+  }
   dispatch(registerStart());
   try {
     const res = await axios.post(`/auth/register`, user);

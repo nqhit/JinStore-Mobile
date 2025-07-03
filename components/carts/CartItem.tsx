@@ -6,7 +6,7 @@ import { useCallback } from 'react';
 import { Image, TouchableOpacity, View } from 'react-native';
 import FText from '../Text';
 
-function CartCard({
+function CartItem({
   itemCart,
   isSelected,
   onToggleSelect,
@@ -81,4 +81,4 @@ function CartCard({
   );
 }
 
-export default CartCard;
+export default CartItem;

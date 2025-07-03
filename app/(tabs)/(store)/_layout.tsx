@@ -28,8 +28,9 @@ function CartScreen() {
           },
         }}
       >
+        <Stack.Screen name="index" options={{ headerShown: false }} />
         <Stack.Screen
-          name="index"
+          name="cart"
           options={{
             headerTitle: 'Giỏ hàng',
             headerRight: () => {
@@ -42,6 +43,8 @@ function CartScreen() {
           }}
         />
         <Stack.Screen name="payment" options={{ title: 'Thanh toán' }} />
+        <Stack.Screen name="coupon" options={{ title: 'Mã giảm giá' }} />
+        <Stack.Screen name="ProdDetail" options={{ headerShown: false }} />
       </Stack>
     </SafeAreaProvider>
   );

@@ -1,9 +1,9 @@
-import { API_BASE_URL } from '@/config/config';
+import { api_url } from '@/config';
 import { userType } from '@/interfaces/user.type';
 import axios, { AxiosInstance } from 'axios';
 import { Alert } from 'react-native';
 
-axios.defaults.baseURL = API_BASE_URL;
+axios.defaults.baseURL = api_url;
 
 // FIXED: Added API response interface
 interface ApiResponse {

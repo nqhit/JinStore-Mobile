@@ -4,12 +4,15 @@ import ProductListStore from '@/components/products/ProductListStore';
 import FText from '@/components/Text';
 import FTextInput from '@/components/TextInput';
 import { Ionicons } from '@expo/vector-icons';
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { useNavigation } from 'expo-router';
 import { memo, useCallback, useLayoutEffect, useMemo, useRef } from 'react';
 import { Easing, TouchableOpacity, View } from 'react-native';
 import { Modalize } from 'react-native-modalize';
 import { SafeAreaView } from 'react-native-safe-area-context';
+
 function StoreScreen() {
+  const tabBarHeight = useBottomTabBarHeight();
   const modalRef = useRef<Modalize>(null);
   const navigation = useNavigation();
 
@@ -44,7 +47,10 @@ function StoreScreen() {
   }, [navigation]);
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }} edges={['top', 'bottom']}>
+    <SafeAreaView
+      style={{ flex: 1, backgroundColor: 'white', paddingBottom: tabBarHeight / 2 }}
+      edges={['top', 'bottom']}
+    >
       {/* Header cũ */}
       <View style={styles.header}>
         <TouchableOpacity style={styles.searchFilter} onPress={onOpen}>

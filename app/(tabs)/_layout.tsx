@@ -28,7 +28,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="store"
+        name="(store)"
         options={{
           title: 'Cửa hàng',
           lazy: true,

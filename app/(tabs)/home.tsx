@@ -1,6 +1,5 @@
 import styles from '@/assets/styles/Screen/HomeScreen.styles';
 import CategoryCard from '@/components/categories/categoryCard';
-import IconShoppingCart from '@/components/IconShoppingCart';
 import ProductCard from '@/components/products/ProductCard';
 import FText from '@/components/Text';
 import useCategory from '@/hooks/category/useCategory.hooks';
@@ -36,7 +35,7 @@ export default function HomeScreen() {
   }, [fetchInfoUser, fetchProduct, fetchCategories]);
 
   const handleRouterStore = useCallback(() => {
-    router.push('/details/ProductDetail');
+    router.push('/(tabs)/(store)/ProdDetail');
   }, []);
 
   useEffect(() => {
@@ -114,7 +113,7 @@ export default function HomeScreen() {
                 <FText style={styles.SubText}>Let&#39;s go shopping</FText>
               </View>
             </View>
-            <IconShoppingCart />
+            {/* <IconShoppingCart /> */}
           </View>
           <View style={styles.body}>
             <Image style={styles.bannerImage} source={require('@/assets/images/banner/banner17.png')} />

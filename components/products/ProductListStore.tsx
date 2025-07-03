@@ -62,7 +62,7 @@ function ProductListStore() {
   }, [handleFetchData]);
 
   const handleRouterStore = useCallback(() => {
-    router.push('/details/ProductDetail');
+    router.push('/ProdDetail');
   }, []);
 
   const featuredProducts = useMemo(() => products.filter((product: productType) => product.isActive), [products]);

@@ -1,8 +1,8 @@
-import { API_BASE_URL } from '@/config/config';
+import { api_url } from '@/config';
 import { productType } from '@/interfaces/product.type';
 import axios from 'axios';
 
-axios.defaults.baseURL = API_BASE_URL;
+axios.defaults.baseURL = api_url;
 
 const defaultHeaders = {
   Accept: 'application/json',
