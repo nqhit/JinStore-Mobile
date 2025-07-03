@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "mobile",
-    "slug": "mobile",
+    "name": "JinStore",
+    "slug": "JinStore",
     "version": "1.0.0",
     "orientation": "portrait",
     "scheme": "mobile",
-    "icon": "./assets/images/ic_launcher.png",
+    "icon": "./assets/images/padding_logo100x100.png",
     "userInterfaceStyle": "automatic",
     "jsEngine": "hermes",
     "newArchEnabled": true,
@@ -18,7 +18,7 @@
       "package": "com.yourcompany.mobile",
       "versionCode": 1,
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/logo36x36.png",
+        "foregroundImage": "./assets/images/padding_logo532.png",
         "backgroundColor": "#ffffff"
       },
       "permissions": [],
