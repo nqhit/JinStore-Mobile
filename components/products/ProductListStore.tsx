@@ -1,6 +1,6 @@
 import useProduct from '@/hooks/product/useProduct.hooks';
 import { productResType, productType } from '@/interfaces/product.type';
-import { getProductsAll } from '@/server/product.server';
+import { getProductsAll } from '@/server/services/product.service';
 import { router } from 'expo-router';
 import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { FlatList, View } from 'react-native';

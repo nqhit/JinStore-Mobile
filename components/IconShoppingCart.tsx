@@ -1,7 +1,7 @@
 import socket from '@/config/socket';
 import useCart from '@/hooks/cart/useCart.hooks';
 import { loginSuccess } from '@/redux/slices/authSlice';
-import { createAxios } from '@/utils/createInstance';
+import { createAxios } from '@/server/axiosInstance';
 import { AntDesign } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
