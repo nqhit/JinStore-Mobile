@@ -1,5 +1,7 @@
 import { API_URL } from '@/constants/env';
+import { loginFormData, registerFormData } from '@/interfaces/api.type';
 import { userType } from '@/interfaces/user.type';
+import { endpoints } from '@/server/constants/endpoints';
 import axios, { AxiosInstance } from 'axios';
 import { router } from 'expo-router';
 import { Alert } from 'react-native';
@@ -14,22 +16,9 @@ import {
   registerFailed,
   registerStart,
   registerSuccess,
-} from '../redux/slices/authSlice';
+} from '../../redux/slices/authSlice';
 
 axios.defaults.baseURL = API_URL;
-
-interface loginFormData {
-  usernameOrEmail: string;
-  password: string;
-}
-
-interface registerFormData {
-  fullname: string;
-  username: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-}
 
 const defaultHeaders = {
   Accept: 'application/json',
@@ -44,7 +33,7 @@ const authHeaders = (accessToken: string) => ({
 export const login = async (user: loginFormData, dispatch: Dispatch): Promise<userType> => {
   dispatch(loginStart());
   try {
-    const res = await axios.post<userType>(`/mobile/login`, user);
+    const res = await axios.post<userType>(endpoints.login, user);
 
     // FIXED: Response is direct user object, not wrapped in data
     if (res.data && res.data._id) {
@@ -73,7 +62,7 @@ export const logOut = async (dispatch: Dispatch, id: string, accessToken: string
   dispatch(logoutStart());
   try {
     const res = await axiosJWT.post(
-      `/mobile/logout`,
+      endpoints.logout,
       { userId: id },
       {
         headers: authHeaders(accessToken),
@@ -98,7 +87,7 @@ export const register = async (user: registerFormData, dispatch: Dispatch) => {
   }
   dispatch(registerStart());
   try {
-    const res = await axios.post(`/auth/register`, user);
+    const res = await axios.post(endpoints.register, user);
 
     if (res.data) {
       dispatch(registerSuccess());

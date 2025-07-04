@@ -1,8 +1,8 @@
 // ./(tabs)/index.tsx
 import styles from '@/assets/styles/Screen/ProfileScreen.styles';
 import FText from '@/components/Text';
-import { logOut } from '@/server/auth.server';
-import { createAxios } from '@/utils/createInstance';
+import { createAxios } from '@/server/axiosInstance';
+import { logOut } from '@/server/services/auth.service';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { router } from 'expo-router';
 import { useCallback, useState } from 'react';

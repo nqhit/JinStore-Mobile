@@ -1,6 +1,7 @@
 // app/index.tsx
 import { API_URL } from '@/constants/env';
 import { loginSuccess } from '@/redux/slices/authSlice'; // Import action để restore state
+import { endpoints } from '@/server/constants/endpoints';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { router } from 'expo-router';
@@ -26,7 +27,7 @@ export default function IndexPage() {
       const refreshToken = JSON.parse(token as string);
 
       const res = await axios.post(
-        `/mobile/refresh`,
+        endpoints.refresh,
         { refreshToken },
         { headers: { 'Content-Type': 'application/json' }, timeout: 10000 },
       );

@@ -1,5 +1,5 @@
 import { API_URL } from '@/constants/env';
-import { productType } from '@/interfaces/product.type';
+import { endpoints } from '@/server/constants/endpoints';
 import axios from 'axios';
 
 axios.defaults.baseURL = API_URL;
@@ -14,16 +14,15 @@ const authHeaders = (accessToken: string) => ({
   ...defaultHeaders,
 });
 
-// NOTE: Lấy danh sách sản phẩm
-export const getProductsAll = async (page: number, limit: number): Promise<productType[]> => {
+export const getCategoriesAll = async () => {
   try {
-    const response = await axios.get(`/products?page=${page}&size=${limit}`, {
+    const response = await axios.get(endpoints.categoriesAll, {
       timeout: 10000,
       headers: defaultHeaders,
     });
 
     return response.data;
-  } catch (error: string | any) {
-    throw new Error(error);
+  } catch (error) {
+    throw new Error(error as string);
   }
 };

@@ -3,7 +3,7 @@ import ButtonLoginSocial from '@/components/Button/LoginSocial';
 import FormInputGroup from '@/components/Form/FormInput';
 import FText from '@/components/Text';
 import { useKeyboardPadding } from '@/hooks/useKeyboardPadding';
-import { register } from '@/server/auth.server';
+import { register } from '@/server/services/auth.service';
 import { fullnameRegex, passwordRegex, usernameRegex } from '@/utils/regex';
 import { Formik } from 'formik';
 import React, { useCallback, useState } from 'react';

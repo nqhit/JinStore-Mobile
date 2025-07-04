@@ -1,12 +1,13 @@
 import { API_URL } from '@/constants/env';
 import { userType } from '@/interfaces/user.type';
+import { endpoints } from '@/server/constants/endpoints';
 import axios, { AxiosInstance } from 'axios';
 import { Alert } from 'react-native';
 
 axios.defaults.baseURL = API_URL;
 
 // FIXED: Added API response interface
-interface ApiResponse {
+interface userResponse {
   success: boolean;
   message: string;
   user: userType;
@@ -30,13 +31,13 @@ export const getInfoUser = async (id: string, accessToken: string, axiosJWT: Axi
 
     console.log('Fetching user info for ID:', id);
 
-    const response = await axiosJWT.get(`/mobile/users/info-user/${id}`, {
+    const response = await axiosJWT.get(endpoints.infoUser + `/${id}`, {
       timeout: 10000,
       headers: authHeaders(accessToken),
     });
 
     // FIXED: Extract user from API response structure
-    const apiResponse = response.data as ApiResponse;
+    const apiResponse = response.data as userResponse;
 
     if (!apiResponse.success) {
       throw new Error(apiResponse.message || 'API request failed');

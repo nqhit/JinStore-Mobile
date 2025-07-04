@@ -1,5 +1,5 @@
 // hooks/useCart.ts
-import { getCart } from '@/server/cart.server';
+import { getCart } from '@/server/services/cart.service';
 import { AxiosInstance } from 'axios';
 import { useCallback } from 'react';
 

@@ -1,5 +1,6 @@
 import { API_URL } from '@/constants/env';
 import { userType } from '@/interfaces/user.type';
+import { endpoints } from '@/server/constants/endpoints';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Dispatch } from '@reduxjs/toolkit';
 import axios from 'axios';
@@ -19,7 +20,7 @@ const refreshToken = async () => {
 
     const refreshToken = JSON.parse(token);
 
-    const res = await axios.post(`/mobile/refresh`, { refreshToken });
+    const res = await axios.post(endpoints.refresh, { refreshToken });
 
     // Lưu token mới vào AsyncStorage
     const { accessToken, refreshToken: newRefreshToken } = res.data;

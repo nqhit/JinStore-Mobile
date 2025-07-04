@@ -1,4 +1,4 @@
-import { deleteItemInCart } from '@/server/cart.server';
+import { deleteItemInCart } from '@/server/services/cart.service';
 import { AxiosInstance } from 'axios';
 import { useCallback } from 'react';
 

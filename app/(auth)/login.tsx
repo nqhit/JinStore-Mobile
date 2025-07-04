@@ -2,7 +2,7 @@ import { styles } from '@/assets/styles/Screen/FormScreen.styles';
 import ButtonLoginSocial from '@/components/Button/LoginSocial';
 import FormInputGroup from '@/components/Form/FormInput';
 import FText from '@/components/Text';
-import { login } from '@/server/auth.server';
+import { login } from '@/server/services/auth.service';
 import { passwordRegex, validateEmail, validateUsername } from '@/utils/regex';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { router, useFocusEffect, useNavigation } from 'expo-router';

@@ -8,7 +8,7 @@ import useDeleteItem from '@/hooks/cart/useDeleteItem.hooks';
 import { useHideTabBar } from '@/hooks/useHideTabBar';
 import { CartItemType } from '@/interfaces/cart.type';
 import { loginSuccess } from '@/redux/slices/authSlice';
-import { createAxios } from '@/utils/createInstance';
+import { createAxios } from '@/server/axiosInstance';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { memo, useCallback, useEffect, useMemo, useState } from 'react';
