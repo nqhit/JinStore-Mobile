@@ -1,10 +1,10 @@
-import { api_url } from '@/config';
+import { API_URL } from '@/constants/env';
 import { productToCartType } from '@/interfaces/product.type';
 import { addFailed, addStart, addSuccess } from '@/redux/slices/itemCartSlice';
 import axios, { AxiosInstance } from 'axios';
 import { Dispatch } from 'redux';
 
-axios.defaults.baseURL = api_url;
+axios.defaults.baseURL = API_URL;
 
 const defaultHeaders = {
   Accept: 'application/json',

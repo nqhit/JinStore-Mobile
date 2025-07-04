@@ -1,4 +1,4 @@
-import { api_url } from '@/config';
+import { API_URL } from '@/constants/env';
 import { userType } from '@/interfaces/user.type';
 import axios, { AxiosInstance } from 'axios';
 import { router } from 'expo-router';
@@ -16,7 +16,7 @@ import {
   registerSuccess,
 } from '../redux/slices/authSlice';
 
-axios.defaults.baseURL = api_url;
+axios.defaults.baseURL = API_URL;
 
 interface loginFormData {
   usernameOrEmail: string;

@@ -1,7 +1,7 @@
-import { api_url } from '@/config';
+import { API_URL } from '@/constants/env';
 import axios from 'axios';
 
-axios.defaults.baseURL = api_url;
+axios.defaults.baseURL = API_URL;
 
 const defaultHeaders = {
   Accept: 'application/json',

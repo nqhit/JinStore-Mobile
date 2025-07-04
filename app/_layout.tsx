@@ -113,7 +113,6 @@ function AppNavigator() {
       <Stack.Screen name="index" />
       <Stack.Screen name="(auth)" options={{ gestureEnabled: false }} />
       <Stack.Screen name="(tabs)" options={{ gestureEnabled: false }} />
-      <Stack.Screen name="(carts)" options={{ gestureEnabled: false }} />
       <Stack.Screen
         name="+not-found"
         options={{

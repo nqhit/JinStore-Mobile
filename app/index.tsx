@@ -1,5 +1,5 @@
 // app/index.tsx
-import { api_url } from '@/config';
+import { API_URL } from '@/constants/env';
 import { loginSuccess } from '@/redux/slices/authSlice'; // Import action để restore state
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
@@ -12,7 +12,7 @@ import { useDispatch } from 'react-redux';
 export default function IndexPage() {
   const dispatch = useDispatch();
   const [isChecking, setIsChecking] = useState(true);
-  axios.defaults.baseURL = api_url;
+  axios.defaults.baseURL = API_URL;
 
   const refreshToken = async () => {
     try {

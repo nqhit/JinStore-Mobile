@@ -1,8 +1,8 @@
 // src/socket.ts
-import { api_url } from '@/config';
+import { API_URL } from '@env';
 import { io } from 'socket.io-client';
 
-const socket = io(api_url, {
+const socket = io(API_URL, {
   transports: ['websocket', 'polling'],
   timeout: 20000,
   forceNew: true,

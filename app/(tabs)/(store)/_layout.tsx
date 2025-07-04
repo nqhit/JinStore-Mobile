@@ -1,15 +1,10 @@
 import styles from '@/assets/styles/Screen/CartScreen.styles';
 import { Ionicons } from '@expo/vector-icons';
 import { router, Stack } from 'expo-router';
-import { useCallback } from 'react';
 import { TouchableOpacity } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 function CartScreen() {
-  const handleRouterStore = useCallback(() => {
-    router.replace('/(tabs)/store');
-  }, []);
-
   return (
     <SafeAreaProvider>
       <Stack
@@ -33,13 +28,6 @@ function CartScreen() {
           name="cart"
           options={{
             headerTitle: 'Giỏ hàng',
-            headerRight: () => {
-              return (
-                <TouchableOpacity onPress={handleRouterStore}>
-                  <Ionicons name={'storefront-outline'} size={24} />
-                </TouchableOpacity>
-              );
-            },
           }}
         />
         <Stack.Screen name="payment" options={{ title: 'Thanh toán' }} />

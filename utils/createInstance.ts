@@ -1,4 +1,4 @@
-import { api_url } from '@/config';
+import { API_URL } from '@/constants/env';
 import { userType } from '@/interfaces/user.type';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Dispatch } from '@reduxjs/toolkit';
@@ -7,7 +7,7 @@ import { router } from 'expo-router';
 import { jwtDecode } from 'jwt-decode';
 import Toast from 'react-native-toast-message';
 
-axios.defaults.baseURL = api_url;
+axios.defaults.baseURL = API_URL;
 
 const refreshToken = async () => {
   try {
