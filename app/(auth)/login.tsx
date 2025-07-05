@@ -4,20 +4,10 @@ import FormInputGroup from '@/components/Form/FormInput';
 import FText from '@/components/Text';
 import { login } from '@/server/services/auth.service';
 import { passwordRegex, validateEmail, validateUsername } from '@/utils/regex';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { router, useFocusEffect, useNavigation } from 'expo-router';
 import { Formik } from 'formik';
 import React, { useCallback, useEffect, useState } from 'react';
-import {
-  Alert,
-  BackHandler,
-  Image,
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { BackHandler, Image, KeyboardAvoidingView, Platform, ScrollView, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDispatch } from 'react-redux';
 import * as yup from 'yup';
@@ -82,23 +72,7 @@ const LoginScreen = () => {
       setIsLoading(true);
 
       try {
-        const userData = await login(values, dispatch);
-
-        if (userData && userData._id) {
-          try {
-            await AsyncStorage.setItem('user', JSON.stringify(userData));
-            await AsyncStorage.setItem('accessToken', JSON.stringify(userData.accessToken));
-            await AsyncStorage.setItem('refreshToken', JSON.stringify(userData.refreshToken));
-
-            router.replace('/(tabs)/home');
-          } catch (storageError) {
-            console.error('AsyncStorage error:', storageError);
-            Alert.alert('Lỗi', 'Không thể lưu thông tin đăng nhập');
-          }
-        } else {
-          console.error('Invalid user data received:', userData);
-          Alert.alert('Lỗi', 'Dữ liệu người dùng không hợp lệ');
-        }
+        await login(values, dispatch);
       } catch (error) {
         console.error('Login error in component:', error);
       } finally {

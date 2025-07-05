@@ -3,8 +3,6 @@ import styles from '@/assets/styles/Screen/ProfileScreen.styles';
 import FText from '@/components/Text';
 import { createAxios } from '@/server/axiosInstance';
 import { logOut } from '@/server/services/auth.service';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { router } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { ActivityIndicator, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -24,16 +22,7 @@ export default function ProfileScreen() {
   const handleLogout = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await logOut(dispatch, id, accessToken, axiosJWT_V2);
-      if (res.success) {
-        await AsyncStorage.multiRemove([
-          'user',
-          'accessToken',
-          'refreshToken',
-          'persist:root', // Nếu bạn dùng redux-persist
-        ]);
-        router.replace('/(auth)/login');
-      }
+      await logOut(dispatch, id, accessToken, axiosJWT_V2);
     } catch {
       setLoading(false);
     } finally {

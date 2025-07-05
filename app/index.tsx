@@ -1,11 +1,9 @@
 // app/index.tsx
-import { API_URL } from '@/constants/env';
 import { loginSuccess } from '@/redux/slices/authSlice'; // Import action để restore state
-import { endpoints } from '@/server/constants/endpoints';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import axios from 'axios';
+import { StorageService } from '@/server/utils/storage.service';
+import { TokenRefreshService } from '@/server/utils/token-refresh.service';
+import { TokenService } from '@/server/utils/token.service';
 import { router } from 'expo-router';
-import { jwtDecode } from 'jwt-decode';
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, View } from 'react-native';
 import { useDispatch } from 'react-redux';
@@ -13,76 +11,27 @@ import { useDispatch } from 'react-redux';
 export default function IndexPage() {
   const dispatch = useDispatch();
   const [isChecking, setIsChecking] = useState(true);
-  axios.defaults.baseURL = API_URL;
-
-  const refreshToken = async () => {
-    try {
-      const token = await AsyncStorage.getItem('refreshToken');
-
-      if (!token) {
-        console.error('Không có refresh token');
-        return null;
-      }
-
-      const refreshToken = JSON.parse(token as string);
-
-      const res = await axios.post(
-        endpoints.refresh,
-        { refreshToken },
-        { headers: { 'Content-Type': 'application/json' }, timeout: 10000 },
-      );
-
-      if (!res || !res.data) {
-        console.error('Invalid response from server');
-      }
-
-      // Lưu token mới vào AsyncStorage
-      const { accessToken, refreshToken: newRefreshToken } = res.data;
-
-      await AsyncStorage.setItem('accessToken', JSON.stringify(accessToken));
-      if (newRefreshToken) {
-        await AsyncStorage.setItem('refreshToken', JSON.stringify(newRefreshToken));
-      }
-
-      return res.data;
-    } catch (err) {
-      console.error('Refresh token error:', err);
-      await AsyncStorage.multiRemove(['accessToken', 'refreshToken', 'persist:root', 'user']);
-      console.log('Phiên đăng nhập đã hết hạn');
-    }
-  };
 
   // Kiểm tra và validate token
   const checkAuthStatus = async () => {
     try {
-      const storedUser = await AsyncStorage.getItem('user');
-      const storedAccessToken = await AsyncStorage.getItem('accessToken');
+      const userData = await StorageService.getItem('user');
+      const accessToken = await StorageService.getItem<string>('accessToken');
 
-      if (!storedUser || !storedAccessToken) {
+      if (!userData || !accessToken) {
         router.replace('/(auth)/login');
         return;
       }
 
-      const userData = JSON.parse(storedUser);
-      const accessToken = JSON.parse(storedAccessToken);
-
       try {
-        const decodedToken = jwtDecode(accessToken);
-        const currentTime = Date.now() / 1000;
-
-        if (!decodedToken || typeof decodedToken.exp !== 'number') {
-          throw new Error('Invalid token format');
-        }
-
-        // 3. Kiểm tra token có hết hạn không
-        if (decodedToken.exp <= currentTime) {
+        if (TokenService.shouldRefreshToken(accessToken)) {
           console.log('Access token đã hết hạn, thử refresh...');
 
-          const refreshData = await refreshToken();
+          const refreshData = await TokenRefreshService.refreshTokens();
 
           if (!refreshData || !refreshData.accessToken) {
             console.error('Refresh token failed');
-            await AsyncStorage.multiRemove(['accessToken', 'refreshToken', 'user']);
+            await StorageService.clearAuthData();
             router.replace('/(auth)/login');
             return;
           }
@@ -92,23 +41,20 @@ export default function IndexPage() {
             accessToken: refreshData.accessToken,
           };
 
-          await AsyncStorage.setItem('user', JSON.stringify(updatedUserData));
+          await StorageService.setItem('user', updatedUserData);
           dispatch(loginSuccess(updatedUserData));
 
           router.replace('/(tabs)/home');
         } else {
           console.log('Token còn hợp lệ');
-
           dispatch(loginSuccess({ ...userData, accessToken }));
-
           router.replace('/(tabs)/home');
         }
       } catch (tokenError) {
         console.error('Token validation error:', tokenError);
 
-        // Thử refresh token as fallback
         try {
-          const refreshData = await refreshToken();
+          const refreshData = await TokenRefreshService.refreshTokens();
           if (!refreshData || !refreshData.accessToken) {
             console.error('Refresh token failed or returned invalid data');
           }
@@ -117,7 +63,7 @@ export default function IndexPage() {
             accessToken: refreshData.accessToken,
           };
 
-          await AsyncStorage.setItem('user', JSON.stringify(updatedUserData));
+          await StorageService.setItem('user', updatedUserData);
           dispatch(loginSuccess(updatedUserData));
           router.replace('/(tabs)/home');
         } catch (refreshError) {
@@ -127,9 +73,7 @@ export default function IndexPage() {
       }
     } catch (error) {
       console.error('Auth check error:', error);
-      // Có lỗi → xóa data và về login
-      await AsyncStorage.multiRemove(['accessToken', 'refreshToken', 'user']);
-      router.replace('/(auth)/login');
+      await StorageService.clearAuthData();
     } finally {
       setIsChecking(false);
     }
