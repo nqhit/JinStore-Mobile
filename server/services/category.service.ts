@@ -1,5 +1,5 @@
 import { API_URL } from '@/constants/env';
-import { endpoints } from '@/server/constants/endpoints';
+import { ENDPOINTS } from '@/server/constants/endpoints';
 import axios from 'axios';
 
 axios.defaults.baseURL = API_URL;
@@ -16,7 +16,7 @@ const authHeaders = (accessToken: string) => ({
 
 export const getCategoriesAll = async () => {
   try {
-    const response = await axios.get(endpoints.categoriesAll, {
+    const response = await axios.get(ENDPOINTS.CATEGORIES_ALL, {
       timeout: 10000,
       headers: defaultHeaders,
     });

@@ -1,16 +1,16 @@
-export const endpoints = {
-  login: '/mobile/login',
-  logout: '/mobile/logout',
-  register: '/auth/register',
-  refresh: '/mobile/refresh',
-  infoUser: '/mobile/users/info-user',
+export const ENDPOINTS = {
+  LOGIN: '/mobile/login',
+  LOGOUT: '/mobile/logout',
+  REGISTER: '/auth/register',
+  REFRESH: '/mobile/refresh',
+  INFO_USER: '/mobile/users/info-user',
 
-  productsAll: '/products',
+  PRODUCTS_ALL: '/products',
 
-  categoriesAll: '/categories',
+  CATEGORIES_ALL: '/categories',
 
-  carts: '/carts',
-  addItemToCart: '/carts/add',
-  updateItemInCart: '/carts/update',
-  deleteItemInCart: '/carts/remove',
+  CARTS: '/carts',
+  ADD_ITEM_TO_CART: '/carts/add',
+  UPDATE_ITEM_IN_CART: '/carts/update',
+  REMOVE_ITEM_IN_CART: '/carts/remove',
 } as const;

@@ -1,6 +1,6 @@
 import { API_URL } from '@/constants/env';
 import { userType } from '@/interfaces/user.type';
-import { endpoints } from '@/server/constants/endpoints';
+import { ENDPOINTS } from '@/server/constants/endpoints';
 import axios, { AxiosInstance } from 'axios';
 import { Alert } from 'react-native';
 
@@ -31,7 +31,7 @@ export const getInfoUser = async (id: string, accessToken: string, axiosJWT: Axi
 
     console.log('Fetching user info for ID:', id);
 
-    const response = await axiosJWT.get(endpoints.infoUser + `/${id}`, {
+    const response = await axiosJWT.get(ENDPOINTS.INFO_USER + `/${id}`, {
       timeout: 10000,
       headers: authHeaders(accessToken),
     });

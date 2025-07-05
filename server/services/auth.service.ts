@@ -1,10 +1,11 @@
 import { API_URL } from '@/constants/env';
-import { loginFormData, registerFormData } from '@/interfaces/api.type';
+import { loginFormData, registerFormData } from '@/interfaces/auth.type';
 import { userType } from '@/interfaces/user.type';
-import { endpoints } from '@/server/constants/endpoints';
+import { ENDPOINTS } from '@/server/constants/endpoints';
+import { ErrorHandler } from '@/utils/error.handler';
+import { ValidationUtils } from '@/utils/validation';
 import axios, { AxiosInstance } from 'axios';
 import { router } from 'expo-router';
-import { Alert } from 'react-native';
 import { Dispatch } from 'redux';
 import {
   loginFailed,
@@ -17,96 +18,87 @@ import {
   registerStart,
   registerSuccess,
 } from '../../redux/slices/authSlice';
+import { HttpService } from '../utils/http.service';
+import { StorageService } from '../utils/storage.service';
 
 axios.defaults.baseURL = API_URL;
 
-const defaultHeaders = {
-  Accept: 'application/json',
-  'Content-Type': 'application/json',
-};
-
-const authHeaders = (accessToken: string) => ({
-  Authorization: `Bearer ${accessToken}`,
-  ...defaultHeaders,
-});
-
-export const login = async (user: loginFormData, dispatch: Dispatch): Promise<userType> => {
+export const login = async (user: loginFormData, dispatch: Dispatch) => {
+  const validationError = ValidationUtils.validateLoginForm(user);
+  if (validationError) {
+    ErrorHandler.showError(validationError);
+    throw new Error(validationError);
+  }
   dispatch(loginStart());
   try {
-    const res = await axios.post<userType>(endpoints.login, user);
+    const httpClient = HttpService.getInstance();
+    const res = await httpClient.post<userType>(ENDPOINTS.LOGIN, user);
 
-    // FIXED: Response is direct user object, not wrapped in data
-    if (res.data && res.data._id) {
-      dispatch(loginSuccess(res.data));
-      console.log('Đăng nhập thành công!');
-      return res.data;
-    } else {
+    if (!res.data || !res.data._id) {
       throw new Error('Phản hồi từ server không hợp lệ');
     }
+
+    const tokens = {
+      accessToken: res.data.accessToken,
+      refreshToken: res.data.refreshToken,
+    };
+
+    await StorageService.setItem('user', res.data);
+    await StorageService.setAuthTokens(tokens);
+
+    dispatch(loginSuccess(res.data));
+    console.log('Đăng nhập thành công!');
+
+    router.replace('/(tabs)/home');
   } catch (error) {
     dispatch(loginFailed());
 
-    if (axios.isAxiosError(error)) {
-      const errorMessage = error.response?.data?.message || 'Đăng nhập thất bại';
-      Alert.alert('Lỗi', errorMessage);
-      throw new Error(errorMessage);
-    } else {
-      const errorMsg = 'Có lỗi xảy ra khi đăng nhập';
-      Alert.alert('Lỗi', errorMsg);
-      throw new Error(errorMsg);
-    }
+    const errorMessage = ErrorHandler.handleAuthError(error);
+    throw new Error(errorMessage);
   }
 };
 
 export const logOut = async (dispatch: Dispatch, id: string, accessToken: string, axiosJWT: AxiosInstance) => {
   dispatch(logoutStart());
   try {
-    const res = await axiosJWT.post(
-      endpoints.logout,
+    await axiosJWT.post(
+      ENDPOINTS.LOGOUT,
       { userId: id },
       {
-        headers: authHeaders(accessToken),
+        headers: HttpService.setAuthHeader(accessToken),
       },
     );
+    await StorageService.clearAuthData();
     dispatch(logoutSuccess());
-    return res.data;
+    router.replace('/(auth)/login');
   } catch (error) {
-    if (axios.isAxiosError(error)) {
-      console.error('Logout error:', error.response?.data?.message);
-      Alert.alert('Lỗi', 'Đăng xuất thất bại');
-    }
     dispatch(logoutFailed());
+    ErrorHandler.handleAuthError(error);
     throw error;
   }
 };
 
 export const register = async (user: registerFormData, dispatch: Dispatch) => {
-  if (user.password !== user.confirmPassword) {
-    Alert.alert('Lỗi', 'Mật khẩu xác nhận không khớp');
+  const validationError = ValidationUtils.validateRegisterForm(user);
+  if (validationError) {
+    ErrorHandler.showError(validationError);
     return;
   }
+
   dispatch(registerStart());
   try {
-    const res = await axios.post(endpoints.register, user);
+    const httpClient = HttpService.getInstance();
+    const res = await httpClient.post(ENDPOINTS.REGISTER, user);
 
-    if (res.data) {
-      dispatch(registerSuccess());
-      Alert.alert('Thành công', 'Đăng ký tài khoản thành công!');
-      router.replace('/login');
-    } else {
+    if (!res.data) {
       throw new Error('Đăng ký thất bại');
     }
+    dispatch(registerSuccess());
+    ErrorHandler.showSuccess('Đăng ký tài khoản thành công!');
+    router.replace('/login');
   } catch (error) {
     dispatch(registerFailed());
-
-    if (axios.isAxiosError(error)) {
-      const errorMessage = error.response?.data?.message || 'Đăng ký thất bại';
-      Alert.alert('Lỗi', errorMessage);
-      throw new Error(errorMessage);
-    } else {
-      const errorMsg = 'Có lỗi xảy ra khi đăng ký';
-      Alert.alert('Lỗi', errorMsg);
-      throw new Error(errorMsg);
-    }
+    ErrorHandler.handleAuthError(error);
+    throw error;
   }
 };

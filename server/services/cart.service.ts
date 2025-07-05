@@ -1,7 +1,7 @@
 import { API_URL } from '@/constants/env';
 import { productToCartType } from '@/interfaces/product.type';
 import { addFailed, addStart, addSuccess } from '@/redux/slices/itemCartSlice';
-import { endpoints } from '@/server/constants/endpoints';
+import { ENDPOINTS } from '@/server/constants/endpoints';
 import axios, { AxiosInstance } from 'axios';
 import { Dispatch } from 'redux';
 
@@ -25,7 +25,7 @@ export const addItemToCart = async (
 ) => {
   dispatch(addStart());
   try {
-    const res = await axiosJWT.post(endpoints.addItemToCart, formData, {
+    const res = await axiosJWT.post(ENDPOINTS.ADD_ITEM_TO_CART, formData, {
       headers: authHeaders(accessToken),
     });
     if (res.data.success) {
@@ -42,7 +42,7 @@ export const addItemToCart = async (
 
 export const getCart = async (accessToken: string, axiosJWT: AxiosInstance) => {
   try {
-    const response = await axiosJWT.get(endpoints.carts, {
+    const response = await axiosJWT.get(ENDPOINTS.CARTS, {
       headers: authHeaders(accessToken),
     });
     return response.data;
@@ -53,7 +53,7 @@ export const getCart = async (accessToken: string, axiosJWT: AxiosInstance) => {
 
 export const updateItemInCart = async (formData: productToCartType, accessToken: string, axiosJWT: AxiosInstance) => {
   try {
-    const response = await axiosJWT.patch(endpoints.updateItemInCart, formData, {
+    const response = await axiosJWT.patch(ENDPOINTS.UPDATE_ITEM_IN_CART, formData, {
       headers: authHeaders(accessToken),
     });
     return response.data;
@@ -64,7 +64,7 @@ export const updateItemInCart = async (formData: productToCartType, accessToken:
 
 export const deleteItemInCart = async (id: string, accessToken: string, axiosJWT: AxiosInstance) => {
   try {
-    const response = await axiosJWT.delete(endpoints.deleteItemInCart + `/${id}`, {
+    const response = await axiosJWT.delete(ENDPOINTS.REMOVE_ITEM_IN_CART + `/${id}`, {
       headers: authHeaders(accessToken),
     });
     return response.data;
