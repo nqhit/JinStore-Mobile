@@ -1,34 +1,26 @@
 // ./(tabs)/index.tsx
 import styles from '@/assets/styles/Screen/ProfileScreen.styles';
 import FText from '@/components/Text';
-import { createAxios } from '@/server/axiosInstance';
-import { logOut } from '@/server/services/auth.service';
+import { useAuth } from '@/server/hooks/useAuth';
 import { useCallback, useState } from 'react';
 import { ActivityIndicator, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useDispatch, useSelector } from 'react-redux';
-import { logoutSuccess } from '../../redux/slices/authSlice';
 
 export default function ProfileScreen() {
   const [loading, setLoading] = useState(false);
-
   const insets = useSafeAreaInsets();
-  const user = useSelector((state: any) => state.auth.login.currentUser);
-  const id = user?._id;
-  const accessToken = user?.accessToken;
-  const dispatch = useDispatch();
-  const axiosJWT_V2 = createAxios(user, dispatch, logoutSuccess);
+  const { logout } = useAuth();
 
   const handleLogout = useCallback(async () => {
     setLoading(true);
     try {
-      await logOut(dispatch, id, accessToken, axiosJWT_V2);
+      await logout();
     } catch {
       setLoading(false);
     } finally {
       setLoading(false);
     }
-  }, [dispatch, id, accessToken, axiosJWT_V2]);
+  }, [logout]);
 
   // Hiển thị loading trong khi kiểm tra
   if (loading) {

@@ -1,5 +1,6 @@
 // app/index.tsx
 import { loginSuccess } from '@/redux/slices/authSlice'; // Import action để restore state
+import { AUTH_STORAGE_KEYS } from '@/server/constants/auth.constants';
 import { StorageService } from '@/server/utils/storage.service';
 import { TokenRefreshService } from '@/server/utils/token-refresh.service';
 import { TokenService } from '@/server/utils/token.service';
@@ -16,7 +17,7 @@ export default function IndexPage() {
   const checkAuthStatus = async () => {
     try {
       const userData = await StorageService.getItem('user');
-      const accessToken = await StorageService.getItem<string>('accessToken');
+      const accessToken = await StorageService.getItem<string>(AUTH_STORAGE_KEYS.ACCESS_TOKEN);
 
       if (!userData || !accessToken) {
         router.replace('/(auth)/login');

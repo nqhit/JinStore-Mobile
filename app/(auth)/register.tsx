@@ -3,22 +3,14 @@ import ButtonLoginSocial from '@/components/Button/LoginSocial';
 import FormInputGroup from '@/components/Form/FormInput';
 import FText from '@/components/Text';
 import { useKeyboardPadding } from '@/hooks/useKeyboardPadding';
-import { register } from '@/server/services/auth.service';
+import { registerFormData } from '@/interfaces/auth.type';
+import { useAuth } from '@/server/hooks/useAuth';
 import { fullnameRegex, passwordRegex, usernameRegex } from '@/utils/regex';
 import { Formik } from 'formik';
 import React, { useCallback, useState } from 'react';
-import { Alert, Image, KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
+import { Image, KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useDispatch } from 'react-redux';
 import * as yup from 'yup';
-
-interface RegisterFormData {
-  fullname: string;
-  username: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-}
 
 const RegisterSchema = yup.object().shape({
   fullname: yup.string().trim().matches(fullnameRegex, 'Họ và tên không hợp lệ').required('Vui lòng nhập họ và tên'),
@@ -43,26 +35,25 @@ const RegisterSchema = yup.object().shape({
 });
 
 const RegisterScreen = () => {
-  const dispatch = useDispatch();
+  const { register } = useAuth();
   const keyboardPadding = useKeyboardPadding(20);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleRegister = useCallback(
-    async (values: RegisterFormData) => {
+    async (values: registerFormData) => {
       if (isLoading) return;
 
       setIsLoading(true);
 
       try {
-        await register(values, dispatch);
+        await register(values);
       } catch (error) {
-        Alert.alert('Lỗi', 'Đăng ký thất bại. Vui lòng thử lại.');
         console.error('Registration error:', error);
       } finally {
         setIsLoading(false);
       }
     },
-    [isLoading, dispatch],
+    [isLoading, register],
   );
 
   return (

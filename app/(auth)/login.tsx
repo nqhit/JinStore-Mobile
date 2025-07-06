@@ -2,7 +2,8 @@ import { styles } from '@/assets/styles/Screen/FormScreen.styles';
 import ButtonLoginSocial from '@/components/Button/LoginSocial';
 import FormInputGroup from '@/components/Form/FormInput';
 import FText from '@/components/Text';
-import { login } from '@/server/services/auth.service';
+import { loginFormData } from '@/interfaces/auth.type';
+import { useAuth } from '@/server/hooks/useAuth';
 import { passwordRegex, validateEmail, validateUsername } from '@/utils/regex';
 import { router, useFocusEffect, useNavigation } from 'expo-router';
 import { Formik } from 'formik';
@@ -30,14 +31,10 @@ const LoginSchema = yup.object().shape({
     .required('Vui lòng nhập mật khẩu'),
 });
 
-interface loginFormData {
-  usernameOrEmail: string;
-  password: string;
-}
-
 const LoginScreen = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
+  const { login } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [isNavigating, setIsNavigating] = useState(false);
 
@@ -70,9 +67,8 @@ const LoginScreen = () => {
   const handleLogin = useCallback(
     async (values: loginFormData) => {
       setIsLoading(true);
-
       try {
-        await login(values, dispatch);
+        await login(values);
       } catch (error) {
         console.error('Login error in component:', error);
       } finally {

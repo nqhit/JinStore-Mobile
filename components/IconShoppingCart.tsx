@@ -1,32 +1,27 @@
 import socket from '@/config/socket';
-import useCart from '@/hooks/cart/useCart.hooks';
-import { loginSuccess } from '@/redux/slices/authSlice';
-import { createAxios } from '@/server/axiosInstance';
+import { useCart } from '@/server/hooks/useCart';
 import { AntDesign } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
 
 import FText from '@/components/Text';
 import { COLORS } from '@/constants/Colors';
+import { useCurrentUser } from '@/server/hooks/useCurrentUser';
 
 function IconShoppingCart() {
-  const user = useSelector((state: any) => state.auth.login.currentUser);
+  const user = useCurrentUser();
   const id = user?._id;
-  const accessToken = user?.accessToken;
-  const dispatch = useDispatch();
-  const axiosJWT = createAxios(user, dispatch, loginSuccess);
 
   const [lengthItems, setLengthItems] = useState(0);
 
-  const { fetchCartItems } = useCart({ accessToken, axiosJWT });
+  const { getCart } = useCart();
 
   const handleFetchData = useCallback(() => {
-    fetchCartItems().then((res) => {
+    getCart().then((res) => {
       setLengthItems(res?.itemCount || 0);
     });
-  }, [fetchCartItems]);
+  }, [getCart]);
 
   const handleRouterCart = useCallback(() => {
     router.navigate('/cart');

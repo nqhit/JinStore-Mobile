@@ -2,19 +2,14 @@ import styles from '@/assets/styles/Screen/CartScreen.styles';
 import CartItem from '@/components/carts/CartItem';
 import FText from '@/components/Text';
 import { COLORS } from '@/constants/Colors';
-import useCart from '@/hooks/cart/useCart.hooks';
-import useChangeQuantity from '@/hooks/cart/useChangeQuantity.hooks';
-import useDeleteItem from '@/hooks/cart/useDeleteItem.hooks';
 import { useHideTabBar } from '@/hooks/useHideTabBar';
 import { CartItemType } from '@/interfaces/cart.type';
-import { loginSuccess } from '@/redux/slices/authSlice';
-import { createAxios } from '@/server/axiosInstance';
+import { useCart } from '@/server/hooks/useCart';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { FlatList, Image, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useDispatch, useSelector } from 'react-redux';
 
 const formatCurrency = (value: number) => {
   return value.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
@@ -22,45 +17,42 @@ const formatCurrency = (value: number) => {
 
 function CartDetails() {
   useHideTabBar();
-  const user = useSelector((state: any) => state.auth.login.currentUser);
-  const accessToken = user?.accessToken;
-  const dispatch = useDispatch();
-  const axiosJWT = createAxios(user, dispatch, loginSuccess);
   const [data, setData] = useState<CartItemType[]>([]);
   const [selectedItems, setSelectedItems] = useState<CartItemType[]>([]);
 
   const isAllSelected = selectedItems.length === data.length;
 
-  const { fetchCartItems } = useCart({ accessToken, axiosJWT });
-  const { fetchDeleteItem } = useDeleteItem({ accessToken, axiosJWT });
-  const { fetchQuantityChange } = useChangeQuantity({
-    accessToken,
-    axiosJWT,
-  });
+  const { getCart, deleteItemInCart, updateItemInCart } = useCart();
 
   const handleFetchData = useCallback(() => {
-    fetchCartItems().then((res) => {
+    getCart().then((res) => {
       setData(Array.isArray(res?.data) ? res.data : []);
     });
-  }, [fetchCartItems]);
+  }, [getCart]);
 
   // NOTE: Thay đổi số lượng hàng hóa
-  const handleChangeQuantity = (itemId: string, change: number, oldQuantity: number) => {
-    fetchQuantityChange(itemId, change, oldQuantity).then((res) => {
-      const newQuantity = oldQuantity + change;
-      setData((prevItems) =>
-        prevItems.map((item) => (item._id === itemId ? { ...item, quantity: newQuantity } : item)),
-      );
-    });
-  };
+  const handleChangeQuantity = useCallback(
+    (itemId: string, change: number, oldQuantity: number) => {
+      updateItemInCart(itemId, change, oldQuantity).then((res) => {
+        const newQuantity = oldQuantity + change;
+        setData((prevItems) =>
+          prevItems.map((item) => (item._id === itemId ? { ...item, quantity: newQuantity } : item)),
+        );
+      });
+    },
+    [updateItemInCart],
+  );
 
   // NOTE: Xóa sản phẩm trong giỏ hàng
-  const handleDeleteItem = (itemId: string) => {
-    fetchDeleteItem(itemId).then((res) => {
-      setData((prevItems) => prevItems.filter((item) => item._id !== itemId));
-      setSelectedItems((prevSelected) => prevSelected.filter((p) => p._id !== itemId));
-    });
-  };
+  const handleDeleteItem = useCallback(
+    (itemId: string) => {
+      deleteItemInCart(itemId).then((res) => {
+        setData((prevItems) => prevItems.filter((item) => item._id !== itemId));
+        setSelectedItems((prevSelected) => prevSelected.filter((p) => p._id !== itemId));
+      });
+    },
+    [deleteItemInCart],
+  );
 
   const handleSelectAll = useCallback(() => {
     if (isAllSelected) {
