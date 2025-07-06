@@ -3,6 +3,7 @@ import { Dispatch } from '@reduxjs/toolkit';
 import { AxiosInstance } from 'axios';
 import { router } from 'expo-router';
 import Toast from 'react-native-toast-message';
+import { AUTH_STORAGE_KEYS } from './constants/auth.constants';
 import { HttpService } from './utils/http.service';
 import { StorageService } from './utils/storage.service';
 import { TokenRefreshService } from './utils/token-refresh.service';
@@ -13,7 +14,7 @@ export const createAxios = (user: userType, dispatch: Dispatch, stateSuccess: an
 
   newInstance.interceptors.request.use(
     async (config) => {
-      const accessToken = await StorageService.getItem<string>('accessToken');
+      const accessToken = await StorageService.getItem<string>(AUTH_STORAGE_KEYS.ACCESS_TOKEN);
 
       if (!accessToken) {
         return config;
@@ -33,7 +34,7 @@ export const createAxios = (user: userType, dispatch: Dispatch, stateSuccess: an
           dispatch(stateSuccess(updatedUserData));
 
           config.headers = config.headers || {};
-          Object.assign(config.headers, HttpService.setAuthHeader(accessToken));
+          Object.assign(config.headers, HttpService.setAuthHeader(refreshData.accessToken));
         } catch {
           Toast.show({
             type: 'info',

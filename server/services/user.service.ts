@@ -2,7 +2,7 @@ import { API_URL } from '@/constants/env';
 import { userType } from '@/interfaces/user.type';
 import { ENDPOINTS } from '@/server/constants/endpoints';
 import axios, { AxiosInstance } from 'axios';
-import { Alert } from 'react-native';
+import { ErrorHandler } from './../../utils/error.handler';
 
 axios.defaults.baseURL = API_URL;
 
@@ -23,13 +23,11 @@ const authHeaders = (accessToken: string) => ({
   ...defaultHeaders,
 });
 
-export const getInfoUser = async (id: string, accessToken: string, axiosJWT: AxiosInstance): Promise<userType> => {
+export const getInfoUser = async (id: string, accessToken: string, axiosJWT: AxiosInstance) => {
   try {
     if (!id || !accessToken) {
       throw new Error('Missing id or accessToken');
     }
-
-    console.log('Fetching user info for ID:', id);
 
     const response = await axiosJWT.get(ENDPOINTS.INFO_USER + `/${id}`, {
       timeout: 10000,
@@ -45,22 +43,6 @@ export const getInfoUser = async (id: string, accessToken: string, axiosJWT: Axi
 
     return apiResponse.user;
   } catch (error) {
-    console.log('Detailed error in getInfoUser:', error);
-
-    if (axios.isAxiosError(error)) {
-      const errorMessage = error.response?.data?.message || 'Lỗi khi lấy thông tin người dùng';
-      console.log('Axios error details:', {
-        status: error.response?.status,
-        data: error.response?.data,
-        message: errorMessage,
-      });
-      Alert.alert('Lỗi', errorMessage);
-      throw new Error(errorMessage);
-    } else {
-      const errorMsg = error instanceof Error ? error.message : 'Có lỗi xảy ra khi lấy thông tin người dùng';
-      console.log('Non-axios error:', errorMsg);
-      Alert.alert('Lỗi', errorMsg);
-      throw new Error(errorMsg);
-    }
+    ErrorHandler.handleAuthError(error);
   }
 };
