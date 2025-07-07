@@ -2,15 +2,12 @@ import styles from '@/assets/styles/Screen/HomeScreen.styles';
 import CategoryCard from '@/components/categories/categoryCard';
 import ProductCard from '@/components/products/ProductCard';
 import FText from '@/components/Text';
-import useCategory from '@/hooks/category/useCategory.hooks';
-import useProduct from '@/hooks/product/useProduct.hooks';
-import useUser from '@/hooks/user/useUser.hooks';
 import { categoryType } from '@/interfaces/category.type';
 import { productType } from '@/interfaces/product.type';
 import { userType } from '@/interfaces/user.type';
-import { getCategoriesAll } from '@/server/services/category.service';
-import { getProductsAll } from '@/server/services/product.service';
-import { getInfoUser } from '@/server/services/user.service';
+import useCategory from '@/server/hooks/useCategory';
+import useProduct from '@/server/hooks/useProduct';
+import { useUser } from '@/server/hooks/useUser';
 import { router } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, Image, ScrollView, TouchableOpacity, View } from 'react-native';
@@ -23,16 +20,27 @@ export default function HomeScreen() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const { fetchInfoUser } = useUser({ getInfoUser, setUserInfo, setLoading, setError });
-  const { fetchProduct } = useProduct({ getProductsAll, setProducts });
+  const { getInfoUser } = useUser();
+  const { getProductsAll } = useProduct();
 
-  const { fetchCategories } = useCategory({ getCategoriesAll, setCategories });
+  const { getCategoriesAll } = useCategory();
 
-  const handleFetchData = useCallback(() => {
-    fetchProduct();
-    fetchInfoUser();
-    fetchCategories();
-  }, [fetchInfoUser, fetchProduct, fetchCategories]);
+  const handleFetchData = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      await Promise.all([
+        getProductsAll(1, 10).then((res) => setProducts(res.data)),
+        getInfoUser(setLoading, setError).then((res) => setUserInfo(res)),
+        getCategoriesAll().then((res) => setCategories(res)),
+      ]);
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Có lỗi xảy ra';
+      setError(errorMessage);
+    } finally {
+      setLoading(false);
+    }
+  }, [getInfoUser, getProductsAll, getCategoriesAll]);
 
   const handleRouterStore = useCallback(() => {
     router.push('/(tabs)/(store)/ProdDetail');
@@ -42,12 +50,19 @@ export default function HomeScreen() {
     handleFetchData();
   }, [handleFetchData]);
 
-  const featuredProducts = products.filter((product: productType) => product.averageRating > 4);
+  const featuredProducts = Array.isArray(products)
+    ? products.filter((product: productType) => product.averageRating > 4)
+    : [];
 
-  const NewProducts = products.filter(
-    (product: productType) => new Date(product.createdAt) > new Date(new Date().setDate(new Date().getDate() - 7)),
-  );
-  const featuredCategories = categories.filter((categories: categoryType) => categories.status === 'active');
+  const NewProducts = Array.isArray(products)
+    ? products.filter(
+        (product: productType) => new Date(product.createdAt) > new Date(new Date().setDate(new Date().getDate() - 7)),
+      )
+    : [];
+
+  const featuredCategories = Array.isArray(categories)
+    ? categories.filter((category: categoryType) => category.status === 'active')
+    : [];
 
   const renderProductItem = ({ item }: { item: productType }) => (
     <ProductCard handleRouterDetail={handleRouterStore} product={item} />

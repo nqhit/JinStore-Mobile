@@ -19,7 +19,7 @@ export const CartService = {
     dispatch(addStart());
     try {
       const res = await axiosJWT.post(ENDPOINTS.ADD_ITEM_TO_CART, formData, {
-        headers: HttpService.setAuthHeader(accessToken),
+        ...HttpService.setAuthHeader(accessToken),
       });
       if (res.data.success) {
         dispatch(addSuccess(res.data));
@@ -49,7 +49,7 @@ export const CartService = {
   updateItemInCart: async (formData: productToCartType, accessToken: string, axiosJWT: AxiosInstance) => {
     try {
       const response = await axiosJWT.patch(ENDPOINTS.UPDATE_ITEM_IN_CART, formData, {
-        headers: HttpService.setAuthHeader(accessToken),
+        ...HttpService.setAuthHeader(accessToken),
       });
       return response.data;
     } catch (error) {

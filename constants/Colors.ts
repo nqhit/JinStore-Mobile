@@ -18,7 +18,9 @@ export const COLORS = {
   green800: '#2E7D32',
 
   error: '#F44336',
+};
 
+export const Colors = {
   light: {
     text: '#11181C',
     background: '#fff',

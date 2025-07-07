@@ -1,4 +1,5 @@
 // app/index.tsx
+import { userType } from '@/interfaces/user.type';
 import { loginSuccess } from '@/redux/slices/authSlice'; // Import action để restore state
 import { AUTH_STORAGE_KEYS } from '@/server/constants/auth.constants';
 import { StorageService } from '@/server/utils/storage.service';
@@ -16,7 +17,7 @@ export default function IndexPage() {
   // Kiểm tra và validate token
   const checkAuthStatus = async () => {
     try {
-      const userData = await StorageService.getItem('user');
+      const userData = await StorageService.getItem<userType>(AUTH_STORAGE_KEYS.USER);
       const accessToken = await StorageService.getItem<string>(AUTH_STORAGE_KEYS.ACCESS_TOKEN);
 
       if (!userData || !accessToken) {
@@ -37,12 +38,12 @@ export default function IndexPage() {
             return;
           }
 
-          const updatedUserData = {
+          const updatedUserData: userType = {
             ...userData,
             accessToken: refreshData.accessToken,
           };
 
-          await StorageService.setItem('user', updatedUserData);
+          await StorageService.setItem(AUTH_STORAGE_KEYS.USER, updatedUserData);
           dispatch(loginSuccess(updatedUserData));
 
           router.replace('/(tabs)/home');
@@ -84,7 +85,6 @@ export default function IndexPage() {
     checkAuthStatus();
   }, []);
 
-  // Hiển thị loading trong khi kiểm tra
   if (isChecking) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>

@@ -18,7 +18,7 @@ export const TokenRefreshService = {
     const { accessToken, refreshToken: newRefreshToken } = response.data;
 
     const tokens: AuthTokens = {
-      accessToken,
+      accessToken: accessToken,
       refreshToken: newRefreshToken || refreshToken,
     };
 

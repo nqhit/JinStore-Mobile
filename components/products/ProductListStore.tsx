@@ -1,6 +1,5 @@
-import useProduct from '@/hooks/product/useProduct.hooks';
 import { productResType, productType } from '@/interfaces/product.type';
-import { getProductsAll } from '@/server/services/product.service';
+import useProduct from '@/server/hooks/useProduct';
 import { router } from 'expo-router';
 import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { FlatList, View } from 'react-native';
@@ -16,13 +15,14 @@ function ProductListStore() {
   const [loadingMore, setLoadingMore] = useState(false); // Tách riêng loading cho load more
   const [refreshing, setRefreshing] = useState(false);
   const [hasNextPage, setHasNextPage] = useState(true);
-  const { fetchProductPagi } = useProduct({ getProductsAll, setProducts });
+  const { getProductsAll } = useProduct();
   const insets = useSafeAreaInsets();
 
   const handleFetchData = useCallback(async () => {
     try {
       setLoading(true);
-      const fetch = await fetchProductPagi(1, limit);
+      const fetch = await getProductsAll(1, limit);
+      setProducts(fetch.data);
       setHasNextPage(fetch.pagination.hasNextPage);
       setPage(1);
     } catch (error) {
@@ -30,14 +30,14 @@ function ProductListStore() {
     } finally {
       setLoading(false);
     }
-  }, [fetchProductPagi, limit]);
+  }, [getProductsAll, limit]);
 
   const loadMore = async () => {
     if (loadingMore || !hasNextPage) return; // Dùng loadingMore thay vì loading
     try {
       setLoadingMore(true);
       const nextPage = page + 1;
-      const fetched = await fetchProductPagi(nextPage, limit);
+      const fetched = await getProductsAll(nextPage, limit);
       setHasNextPage(fetched.pagination.hasNextPage);
       setPage(nextPage);
     } catch (error) {

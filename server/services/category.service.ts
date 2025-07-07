@@ -1,28 +1,22 @@
 import { API_URL } from '@/constants/env';
 import { ENDPOINTS } from '@/server/constants/endpoints';
+import { ErrorHandler } from '@/utils/error.handler';
 import axios from 'axios';
+import { HttpService } from '../utils/http.service';
 
 axios.defaults.baseURL = API_URL;
 
-const defaultHeaders = {
-  Accept: 'application/json',
-  'Content-Type': 'application/json',
-};
+export const categoryService = {
+  getCategoriesAll: async () => {
+    try {
+      const httpClient = HttpService.getInstance();
+      const response = await httpClient.get(ENDPOINTS.CATEGORIES_ALL, {
+        timeout: 10000,
+      });
 
-const authHeaders = (accessToken: string) => ({
-  Authorization: `Bearer ${accessToken}`,
-  ...defaultHeaders,
-});
-
-export const getCategoriesAll = async () => {
-  try {
-    const response = await axios.get(ENDPOINTS.CATEGORIES_ALL, {
-      timeout: 10000,
-      headers: defaultHeaders,
-    });
-
-    return response.data;
-  } catch (error) {
-    throw new Error(error as string);
-  }
+      return response.data;
+    } catch (error) {
+      ErrorHandler.handleAuthError(error);
+    }
+  },
 };

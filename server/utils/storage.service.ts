@@ -20,6 +20,7 @@ export const StorageService = {
       return null;
     }
   },
+
   async clearAuthData(): Promise<void> {
     try {
       await AsyncStorage.multiRemove([
@@ -32,6 +33,7 @@ export const StorageService = {
       console.error('Error clearing auth data:', error);
     }
   },
+
   async setAuthTokens(tokens: AuthTokens): Promise<void> {
     await Promise.all([
       this.setItem(AUTH_STORAGE_KEYS.ACCESS_TOKEN, tokens.accessToken),
