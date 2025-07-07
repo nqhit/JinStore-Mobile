@@ -2,18 +2,26 @@ import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
   container: {
+    position: 'absolute',
     flex: 1,
+    width: '100%',
   },
+
   header: {
     width: '100%',
-    position: 'absolute',
     paddingHorizontal: 15,
     paddingVertical: 15,
     justifyContent: 'center',
-    zIndex: 1,
-    // boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
     borderBottomColor: '#ccc',
     borderBottomWidth: 1,
+  },
+
+  body: {
+    flex: 1,
+    paddingHorizontal: 15,
+    paddingVertical: 15,
+    gap: 10,
+    height: 1000,
   },
 });
 

@@ -1,4 +1,5 @@
 import styles from '@/assets/styles/Screen/CouponScreen.styles';
+import { CouponList } from '@/components/coupons/CouponList';
 import SearchFilter from '@/components/SearchFilter';
 import { COLORS } from '@/constants/Colors';
 import { View } from 'react-native';
@@ -10,6 +11,9 @@ function CartCoupon() {
       <View style={styles.container}>
         <View style={styles.header}>
           <SearchFilter onOpen={() => {}} />
+        </View>
+        <View style={styles.body}>
+          <CouponList />
         </View>
       </View>
     </SafeAreaView>
