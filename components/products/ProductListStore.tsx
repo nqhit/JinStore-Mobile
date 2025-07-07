@@ -1,5 +1,5 @@
 import { productResType, productType } from '@/interfaces/product.type';
-import useProduct from '@/server/hooks/useProduct';
+import { useProduct } from '@/server/hooks/useProduct';
 import { router } from 'expo-router';
 import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { FlatList, View } from 'react-native';

@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-end',
-    gap: 15,
+    gap: 10,
   },
 
   discountContainer: {
@@ -110,12 +110,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     color: COLORS.primary,
-    lineHeight: 20,
   },
 
   amountSaveContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-end',
     justifyContent: 'space-between',
   },
 
@@ -123,7 +122,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '600',
     color: COLORS.black,
-    lineHeight: 20,
   },
 
   notiContainer: {
@@ -144,8 +142,8 @@ const styles = StyleSheet.create({
   saveText: {
     fontSize: 16,
     color: COLORS.primary,
-    lineHeight: 23,
   },
+
   btnCheckout: {
     backgroundColor: COLORS.primary,
     borderRadius: 8,

@@ -1,7 +1,7 @@
 import { productService } from '@/server/services/product.service';
 import { useCallback } from 'react';
 
-function useProduct() {
+export const useProduct = () => {
   const getProductsAll = useCallback(async (page: number, limit: number) => {
     try {
       return await productService.getProductsAll(page, limit);
@@ -10,6 +10,4 @@ function useProduct() {
     }
   }, []);
   return { getProductsAll };
-}
-
-export default useProduct;
+};

@@ -6,7 +6,7 @@ import { categoryType } from '@/interfaces/category.type';
 import { productType } from '@/interfaces/product.type';
 import { userType } from '@/interfaces/user.type';
 import useCategory from '@/server/hooks/useCategory';
-import useProduct from '@/server/hooks/useProduct';
+import { useProduct } from '@/server/hooks/useProduct';
 import { useUser } from '@/server/hooks/useUser';
 import { router } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';

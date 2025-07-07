@@ -1,19 +1,25 @@
 import { COLORS } from '@/constants/Colors';
 import { Ionicons } from '@expo/vector-icons';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Keyboard, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
 import FTextInput from './TextInput';
 
 function SearchFilter({ onOpen }: { onOpen: () => void }) {
+  const handleOutsideTouch = () => {
+    Keyboard.dismiss();
+  };
+
   return (
-    <View style={styles.searchContainer}>
-      <TouchableOpacity style={styles.searchFilter} onPress={onOpen}>
-        <Ionicons name="options-outline" size={26} color="black" />
-      </TouchableOpacity>
-      <View style={styles.searchBar}>
-        <Ionicons name="search" size={20} color="#666" />
-        <FTextInput placeholder="Tìm kiếm..." style={styles.searchInput} />
+    <TouchableWithoutFeedback onPress={handleOutsideTouch}>
+      <View style={styles.searchContainer}>
+        <TouchableOpacity style={styles.searchFilter} onPress={onOpen}>
+          <Ionicons name="options-outline" size={26} color="black" />
+        </TouchableOpacity>
+        <View style={styles.searchBar}>
+          <Ionicons name="search" size={20} color="#666" />
+          <FTextInput placeholder="Tìm kiếm..." style={styles.searchInput} />
+        </View>
       </View>
-    </View>
+    </TouchableWithoutFeedback>
   );
 }
 

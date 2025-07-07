@@ -2,24 +2,23 @@ import styles from '@/assets/styles/Screen/CartScreen.styles';
 import CartItem from '@/components/carts/CartItem';
 import FText from '@/components/Text';
 import { COLORS } from '@/constants/Colors';
+import { useCouponStore } from '@/hooks/useCouponStore';
 import { useHideTabBar } from '@/hooks/useHideTabBar';
 import { CartItemType } from '@/interfaces/cart.type';
 import { useCart } from '@/server/hooks/useCart';
+import { formatCurrency } from '@/utils/FormatCurrency';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { FlatList, Image, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-const formatCurrency = (value: number) => {
-  return value.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
-};
-
 function CartDetails() {
   useHideTabBar();
   const [data, setData] = useState<CartItemType[]>([]);
   const [selectedItems, setSelectedItems] = useState<CartItemType[]>([]);
 
+  const { couponItem } = useCouponStore();
   const isAllSelected = selectedItems.length === data.length;
 
   const { getCart, deleteItemInCart, updateItemInCart } = useCart();
@@ -98,10 +97,24 @@ function CartDetails() {
     }, 0);
   }, [data, selectedItems]);
 
-  // Cập nhật hàm tính toán giảm giá từ coupon
+  // NOTE:hàm tính toán giảm giá từ coupon
   const calculateCouponDiscount = useMemo(() => {
-    return 0;
-  }, []);
+    let discount = 0;
+
+    if (!couponItem) return 0;
+
+    if (couponItem.type === 'percentage') {
+      const percent = couponItem.discount || 0;
+      discount = (calculateSubtotal * percent) / 100;
+    } else if (couponItem.type === 'fixed') {
+      discount = couponItem.discount || 0;
+      if (discount > calculateSubtotal) {
+        discount = calculateSubtotal;
+      }
+    }
+
+    return discount;
+  }, [couponItem, calculateSubtotal]);
 
   const calculateTotal = useMemo(() => {
     return calculateSubtotal - calculateCouponDiscount;
@@ -114,10 +127,10 @@ function CartDetails() {
       params: {
         data: JSON.stringify(selectedIds),
         feeDiscount: calculateCouponDiscount,
-        total: calculateSubtotal,
+        total: calculateTotal,
       },
     });
-  }, [selectedItems, calculateCouponDiscount, calculateSubtotal]);
+  }, [selectedItems, calculateCouponDiscount, calculateTotal]);
 
   const handleRouterCoupon = useCallback(() => {
     router.push('/coupon');
@@ -163,7 +176,7 @@ function CartDetails() {
             </View>
             <View style={styles.discountContainer}>
               <View style={styles.couponLeft}>
-                <FText>{formatCurrency(calculateCouponDiscount)}</FText>
+                <FText>{formatCurrency(couponItem?.discount || 0)}</FText>
               </View>
               <View>
                 <Ionicons name="chevron-forward" size={24} color={COLORS.primary} />
@@ -190,7 +203,7 @@ function CartDetails() {
               {selectedItems.length > 0 && (
                 <View style={styles.amountSaveContainer}>
                   <FText style={styles.saveText}>Tiết kiệm: </FText>
-                  <FText style={styles.amountSave}>{calculateCouponDiscount}</FText>
+                  <FText style={styles.amountSave}>{formatCurrency(calculateCouponDiscount)}</FText>
                 </View>
               )}
             </View>

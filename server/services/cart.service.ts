@@ -37,7 +37,7 @@ export const CartService = {
   getCart: async (accessToken: string, axiosJWT: AxiosInstance) => {
     try {
       const response = await axiosJWT.get(ENDPOINTS.CARTS, {
-        headers: HttpService.setAuthHeader(accessToken),
+        ...HttpService.setAuthHeader(accessToken),
       });
       return response.data;
     } catch (error) {

@@ -2,6 +2,8 @@
 import { loginSuccess } from '@/redux/slices/authSlice';
 import { createAxios } from '@/server/axiosInstance';
 import { CartService } from '@/server/services/cart.service';
+import { router } from 'expo-router';
+import { Alert } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { useCurrentUser } from './useCurrentUser';
 
@@ -13,6 +15,15 @@ export const useCart = () => {
 
   const getCart = async () => {
     return await CartService.getCart(accessToken, axiosJWT);
+  };
+
+  const addItemToCart = async (formData: any) => {
+    if (!accessToken || user === null) {
+      Alert.alert('Vui lòng đăng nhập');
+      router.push('/(auth)/login');
+      return null;
+    }
+    return await CartService.addItemToCart(formData, dispatch, accessToken, axiosJWT);
   };
 
   const deleteItemInCart = async (itemId: string) => {
@@ -30,5 +41,5 @@ export const useCart = () => {
 
     return await CartService.updateItemInCart(formData, accessToken, axiosJWT);
   };
-  return { getCart, deleteItemInCart, updateItemInCart };
+  return { getCart, addItemToCart, deleteItemInCart, updateItemInCart };
 };

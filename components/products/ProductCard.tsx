@@ -1,15 +1,12 @@
 import styles from '@/assets/styles/products/ProductCard.styles';
 import FText from '@/components/Text';
 import { productType } from '@/interfaces/product.type';
-import { loginSuccess } from '@/redux/slices/authSlice';
-import { createAxios } from '@/server/axiosInstance';
-import { addItemToCart } from '@/server/services/cart.service';
-import { router } from 'expo-router';
+import { useCart } from '@/server/hooks/useCart';
 import { memo } from 'react';
 import { Alert, Image, TouchableOpacity, View } from 'react-native';
 import { StarRatingDisplay } from 'react-native-star-rating-widget';
 import Toast from 'react-native-toast-message';
-import { useDispatch, useSelector } from 'react-redux';
+
 function ProductCard({
   product,
   handleRouterDetail = () => {},
@@ -17,11 +14,7 @@ function ProductCard({
   handleRouterDetail: () => void;
   product: productType;
 }) {
-  const user = useSelector((state: any) => state.auth.login.currentUser);
-  const accessToken = user?.accessToken;
-  const dispatch = useDispatch();
-  const axiosJWT = createAxios(user, dispatch, loginSuccess);
-
+  const { addItemToCart } = useCart();
   const handleAddToCart = async (product: productType) => {
     if (!product || !product._id) return;
 
@@ -30,14 +23,8 @@ function ProductCard({
       quantity: 1,
     };
 
-    if (!accessToken || user === null) {
-      Alert.alert('Vui lòng đăng nhập');
-      router.push('/(auth)/login');
-      return;
-    }
-
     try {
-      const res = await addItemToCart(formData, dispatch, accessToken, axiosJWT);
+      const res = await addItemToCart(formData);
       if (res.success) {
         Toast.show({
           type: 'success',

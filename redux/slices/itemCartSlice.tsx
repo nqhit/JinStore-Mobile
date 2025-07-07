@@ -1,10 +1,10 @@
-import { CartItem } from '@/interfaces/cart.type';
+import { CartItemType } from '@/interfaces/cart.type';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 const itemSlice = createSlice({
   name: 'cart',
   initialState: {
-    itemCart: [] as CartItem[],
+    itemCart: [] as CartItemType[],
     add: {
       isFetching: false,
       error: null as string | null,
@@ -17,7 +17,7 @@ const itemSlice = createSlice({
       state.add.error = null;
       state.add.success = false;
     },
-    addSuccess: (state, action: PayloadAction<CartItem>) => {
+    addSuccess: (state, action: PayloadAction<CartItemType>) => {
       state.add.isFetching = false;
       state.add.success = true;
       state.add.error = null;
