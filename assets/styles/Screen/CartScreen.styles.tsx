@@ -177,6 +177,27 @@ const styles = StyleSheet.create({
   btnDisabled: {
     backgroundColor: COLORS.gray300,
   },
+
+  couponWarning: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    backgroundColor: '#FFF3CD',
+    borderRadius: 8,
+    marginTop: 8,
+  },
+  warningText: {
+    flex: 1,
+    marginHorizontal: 8,
+    fontSize: 12,
+    color: '#856404',
+  },
+  removeText: {
+    color: '#DC3545',
+    fontSize: 12,
+    fontWeight: '600',
+  },
 });
 
 export default styles;

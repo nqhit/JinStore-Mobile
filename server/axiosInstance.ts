@@ -61,11 +61,18 @@ export const createAxios = (user: userType, dispatch: Dispatch, stateSuccess: an
       if ((error.response?.status === 401 || error.response?.status === 403) && !originalRequest._retry) {
         originalRequest._retry = true;
         try {
-          const data = await TokenRefreshService.refreshTokens();
-          const newAccessToken = data.accessToken;
+          const refreshData = await TokenRefreshService.refreshTokens();
 
-          dispatch(stateSuccess({ ...user, accessToken: newAccessToken }));
-          originalRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
+          const updatedUserData = {
+            ...user,
+            accessToken: refreshData.accessToken,
+          };
+
+          await StorageService.setItem('user', updatedUserData);
+          dispatch(stateSuccess(updatedUserData));
+
+          originalRequest.headers = originalRequest.headers || {};
+          Object.assign(originalRequest.headers, HttpService.setAuthHeader(refreshData.accessToken));
 
           return newInstance(originalRequest);
         } catch (err) {

@@ -24,8 +24,10 @@ export const CouponItem = ({ coupon }: { coupon: CouponType }) => {
 
   const handleApplyCoupon = async () => {
     setCouponItem({
+      _id: coupon._id,
       code: coupon.code,
       type: coupon.type,
+      minOrderAmount: coupon.minOrderAmount,
       discount: coupon.type === 'fixed' ? coupon.value : coupon.maxPercent,
     });
     await Clipboard.setStringAsync(code);

@@ -18,6 +18,8 @@ export const COLORS = {
   green800: '#2E7D32',
 
   error: '#F44336',
+
+  warning: '#FFC107',
 };
 
 export const Colors = {

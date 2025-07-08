@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     alignContent: 'center',
-    width: 15,
+    width: 20,
     textAlign: 'center',
   },
 });

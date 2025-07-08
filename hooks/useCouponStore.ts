@@ -2,9 +2,11 @@ import { create } from 'zustand';
 
 type CouponStore = {
   couponItem: {
+    _id: string;
     code: string;
     type: string;
     discount?: number;
+    minOrderAmount: number;
   } | null;
   setCouponItem: (item: CouponStore['couponItem']) => void;
   clearCouponCode: () => void;

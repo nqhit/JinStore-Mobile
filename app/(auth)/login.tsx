@@ -10,7 +10,6 @@ import { Formik } from 'formik';
 import React, { useCallback, useEffect, useState } from 'react';
 import { BackHandler, Image, KeyboardAvoidingView, Platform, ScrollView, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useDispatch } from 'react-redux';
 import * as yup from 'yup';
 
 const LoginSchema = yup.object().shape({
@@ -32,7 +31,6 @@ const LoginSchema = yup.object().shape({
 });
 
 const LoginScreen = () => {
-  const dispatch = useDispatch();
   const navigation = useNavigation();
   const { login } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
@@ -75,7 +73,7 @@ const LoginScreen = () => {
         setIsLoading(false);
       }
     },
-    [dispatch],
+    [login],
   );
 
   return (
