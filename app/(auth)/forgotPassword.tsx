@@ -1,10 +1,10 @@
 import { styles } from '@/assets/styles/Screen/FormScreen.styles';
-import FormInputGroup from '@/components/Form/FormInput';
+import { FormEmail } from '@/components/Form/FormEmail';
+import { FormOtp } from '@/components/Form/FormOTP';
+import { FormPassword } from '@/components/Form/FormPassword';
 import FText from '@/components/Text';
 import { useAuth } from '@/server/hooks/useAuth';
-import { validateEmail } from '@/utils/regex';
 import { router, useFocusEffect, useNavigation } from 'expo-router';
-import { Formik } from 'formik';
 import React, { useCallback, useEffect, useState } from 'react';
 import {
   Alert,
@@ -17,7 +17,6 @@ import {
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import * as yup from 'yup';
 
 // Interfaces
 interface EmailFormData {
@@ -32,29 +31,6 @@ interface ResetPasswordFormData {
   password: string;
   confirmPassword: string;
 }
-
-// Validation schemas
-const EmailSchema = yup.object().shape({
-  email: yup
-    .string()
-    .test('is-email', 'Vui lòng nhập email hợp lệ', (value) => {
-      if (!value) return false;
-      return validateEmail(value);
-    })
-    .required('Vui lòng nhập email'),
-});
-
-const OtpSchema = yup.object().shape({
-  otp: yup.string().length(6, 'Vui lòng nhập đủ 6 chữ số OTP').required('Vui lòng nhập mã OTP'),
-});
-
-const ResetPasswordSchema = yup.object().shape({
-  password: yup.string().min(8, 'Mật khẩu phải có ít nhất 8 ký tự').required('Vui lòng nhập mật khẩu'),
-  confirmPassword: yup
-    .string()
-    .oneOf([yup.ref('password')], 'Mật khẩu xác nhận không trùng khớp')
-    .required('Vui lòng nhập xác nhận mật khẩu'),
-});
 
 const ForgotPasswordScreen = () => {
   const navigation = useNavigation();
@@ -163,49 +139,11 @@ const ForgotPasswordScreen = () => {
   const renderStepContent = () => {
     switch (step) {
       case 1:
-        return (
-          <Formik initialValues={{ email: '' }} validationSchema={EmailSchema} validateOnMount onSubmit={handleSendOtp}>
-            {({ handleChange, handleBlur, handleSubmit, values, errors, touched, isValid }) => (
-              <FormInputGroup
-                inputs={[
-                  {
-                    placeholder: 'Email',
-                    keyboardType: 'email-address',
-                    value: values.email,
-                    onChangeText: handleChange('email'),
-                    onBlur: handleBlur('email'),
-                    error: errors.email,
-                    touched: touched.email,
-                  },
-                ]}
-                button={{ isFormValid: isValid, isLoading, handleFunc: handleSubmit }}
-                text="Gửi mã OTP"
-              />
-            )}
-          </Formik>
-        );
-
+        return <FormEmail isLoading={isLoading} onSubmit={handleSendOtp} />;
       case 2:
         return (
           <>
-            <Formik initialValues={{ otp: '' }} validationSchema={OtpSchema} validateOnMount onSubmit={handleVerifyOtp}>
-              {({ handleChange, handleBlur, handleSubmit, values, errors, touched, isValid }) => (
-                <FormInputGroup
-                  inputs={[
-                    {
-                      placeholder: 'Nhập mã OTP (6 chữ số)',
-                      value: values.otp,
-                      onChangeText: handleChange('otp'),
-                      onBlur: handleBlur('otp'),
-                      error: errors.otp,
-                      touched: touched.otp,
-                    },
-                  ]}
-                  button={{ isFormValid: isValid, isLoading, handleFunc: handleSubmit }}
-                  text="Xác nhận OTP"
-                />
-              )}
-            </Formik>
+            <FormOtp isLoading={isLoading} onSubmit={handleVerifyOtp} />
 
             <View style={styles.forgotPasswordContainer}>
               <TouchableOpacity onPress={handleResendOtp} disabled={countdown > 0}>
@@ -218,41 +156,7 @@ const ForgotPasswordScreen = () => {
         );
 
       case 3:
-        return (
-          <Formik
-            initialValues={{ password: '', confirmPassword: '' }}
-            validationSchema={ResetPasswordSchema}
-            validateOnMount
-            onSubmit={handleResetPassword}
-          >
-            {({ handleChange, handleBlur, handleSubmit, values, errors, touched, isValid }) => (
-              <FormInputGroup
-                inputs={[
-                  {
-                    placeholder: 'Mật khẩu mới',
-                    value: values.password,
-                    onChangeText: handleChange('password'),
-                    onBlur: handleBlur('password'),
-                    error: errors.password,
-                    touched: touched.password,
-                    secureTextEntry: true,
-                  },
-                  {
-                    placeholder: 'Xác nhận mật khẩu',
-                    value: values.confirmPassword,
-                    onChangeText: handleChange('confirmPassword'),
-                    onBlur: handleBlur('confirmPassword'),
-                    error: errors.confirmPassword,
-                    touched: touched.confirmPassword,
-                    secureTextEntry: true,
-                  },
-                ]}
-                button={{ isFormValid: isValid, isLoading, handleFunc: handleSubmit }}
-                text="Đặt lại mật khẩu"
-              />
-            )}
-          </Formik>
-        );
+        return <FormPassword isLoading={isLoading} onSubmit={handleResetPassword} />;
 
       default:
         return null;

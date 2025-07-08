@@ -66,7 +66,7 @@ const LoginScreen = () => {
     if (isNavigating) return;
 
     setIsNavigating(true);
-    router.push('/forgot-password');
+    router.push('/forgotPassword');
 
     setTimeout(() => {
       setIsNavigating(false);
