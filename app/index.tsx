@@ -1,3 +1,4 @@
+import { loginSuccess } from '@/redux/slices/authSlice';
 import { checkAndHandleToken, handleLogout, validateAuthData } from '@/server/auth.helper';
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
@@ -18,7 +19,12 @@ export default function IndexPage() {
       }
 
       // Check and handle token
-      const { success, shouldNavigateToHome } = await checkAndHandleToken(userData, accessToken, dispatch);
+      const { success, shouldNavigateToHome } = await checkAndHandleToken(
+        userData,
+        accessToken,
+        dispatch,
+        loginSuccess,
+      );
 
       if (success && shouldNavigateToHome) {
         router.replace('/(tabs)/home');

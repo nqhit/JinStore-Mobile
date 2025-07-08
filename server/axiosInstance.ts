@@ -21,11 +21,7 @@ export const createAxios = (user: userType, dispatch: Dispatch, stateSuccess: an
 
       if (TokenService.shouldRefreshToken(accessToken)) {
         try {
-          const updatedUserData = await handleTokenRefresh(user, dispatch, {
-            onSuccess: (updatedUser: userType) => {
-              dispatch(stateSuccess(updatedUser));
-            },
-          });
+          const updatedUserData = await handleTokenRefresh(user, stateSuccess, dispatch);
 
           if (updatedUserData) {
             config.headers = config.headers || {};
@@ -56,11 +52,7 @@ export const createAxios = (user: userType, dispatch: Dispatch, stateSuccess: an
         originalRequest._retry = true;
 
         try {
-          const updatedUserData = await handleTokenRefresh(user, dispatch, {
-            onSuccess: (updatedUser: userType) => {
-              dispatch(stateSuccess(updatedUser));
-            },
-          });
+          const updatedUserData = await handleTokenRefresh(user, stateSuccess, dispatch);
 
           if (updatedUserData) {
             originalRequest.headers = originalRequest.headers || {};

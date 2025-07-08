@@ -19,11 +19,11 @@ export const TokenRefreshService = {
 
     const tokens: AuthTokens = {
       accessToken: accessToken,
-      refreshToken: newRefreshToken || refreshToken,
+      refreshToken: newRefreshToken,
     };
 
     await StorageService.setAuthTokens(tokens);
-    return tokens;
+    return response.data;
   },
   async handleRefreshFailure(): Promise<void> {
     await StorageService.clearAuthData();

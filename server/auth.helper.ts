@@ -19,8 +19,8 @@ export interface TokenRefreshCallbacks {
  */
 export const handleTokenRefresh = async (
   userData: userType,
+  stateSuccess: any,
   dispatch: Dispatch,
-  callbacks?: TokenRefreshCallbacks,
 ): Promise<userType | null> => {
   try {
     console.log('Đang refresh token...');
@@ -46,15 +46,11 @@ export const handleTokenRefresh = async (
     await StorageService.setAuthTokens(tokens);
 
     // Cập nhật redux state
-    dispatch(loginSuccess(updatedUserData));
-
-    console.log('Token refresh thành công');
-    callbacks?.onSuccess?.(updatedUserData);
+    dispatch(stateSuccess(updatedUserData));
 
     return updatedUserData;
   } catch (error) {
     console.error('Token refresh failed:', error);
-    callbacks?.onError?.();
     return null;
   }
 };
@@ -98,12 +94,13 @@ export const checkAndHandleToken = async (
   userData: userType,
   accessToken: string,
   dispatch: Dispatch,
+  stateSuccess: any,
 ): Promise<{ success: boolean; shouldNavigateToHome: boolean }> => {
   try {
     if (TokenService.shouldRefreshToken(accessToken)) {
       console.log('Access token đã hết hạn, thử refresh...');
 
-      const updatedUserData = await handleTokenRefresh(userData, dispatch);
+      const updatedUserData = await handleTokenRefresh(userData, stateSuccess, dispatch);
 
       if (!updatedUserData) {
         await handleLogoutWithToast();
@@ -121,7 +118,7 @@ export const checkAndHandleToken = async (
 
     // Fallback: thử refresh token
     try {
-      const updatedUserData = await handleTokenRefresh(userData, dispatch);
+      const updatedUserData = await handleTokenRefresh(userData, stateSuccess, dispatch);
 
       if (!updatedUserData) {
         await handleLogoutWithToast();
