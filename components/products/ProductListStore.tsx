@@ -12,7 +12,7 @@ function ProductListStore() {
   const [page, setPage] = useState(1);
   const [limit] = useState(20);
   const [loading, setLoading] = useState(false);
-  const [loadingMore, setLoadingMore] = useState(false); // Tách riêng loading cho load more
+  const [loadingMore, setLoadingMore] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [hasNextPage, setHasNextPage] = useState(true);
   const { getProductsAll } = useProduct();
@@ -33,11 +33,12 @@ function ProductListStore() {
   }, [getProductsAll, limit]);
 
   const loadMore = async () => {
-    if (loadingMore || !hasNextPage) return; // Dùng loadingMore thay vì loading
+    if (loadingMore || !hasNextPage) return;
     try {
       setLoadingMore(true);
       const nextPage = page + 1;
       const fetched = await getProductsAll(nextPage, limit);
+      setProducts((prevProducts) => [...prevProducts, ...fetched.data]);
       setHasNextPage(fetched.pagination.hasNextPage);
       setPage(nextPage);
     } catch (error) {
@@ -61,18 +62,27 @@ function ProductListStore() {
     }
   }, [handleFetchData]);
 
-  const handleRouterStore = useCallback(() => {
-    router.push('/ProdDetail');
+  // Memoize router handler với useCallback
+  const handleRouterStore = useCallback((productId: string) => {
+    router.push({
+      pathname: '/ProdDetail',
+      params: { id: productId },
+    });
   }, []);
 
+  // Memoize featured products
   const featuredProducts = useMemo(() => products.filter((product: productType) => product.isActive), [products]);
-  const keyExtractorProduct = (item: productType, index: number) => {
-    // Đảm bảo key luôn unique bằng cách kết hợp _id và index
-    const id = item._id?.toString() || `temp-${index}`;
-    return `${id}-${index}`;
-  };
-  const renderProductItem = ({ item }: { item: productType }) => (
-    <ProductStore handleRouterDetail={handleRouterStore} product={item} />
+
+  // Tối ưu hóa keyExtractor
+  const keyExtractorProduct = useCallback((item: productType, index: number) => {
+    return item._id?.toString() || `temp-${index}`;
+  }, []);
+
+  const renderProductItem = useCallback(
+    ({ item }: { item: productType }) => (
+      <ProductStore handleRouterDetail={() => handleRouterStore(item._id)} product={item} />
+    ),
+    [handleRouterStore],
   );
 
   return (
@@ -95,14 +105,20 @@ function ProductListStore() {
             paddingBottom: insets.bottom,
             backgroundColor: 'white',
           }}
-          ListFooterComponent={loadingMore && hasNextPage ? <Loading /> : null} // Dùng loadingMore
+          ListFooterComponent={loadingMore && hasNextPage ? <Loading /> : null}
           columnWrapperStyle={{
             justifyContent: 'space-between',
             gap: 10,
             flexWrap: 'wrap',
             marginBottom: 10,
           }}
-          showsVerticalScrollIndicator={false} // Ẩn scroll bar cho UI sạch hơn
+          showsVerticalScrollIndicator={false}
+          removeClippedSubviews={true}
+          maxToRenderPerBatch={10}
+          updateCellsBatchingPeriod={50}
+          initialNumToRender={10}
+          windowSize={10}
+          getItemLayout={undefined}
         />
       )}
     </View>

@@ -105,4 +105,34 @@ export const AuthService = {
       throw error;
     }
   },
+
+  sendOtp: async (email: string) => {
+    try {
+      const httpClient = HttpService.getInstance();
+      await httpClient.post(ENDPOINTS.SEND_OTP, { email });
+    } catch (error) {
+      ErrorHandler.handleAuthError(error);
+      throw error;
+    }
+  },
+
+  verifyOtp: async (email: string, otp: string) => {
+    try {
+      const httpClient = HttpService.getInstance();
+      await httpClient.post(ENDPOINTS.VERIFY_OTP, { email, otp });
+    } catch (error) {
+      ErrorHandler.handleAuthError(error);
+      throw error;
+    }
+  },
+
+  resetPassword: async (email: string, password: string, confirmPassword: string) => {
+    try {
+      const httpClient = HttpService.getInstance();
+      await httpClient.patch(ENDPOINTS.RESET_PASSWORD, { email, password, confirmPassword });
+    } catch (error) {
+      ErrorHandler.handleAuthError(error);
+      throw error;
+    }
+  },
 };

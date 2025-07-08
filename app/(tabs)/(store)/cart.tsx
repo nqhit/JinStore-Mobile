@@ -2,9 +2,11 @@ import styles from '@/assets/styles/Screen/CartScreen.styles';
 import CartItem from '@/components/carts/CartItem';
 import FText from '@/components/Text';
 import { COLORS } from '@/constants/Colors';
+import { COUPON_MESSAGES } from '@/constants/message';
 import { useCouponStore } from '@/hooks/useCouponStore';
 import { useHideTabBar } from '@/hooks/useHideTabBar';
 import { CartItemType } from '@/interfaces/cart.type';
+import { CouponValidation } from '@/interfaces/coupon.type';
 import { useCart } from '@/server/hooks/useCart';
 import { formatCurrency } from '@/utils/FormatCurrency';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
@@ -12,22 +14,6 @@ import { router } from 'expo-router';
 import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { Alert, FlatList, Image, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-
-// Types
-interface CouponValidation {
-  canApply: boolean;
-  reason: 'NO_ITEMS_SELECTED' | 'NO_COUPON' | 'INSUFFICIENT_AMOUNT' | 'INVALID_COUPON' | 'VALID';
-  message: string;
-}
-
-// Constants
-const COUPON_MESSAGES = {
-  NO_ITEMS_SELECTED: 'Vui lòng chọn sản phẩm để áp dụng mã giảm giá',
-  NO_COUPON: 'Chưa có mã giảm giá',
-  INVALID_COUPON: 'Mã giảm giá không hợp lệ',
-  INSUFFICIENT_AMOUNT: (amount: number) => `Đơn hàng tối thiểu ${formatCurrency(amount)} để áp dụng mã này`,
-  VALID: 'Mã giảm giá hợp lệ',
-};
 
 function CartDetails() {
   useHideTabBar();

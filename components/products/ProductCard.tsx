@@ -16,15 +16,8 @@ function ProductCard({
 }) {
   const { addItemToCart } = useCart();
   const handleAddToCart = async (product: productType) => {
-    if (!product || !product._id) return;
-
-    const formData = {
-      productId: product._id,
-      quantity: 1,
-    };
-
     try {
-      const res = await addItemToCart(formData);
+      const res = await addItemToCart(product);
       if (res.success) {
         Toast.show({
           type: 'success',

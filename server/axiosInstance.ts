@@ -1,12 +1,11 @@
+// server/axiosInstance.ts
 import { userType } from '@/interfaces/user.type';
 import { Dispatch } from '@reduxjs/toolkit';
 import { AxiosInstance } from 'axios';
-import { router } from 'expo-router';
-import Toast from 'react-native-toast-message';
+import { handleLogoutWithToast, handleTokenRefresh } from './auth.helper';
 import { AUTH_STORAGE_KEYS } from './constants/auth.constants';
 import { HttpService } from './utils/http.service';
 import { StorageService } from './utils/storage.service';
-import { TokenRefreshService } from './utils/token-refresh.service';
 import { TokenService } from './utils/token.service';
 
 export const createAxios = (user: userType, dispatch: Dispatch, stateSuccess: any): AxiosInstance => {
@@ -22,27 +21,22 @@ export const createAxios = (user: userType, dispatch: Dispatch, stateSuccess: an
 
       if (TokenService.shouldRefreshToken(accessToken)) {
         try {
-          console.log('Token sắp hết hạn, đang refresh...');
-          const refreshData = await TokenRefreshService.refreshTokens();
-
-          const updatedUserData = {
-            ...user,
-            accessToken: refreshData.accessToken,
-          };
-
-          await StorageService.setItem('user', updatedUserData);
-          dispatch(stateSuccess(updatedUserData));
-
-          config.headers = config.headers || {};
-          Object.assign(config.headers, HttpService.setAuthHeader(refreshData.accessToken));
-        } catch {
-          Toast.show({
-            type: 'info',
-            text1: 'Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại!',
-            position: 'bottom',
-            visibilityTime: 800,
+          const updatedUserData = await handleTokenRefresh(user, dispatch, {
+            onSuccess: (updatedUser: userType) => {
+              dispatch(stateSuccess(updatedUser));
+            },
           });
-          router.push('/(auth)/login');
+
+          if (updatedUserData) {
+            config.headers = config.headers || {};
+            Object.assign(config.headers, HttpService.setAuthHeader(updatedUserData.accessToken));
+          } else {
+            throw new Error('Token refresh failed');
+          }
+        } catch (error) {
+          console.error('Request interceptor error:', error);
+          await handleLogoutWithToast();
+          return Promise.reject(error);
         }
       } else {
         config.headers = config.headers || {};
@@ -60,23 +54,25 @@ export const createAxios = (user: userType, dispatch: Dispatch, stateSuccess: an
 
       if ((error.response?.status === 401 || error.response?.status === 403) && !originalRequest._retry) {
         originalRequest._retry = true;
+
         try {
-          const refreshData = await TokenRefreshService.refreshTokens();
+          const updatedUserData = await handleTokenRefresh(user, dispatch, {
+            onSuccess: (updatedUser: userType) => {
+              dispatch(stateSuccess(updatedUser));
+            },
+          });
 
-          const updatedUserData = {
-            ...user,
-            accessToken: refreshData.accessToken,
-          };
+          if (updatedUserData) {
+            originalRequest.headers = originalRequest.headers || {};
+            Object.assign(originalRequest.headers, HttpService.setAuthHeader(updatedUserData.accessToken));
 
-          await StorageService.setItem('user', updatedUserData);
-          dispatch(stateSuccess(updatedUserData));
-
-          originalRequest.headers = originalRequest.headers || {};
-          Object.assign(originalRequest.headers, HttpService.setAuthHeader(refreshData.accessToken));
-
-          return newInstance(originalRequest);
+            return newInstance(originalRequest);
+          } else {
+            throw new Error('Token refresh failed');
+          }
         } catch (err) {
-          console.error('Lỗi khi refresh token:', err);
+          console.error('Response interceptor error:', err);
+          await StorageService.clearAuthData();
           return Promise.reject(err);
         }
       }
@@ -84,5 +80,6 @@ export const createAxios = (user: userType, dispatch: Dispatch, stateSuccess: an
       return Promise.reject(error);
     },
   );
+
   return newInstance;
 };

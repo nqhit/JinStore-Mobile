@@ -23,7 +23,6 @@ export const CartService = {
       });
       if (res.data.success) {
         dispatch(addSuccess(res.data));
-        console.log('Message of add item to cart:', res.data.message);
         return res.data;
       }
     } catch (error: string | any) {

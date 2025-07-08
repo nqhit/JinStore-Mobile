@@ -1,4 +1,5 @@
 // hooks/useCart.ts
+import { productType } from '@/interfaces/product.type';
 import { loginSuccess } from '@/redux/slices/authSlice';
 import { createAxios } from '@/server/axiosInstance';
 import { CartService } from '@/server/services/cart.service';
@@ -17,12 +18,18 @@ export const useCart = () => {
     return await CartService.getCart(accessToken, axiosJWT);
   };
 
-  const addItemToCart = async (formData: any) => {
+  const addItemToCart = async (product: productType) => {
     if (!accessToken || user === null) {
       Alert.alert('Vui lòng đăng nhập');
       router.push('/(auth)/login');
       return null;
     }
+    if (!product || !product._id) return;
+
+    const formData = {
+      productId: product._id,
+      quantity: 1,
+    };
     return await CartService.addItemToCart(formData, dispatch, accessToken, axiosJWT);
   };
 

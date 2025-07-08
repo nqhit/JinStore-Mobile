@@ -14,3 +14,9 @@ export interface CouponType {
   updatedAt: string;
   __v?: number;
 }
+
+export interface CouponValidation {
+  canApply: boolean;
+  reason: 'NO_ITEMS_SELECTED' | 'NO_COUPON' | 'INSUFFICIENT_AMOUNT' | 'INVALID_COUPON' | 'VALID';
+  message: string;
+}
