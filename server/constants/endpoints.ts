@@ -4,6 +4,9 @@ export const ENDPOINTS = {
   LOGOUT: '/mobile/logout',
   REGISTER: '/auth/register',
   REFRESH: '/mobile/refresh',
+  SEND_OTP: '/otp/send-otp',
+  VERIFY_OTP: '/otp/verify-otp',
+  RESET_PASSWORD: '/users/reset-password',
   INFO_USER: '/mobile/users/info-user',
 
   // NOTE: Sản phẩm

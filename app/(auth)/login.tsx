@@ -44,7 +44,7 @@ const LoginScreen = () => {
 
   useFocusEffect(
     useCallback(() => {
-      const onBackPress = () => true; // <- return true để chặn
+      const onBackPress = () => true;
       const subscription = BackHandler.addEventListener('hardwareBackPress', onBackPress);
 
       return () => subscription.remove();
@@ -56,6 +56,17 @@ const LoginScreen = () => {
 
     setIsNavigating(true);
     router.push('/register');
+
+    setTimeout(() => {
+      setIsNavigating(false);
+    }, 1000);
+  }, [isNavigating]);
+
+  const handleNavigateToForgot = useCallback(() => {
+    if (isNavigating) return;
+
+    setIsNavigating(true);
+    router.push('/forgot-password');
 
     setTimeout(() => {
       setIsNavigating(false);
@@ -130,7 +141,7 @@ const LoginScreen = () => {
               </Formik>
 
               <View style={styles.forgotPasswordContainer}>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={handleNavigateToForgot}>
                   <FText style={styles.forgotPasswordText}>Quên mật khẩu?</FText>
                 </TouchableOpacity>
               </View>

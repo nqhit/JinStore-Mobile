@@ -24,9 +24,24 @@ export const useAuth = () => {
     return await AuthService.register(formData, dispatch);
   };
 
+  const sendOtp = async (email: string) => {
+    return await AuthService.sendOtp(email);
+  };
+
+  const verifyOtp = async (email: string, otp: string) => {
+    return await AuthService.verifyOtp(email, otp);
+  };
+
+  const resetPassword = async (email: string, password: string, confirmPassword: string) => {
+    return await AuthService.resetPassword(email, password, confirmPassword);
+  };
+
   return {
     login,
     logout,
     register,
+    sendOtp,
+    verifyOtp,
+    resetPassword,
   };
 };
