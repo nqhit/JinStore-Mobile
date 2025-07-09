@@ -53,10 +53,16 @@ export const styles = StyleSheet.create({
     color: COLORS.primary,
   },
 
-  forgotPasswordContainer: {
+  bottomForm: {
     width: '100%',
-    alignItems: 'flex-start',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
+
+  forgotPasswordContainer: {
+    justifyContent: 'center',
+  },
+
   forgotPasswordText: {
     fontSize: 14,
     color: COLORS.primary,

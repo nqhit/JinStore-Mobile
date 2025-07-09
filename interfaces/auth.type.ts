@@ -1,6 +1,7 @@
 export interface loginFormData {
   usernameOrEmail: string;
   password: string;
+  rememberMe?: boolean;
 }
 
 export interface registerFormData {

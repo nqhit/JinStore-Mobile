@@ -2,9 +2,11 @@ import { styles } from '@/assets/styles/Screen/FormScreen.styles';
 import ButtonLoginSocial from '@/components/Button/LoginSocial';
 import FormInputGroup from '@/components/Form/FormInput';
 import FText from '@/components/Text';
+import { COLORS } from '@/constants/Colors';
 import { loginFormData } from '@/interfaces/auth.type';
 import { useAuth } from '@/server/hooks/useAuth';
 import { passwordRegex, validateEmail, validateUsername } from '@/utils/regex';
+import { Ionicons } from '@expo/vector-icons';
 import { router, useFocusEffect, useNavigation } from 'expo-router';
 import { Formik } from 'formik';
 import React, { useCallback, useEffect, useState } from 'react';
@@ -35,6 +37,7 @@ const LoginScreen = () => {
   const { login } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [isNavigating, setIsNavigating] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false); // Thêm state ghi nhớ đăng nhập
 
   useEffect(() => {
     navigation.setOptions({
@@ -77,14 +80,14 @@ const LoginScreen = () => {
     async (values: loginFormData) => {
       setIsLoading(true);
       try {
-        await login(values);
+        await login({ ...values, rememberMe });
       } catch (error) {
         console.error('Login error in component:', error);
       } finally {
         setIsLoading(false);
       }
     },
-    [login],
+    [login, rememberMe],
   );
 
   return (
@@ -140,10 +143,27 @@ const LoginScreen = () => {
                 )}
               </Formik>
 
-              <View style={styles.forgotPasswordContainer}>
-                <TouchableOpacity onPress={handleNavigateToForgot}>
-                  <FText style={styles.forgotPasswordText}>Quên mật khẩu?</FText>
-                </TouchableOpacity>
+              <View style={styles.bottomForm}>
+                <View style={styles.forgotPasswordContainer}>
+                  <TouchableOpacity onPress={handleNavigateToForgot}>
+                    <FText style={styles.forgotPasswordText}>Quên mật khẩu?</FText>
+                  </TouchableOpacity>
+                </View>
+                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+                  <TouchableOpacity
+                    onPress={() => setRememberMe((prev) => !prev)}
+                    style={{ marginRight: 5 }}
+                    accessibilityRole="checkbox"
+                    accessibilityState={{ checked: rememberMe }}
+                  >
+                    <Ionicons
+                      name={rememberMe ? 'checkbox-sharp' : 'square-outline'}
+                      size={20}
+                      color={rememberMe ? COLORS.primary : '#8E8E93'}
+                    />
+                  </TouchableOpacity>
+                  <FText>Ghi nhớ đăng nhập</FText>
+                </View>
               </View>
             </View>
 

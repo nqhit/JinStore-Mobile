@@ -37,13 +37,15 @@ export const AuthService = {
         throw new Error('Phản hồi từ server không hợp lệ');
       }
 
-      const tokens = {
-        accessToken: res.data.accessToken,
-        refreshToken: res.data.refreshToken,
-      };
+      if (user.rememberMe) {
+        const tokens = {
+          accessToken: res.data.accessToken,
+          refreshToken: res.data.refreshToken,
+        };
 
-      await StorageService.setItem(AUTH_STORAGE_KEYS.USER, res.data);
-      await StorageService.setAuthTokens(tokens);
+        await StorageService.setItem(AUTH_STORAGE_KEYS.USER, res.data);
+        await StorageService.setAuthTokens(tokens);
+      }
 
       dispatch(loginSuccess(res.data));
       console.log('Đăng nhập thành công!');

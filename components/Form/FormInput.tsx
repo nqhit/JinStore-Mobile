@@ -2,7 +2,8 @@
 import FText from '@/components/Text';
 import FTextInput from '@/components/TextInput';
 import { COLORS } from '@/constants/Colors';
-import React from 'react';
+import { Entypo } from '@expo/vector-icons';
+import React, { useState } from 'react';
 import {
   ActivityIndicator,
   NativeSyntheticEvent,
@@ -44,6 +45,18 @@ const FormInputGroup: React.FC<FormInputGroupProps> = ({
   placeholderTextColor = '#999',
   text = 'Submit',
 }) => {
+  // State để lưu trạng thái hiển thị/ẩn mật khẩu cho từng input
+  const [showPasswords, setShowPasswords] = useState(inputs.map(() => false));
+
+  // Hàm chuyển đổi trạng thái hiển thị/ẩn mật khẩu
+  const toggleShowPassword = (index: number) => {
+    setShowPasswords((prev) => {
+      const updated = [...prev];
+      updated[index] = !updated[index];
+      return updated;
+    });
+  };
+
   return (
     <>
       <View style={[styles.inputGroup]}>
@@ -52,20 +65,32 @@ const FormInputGroup: React.FC<FormInputGroupProps> = ({
             style={[styles.inputContainer, input.error && input.touched ? { marginBottom: 0 } : { marginBottom: 23.3 }]}
             key={index}
           >
-            <FTextInput
-              aria-label="input"
-              style={[styles.input, input.error && input.touched && styles.inputError]}
-              placeholder={input.placeholder}
-              placeholderTextColor={placeholderTextColor}
-              value={input.value}
-              onChangeText={input.onChangeText}
-              onBlur={input.onBlur}
-              secureTextEntry={input.secureTextEntry}
-              keyboardType={input.keyboardType || 'default'}
-              autoCapitalize={input.autoCapitalize || 'none'}
-              autoCorrect={false}
-              editable={input.editable}
-            />
+            <View style={{ position: 'relative' }}>
+              <FTextInput
+                aria-label="input"
+                style={[styles.input, input.error && input.touched && styles.inputError]}
+                placeholder={input.placeholder}
+                placeholderTextColor={placeholderTextColor}
+                value={input.value}
+                onChangeText={input.onChangeText}
+                onBlur={input.onBlur}
+                secureTextEntry={input.secureTextEntry && !showPasswords[index]}
+                keyboardType={input.keyboardType || 'default'}
+                autoCapitalize={input.autoCapitalize || 'none'}
+                autoCorrect={false}
+                editable={input.editable}
+              />
+              {/* Nếu là trường mật khẩu thì hiển thị icon show/hide */}
+              {input.secureTextEntry && (
+                <TouchableOpacity style={styles.eyeIcon} onPress={() => toggleShowPassword(index)} activeOpacity={0.7}>
+                  {showPasswords[index] ? (
+                    <Entypo name="eye-with-line" size={24} color="black" />
+                  ) : (
+                    <Entypo name="eye" size={24} color="black" />
+                  )}
+                </TouchableOpacity>
+              )}
+            </View>
             {input.error && input.touched && <FText style={styles.errorText}>{input.error}</FText>}
           </View>
         ))}
@@ -73,7 +98,7 @@ const FormInputGroup: React.FC<FormInputGroupProps> = ({
       <TouchableOpacity
         style={[styles.btnSuccess /* , (!isFormValid || isLoading) && styles.btnDisabled */]}
         onPress={handleFunc}
-        /* disabled={!isFormValid || isLoading} */
+        disabled={!isFormValid || isLoading}
       >
         {isLoading ? (
           <ActivityIndicator size="small" color={COLORS.white} />
@@ -138,5 +163,11 @@ const styles = StyleSheet.create({
     color: COLORS.white,
     fontSize: 16,
     fontWeight: '600',
+  },
+  eyeIcon: {
+    position: 'absolute',
+    right: 15,
+    top: 12,
+    zIndex: 10,
   },
 });
