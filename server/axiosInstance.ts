@@ -31,6 +31,7 @@ export const createAxios = (user: userType, dispatch: Dispatch, stateSuccess: an
           if (updatedUserData) {
             config.headers = config.headers || {};
             Object.assign(config.headers, HttpService.setAuthHeader(updatedUserData.accessToken));
+            console.log('Token refreshed successfully');
           } else {
             throw new Error('Token refresh failed');
           }
@@ -68,7 +69,7 @@ export const createAxios = (user: userType, dispatch: Dispatch, stateSuccess: an
           if (updatedUserData) {
             originalRequest.headers = originalRequest.headers || {};
             Object.assign(originalRequest.headers, HttpService.setAuthHeader(updatedUserData.accessToken));
-
+            console.log('Token refreshed successfully');
             return newInstance(originalRequest);
           } else {
             throw new Error('Token refresh failed');

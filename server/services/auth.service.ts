@@ -11,9 +11,6 @@ import {
   loginFailed,
   loginStart,
   loginSuccess,
-  logoutFailed,
-  logoutStart,
-  logoutSuccess,
   registerFailed,
   registerStart,
   registerSuccess,
@@ -61,19 +58,17 @@ export const AuthService = {
   },
 
   logOut: async (dispatch: Dispatch, id: string) => {
-    dispatch(logoutStart());
     try {
       const httpClient = HttpService.getInstance();
       const res = await httpClient.post(ENDPOINTS.LOGOUT, { userId: id });
       if (res.data.success) {
         console.log(res.data.message);
-        dispatch(logoutSuccess());
         router.replace('/(auth)/login');
         await StorageService.clearAuthData();
       }
       return res.data;
     } catch (error) {
-      dispatch(logoutFailed());
+      console.error('Logout error:', error);
       throw error;
     }
   },

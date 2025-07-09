@@ -10,10 +10,10 @@ export const userService = {
   getInfoUser: async (id: string, accessToken: string, axiosJWT: AxiosInstance) => {
     try {
       if (!id || !accessToken) {
-        throw new Error('Missing id or accessToken');
+        throw new Error('Có lỗi xảy ra vui lòng thử lại!');
       }
 
-      const response = await axiosJWT.get(ENDPOINTS.INFO_USER + `/${id}`, {
+      const response = await axiosJWT.get(ENDPOINTS.INFO_USER(id), {
         timeout: 10000,
         ...HttpService.setAuthHeader(accessToken),
       });
@@ -21,6 +21,7 @@ export const userService = {
       return response.data;
     } catch (error) {
       ErrorHandler.handleAuthError(error);
+      throw error;
     }
   },
 };
