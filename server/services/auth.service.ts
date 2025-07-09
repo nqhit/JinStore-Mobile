@@ -71,9 +71,9 @@ export const AuthService = {
         router.replace('/(auth)/login');
         await StorageService.clearAuthData();
       }
+      return res.data;
     } catch (error) {
       dispatch(logoutFailed());
-      ErrorHandler.handleAuthError(error);
       throw error;
     }
   },

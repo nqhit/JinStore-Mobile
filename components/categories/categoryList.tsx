@@ -1,4 +1,3 @@
-import { COLORS } from '@/constants/Colors';
 import { categoryType } from '@/interfaces/category.type';
 import useCategory from '@/server/hooks/useCategory';
 import { useEffect, useState } from 'react';
@@ -40,9 +39,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'flex-start',
-    borderWidth: 1,
-    borderColor: COLORS.gray200,
-    borderRadius: 8,
+    // borderWidth: 1,
+    // borderColor: COLORS.gray200,
+    // borderRadius: 8,
     minHeight: 100,
   },
 });

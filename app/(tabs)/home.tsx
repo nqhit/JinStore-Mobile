@@ -124,9 +124,9 @@ export default function HomeScreen() {
             <Image style={styles.bannerImage} source={require('@/assets/images/banner/banner17.png')} />
 
             <View>
-              <View style={styles.sectionHeader}>
+              {/*               <View style={styles.sectionHeader}>
                 <FText style={styles.sectionTitle}>Danh mục</FText>
-              </View>
+              </View> */}
               <CategoryList handleSubmit={handleRouterStore} />
             </View>
             <View>

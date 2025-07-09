@@ -61,6 +61,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     backgroundColor: 'transparent',
     paddingTop: 20,
+    gap: 20,
   },
 
   // Banner với hình ảnh
@@ -80,7 +81,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginTop: 20,
+    // marginTop: 20,
     marginBottom: 5,
   },
   sectionTitle: {
