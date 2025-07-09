@@ -13,7 +13,7 @@ export interface TokenRefreshCallbacks {
   onSuccess?: (updatedUser: userType) => void;
   onError?: () => void;
 }
-
+let isLoggingOut = false;
 /**
  * Xử lý refresh token và cập nhật storage + redux state
  */
@@ -22,6 +22,9 @@ export const handleTokenRefresh = async (
   stateSuccess: any,
   dispatch: Dispatch,
 ): Promise<userType | null> => {
+  if (isLoggingOut) {
+    return null;
+  }
   try {
     console.log('Đang refresh token...');
     const refreshData = await TokenRefreshService.refreshTokens();
@@ -51,6 +54,16 @@ export const handleTokenRefresh = async (
     return updatedUserData;
   } catch (error) {
     console.error('Token refresh failed:', error);
+
+    // Chỉ auto logout nếu không phải do đang logout
+    if (!isLoggingOut) {
+      // Kiểm tra nếu error là do không có refresh token
+      if (error === 'Không có refresh token') {
+        // Có thể user đã logout ở tab khác hoặc storage bị clear
+        await handleLogout();
+      }
+    }
+
     return null;
   }
 };
@@ -59,6 +72,9 @@ export const handleTokenRefresh = async (
  * Xử lý logout và clear data với Toast
  */
 export const handleLogoutWithToast = async (message?: string) => {
+  if (isLoggingOut) return;
+
+  isLoggingOut = true;
   try {
     Toast.show({
       type: 'info',
@@ -71,6 +87,11 @@ export const handleLogoutWithToast = async (message?: string) => {
   } catch (error) {
     console.error('Logout error:', error);
     router.replace('/(auth)/login');
+  } finally {
+    // Reset state sau một khoảng thời gian
+    setTimeout(() => {
+      isLoggingOut = false;
+    }, 1000);
   }
 };
 
@@ -78,12 +99,21 @@ export const handleLogoutWithToast = async (message?: string) => {
  * Xử lý logout không có Toast
  */
 export const handleLogout = async () => {
+  if (isLoggingOut) return;
+
+  isLoggingOut = true;
+
   try {
     await StorageService.clearAuthData();
     router.replace('/(auth)/login');
   } catch (error) {
     console.error('Logout error:', error);
     router.replace('/(auth)/login');
+  } finally {
+    // Reset state sau một khoảng thời gian
+    setTimeout(() => {
+      isLoggingOut = false;
+    }, 1000);
   }
 };
 
@@ -103,7 +133,9 @@ export const checkAndHandleToken = async (
       const updatedUserData = await handleTokenRefresh(userData, stateSuccess, dispatch);
 
       if (!updatedUserData) {
-        await handleLogoutWithToast();
+        if (!isLoggingOut) {
+          await handleLogoutWithToast();
+        }
         return { success: false, shouldNavigateToHome: false };
       }
 
@@ -121,7 +153,9 @@ export const checkAndHandleToken = async (
       const updatedUserData = await handleTokenRefresh(userData, stateSuccess, dispatch);
 
       if (!updatedUserData) {
-        await handleLogoutWithToast();
+        if (!isLoggingOut) {
+          await handleLogoutWithToast();
+        }
         return { success: false, shouldNavigateToHome: false };
       }
 
@@ -155,4 +189,8 @@ export const validateAuthData = async (): Promise<{
     console.error('Auth validation error:', error);
     return { isValid: false };
   }
+};
+
+export const resetLogoutState = () => {
+  isLoggingOut = false;
 };

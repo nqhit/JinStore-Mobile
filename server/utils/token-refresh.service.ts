@@ -12,21 +12,29 @@ export const TokenRefreshService = {
       throw new Error('Không có refresh token');
     }
 
-    const httpClient = HttpService.getInstance();
-    const response = await httpClient.post(ENDPOINTS.REFRESH, { refreshToken });
+    try {
+      const httpClient = HttpService.getInstance();
+      const response = await httpClient.post(ENDPOINTS.REFRESH, { refreshToken });
 
-    const { accessToken, refreshToken: newRefreshToken } = response.data;
-
-    const tokens: AuthTokens = {
-      accessToken: accessToken,
-      refreshToken: newRefreshToken,
-    };
-
-    await StorageService.setAuthTokens(tokens);
-    return response.data;
+      await StorageService.setItem(AUTH_STORAGE_KEYS.ACCESS_TOKEN, response.data.accessToken);
+      if (response.data.refreshToken) {
+        await StorageService.setItem(AUTH_STORAGE_KEYS.REFRESH_TOKEN, response.data.refreshToken);
+      }
+      return response.data;
+    } catch (error) {
+      // Nếu refresh token không hợp lệ, xóa auth data
+      console.error('Refresh token failed:', error);
+      await this.handleRefreshFailure();
+      throw error;
+    }
   },
+
   async handleRefreshFailure(): Promise<void> {
-    await StorageService.clearAuthData();
-    console.error('Phiên đăng nhập đã hết hạn');
+    try {
+      await StorageService.clearAuthData();
+      console.error('Phiên đăng nhập đã hết hạn');
+    } catch (error) {
+      console.error('Error clearing auth data:', error);
+    }
   },
 };

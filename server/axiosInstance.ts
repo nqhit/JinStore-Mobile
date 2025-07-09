@@ -8,11 +8,16 @@ import { HttpService } from './utils/http.service';
 import { StorageService } from './utils/storage.service';
 import { TokenService } from './utils/token.service';
 
+let isLoggingOut = false;
+
 export const createAxios = (user: userType, dispatch: Dispatch, stateSuccess: any): AxiosInstance => {
   const newInstance = HttpService.createAuthenticatedInstance();
 
   newInstance.interceptors.request.use(
     async (config) => {
+      if (isLoggingOut) {
+        return Promise.reject(new Error('User is logging out'));
+      }
       const accessToken = await StorageService.getItem<string>(AUTH_STORAGE_KEYS.ACCESS_TOKEN);
 
       if (!accessToken) {
@@ -46,6 +51,9 @@ export const createAxios = (user: userType, dispatch: Dispatch, stateSuccess: an
   newInstance.interceptors.response.use(
     (response) => response,
     async (error) => {
+      if (isLoggingOut) {
+        return Promise.reject(error);
+      }
       const originalRequest = error.config;
 
       if ((error.response?.status === 401 || error.response?.status === 403) && !originalRequest._retry) {
@@ -64,7 +72,10 @@ export const createAxios = (user: userType, dispatch: Dispatch, stateSuccess: an
           }
         } catch (err) {
           console.error('Response interceptor error:', err);
-          await StorageService.clearAuthData();
+          if (!isLoggingOut) {
+            isLoggingOut = true;
+            await StorageService.clearAuthData();
+          }
           return Promise.reject(err);
         }
       }
@@ -74,4 +85,9 @@ export const createAxios = (user: userType, dispatch: Dispatch, stateSuccess: an
   );
 
   return newInstance;
+};
+
+// Function để reset logout state khi user login lại
+export const resetLogoutState = () => {
+  isLoggingOut = false;
 };
