@@ -53,13 +53,8 @@ export const handleTokenRefresh = async (
 
     return updatedUserData;
   } catch (error) {
-    console.error('Token refresh failed:', error);
-
-    // Chỉ auto logout nếu không phải do đang logout
     if (!isLoggingOut) {
-      // Kiểm tra nếu error là do không có refresh token
       if (error === 'Không có refresh token') {
-        // Có thể user đã logout ở tab khác hoặc storage bị clear
         await handleLogout();
       }
     }

@@ -36,7 +36,10 @@ export const createAxios = (user: userType, dispatch: Dispatch, stateSuccess: an
           }
         } catch (error) {
           console.error('Request interceptor error:', error);
-          await handleLogoutWithToast();
+          if (!isLoggingOut) {
+            isLoggingOut = true;
+            await handleLogoutWithToast();
+          }
           return Promise.reject(error);
         }
       } else {
@@ -71,7 +74,6 @@ export const createAxios = (user: userType, dispatch: Dispatch, stateSuccess: an
             throw new Error('Token refresh failed');
           }
         } catch (err) {
-          console.error('Response interceptor error:', err);
           if (!isLoggingOut) {
             isLoggingOut = true;
             await StorageService.clearAuthData();
