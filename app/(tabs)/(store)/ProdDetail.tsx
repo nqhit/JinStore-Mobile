@@ -5,7 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 function ProductDetail() {
   useHideTabBar();
   return (
-    <SafeAreaView edges={['top', 'bottom', 'left', 'right']}>
+    <SafeAreaView edges={['bottom', 'left', 'right']}>
       <View>
         <FText>ProductDetail</FText>
       </View>

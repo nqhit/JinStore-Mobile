@@ -100,11 +100,6 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     marginLeft: -10,
   },
-  categoryListContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'flex-start',
-  },
 });
 
 export default styles;

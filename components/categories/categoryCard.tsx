@@ -8,7 +8,7 @@ function CategoryCard({ category, handleRouterStore }: { category: categoryType;
   return (
     <TouchableOpacity style={styles.categoryContainer} onPress={handleRouterStore}>
       <Image
-        source={{ uri: category.image?.url || 'https://via.placeholder.com/100' }}
+        source={{ uri: category.image?.url || '@/assets/images/placeholder.png' }}
         style={styles.image}
         resizeMode="contain"
       />

@@ -22,9 +22,9 @@ function ProductCard({
         Toast.show({
           type: 'success',
           text1: 'Đã thêm vào giỏ hàng',
-          text1Style: { color: 'green', fontSize: 16, fontWeight: '600', backgroundColor: 'red' },
-          position: 'bottom',
-          visibilityTime: 800,
+          text1Style: { color: 'green', fontSize: 18, fontWeight: '600', backgroundColor: 'red' },
+          position: 'top',
+          visibilityTime: 500,
         });
       }
     } catch (err) {

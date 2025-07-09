@@ -1,11 +1,9 @@
 import styles from '@/assets/styles/Screen/HomeScreen.styles';
-import CategoryCard from '@/components/categories/categoryCard';
+import { CategoryList } from '@/components/categories/categoryList';
 import ProductCard from '@/components/products/ProductCard';
 import FText from '@/components/Text';
-import { categoryType } from '@/interfaces/category.type';
 import { productType } from '@/interfaces/product.type';
 import { userType } from '@/interfaces/user.type';
-import useCategory from '@/server/hooks/useCategory';
 import { useProduct } from '@/server/hooks/useProduct';
 import { useUser } from '@/server/hooks/useUser';
 import { router } from 'expo-router';
@@ -16,14 +14,11 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 export default function HomeScreen() {
   const [userInfo, setUserInfo] = useState<userType | null>(null);
   const [products, setProducts] = useState<productType[]>([]);
-  const [categories, setCategories] = useState<categoryType[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const { getInfoUser } = useUser();
   const { getProductsAll } = useProduct();
-
-  const { getCategoriesAll } = useCategory();
 
   const handleFetchData = useCallback(async () => {
     try {
@@ -32,7 +27,6 @@ export default function HomeScreen() {
       await Promise.all([
         getProductsAll(1, 10).then((res) => setProducts(res.data)),
         getInfoUser(setLoading, setError).then((res) => setUserInfo(res)),
-        getCategoriesAll().then((res) => setCategories(res)),
       ]);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Có lỗi xảy ra';
@@ -40,10 +34,14 @@ export default function HomeScreen() {
     } finally {
       setLoading(false);
     }
-  }, [getInfoUser, getProductsAll, getCategoriesAll]);
+  }, [getInfoUser, getProductsAll]);
+
+  const handleRouterProdDetail = useCallback(() => {
+    router.push('/(tabs)/(store)/ProdDetail');
+  }, []);
 
   const handleRouterStore = useCallback(() => {
-    router.push('/(tabs)/(store)/ProdDetail');
+    router.push('/(tabs)/(store)');
   }, []);
 
   useEffect(() => {
@@ -60,19 +58,11 @@ export default function HomeScreen() {
       )
     : [];
 
-  const featuredCategories = Array.isArray(categories)
-    ? categories.filter((category: categoryType) => category.status === 'active')
-    : [];
-
   const renderProductItem = ({ item }: { item: productType }) => (
-    <ProductCard handleRouterDetail={handleRouterStore} product={item} />
-  );
-  const renderCategoryItem = ({ item }: { item: categoryType }) => (
-    <CategoryCard handleRouterStore={handleRouterStore} category={item} />
+    <ProductCard handleRouterDetail={handleRouterProdDetail} product={item} />
   );
 
   const keyExtractorProduct = (item: productType, index: number) => item._id?.toString() || index.toString();
-  const keyExtractorCategory = (item: categoryType, index: number) => item._id?.toString() || index.toString();
 
   // FIXED: Added loading and error states
   if (loading) {
@@ -136,26 +126,12 @@ export default function HomeScreen() {
             <View>
               <View style={styles.sectionHeader}>
                 <FText style={styles.sectionTitle}>Danh mục</FText>
-                <TouchableOpacity>
-                  <FText style={styles.seeMore}>Xem thêm</FText>
-                </TouchableOpacity>
               </View>
-              <View style={styles.categoryListContainer}>
-                <FlatList
-                  data={featuredCategories}
-                  renderItem={renderCategoryItem}
-                  keyExtractor={keyExtractorCategory}
-                  horizontal
-                  showsHorizontalScrollIndicator={false}
-                />
-              </View>
+              <CategoryList handleSubmit={handleRouterStore} />
             </View>
             <View>
               <View style={styles.sectionHeader}>
                 <FText style={styles.sectionTitle}>Sản phẩm nổi bật</FText>
-                <TouchableOpacity>
-                  <FText style={styles.seeMore}>Xem thêm</FText>
-                </TouchableOpacity>
               </View>
               <View style={styles.productListContainer}>
                 <FlatList

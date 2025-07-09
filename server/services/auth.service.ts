@@ -4,8 +4,7 @@ import { userType } from '@/interfaces/user.type';
 import { ENDPOINTS } from '@/server/constants/endpoints';
 import { ErrorHandler } from '@/utils/error.handler';
 import { ValidationUtils } from '@/utils/validation';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import axios, { AxiosInstance } from 'axios';
+import axios from 'axios';
 import { router } from 'expo-router';
 import { Dispatch } from 'redux';
 import {
@@ -61,19 +60,17 @@ export const AuthService = {
     }
   },
 
-  logOut: async (dispatch: Dispatch, id: string, accessToken: string, axiosJWT: AxiosInstance) => {
+  logOut: async (dispatch: Dispatch, id: string) => {
     dispatch(logoutStart());
     try {
-      await axiosJWT.post(
-        ENDPOINTS.LOGOUT,
-        { userId: id },
-        {
-          ...HttpService.setAuthHeader(accessToken),
-        },
-      );
-      await AsyncStorage.clear();
-      dispatch(logoutSuccess());
-      router.replace('/(auth)/login');
+      const httpClient = HttpService.getInstance();
+      const res = await httpClient.post(ENDPOINTS.LOGOUT, { userId: id });
+      if (res.data.success) {
+        console.log(res.data.message);
+        dispatch(logoutSuccess());
+        router.replace('/(auth)/login');
+        await StorageService.clearAuthData();
+      }
     } catch (error) {
       dispatch(logoutFailed());
       ErrorHandler.handleAuthError(error);
