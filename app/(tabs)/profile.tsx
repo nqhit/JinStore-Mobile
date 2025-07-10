@@ -1,16 +1,20 @@
 // ./(tabs)/index.tsx
 import styles from '@/assets/styles/Screen/ProfileScreen.styles';
+import ActionAccountButton from '@/components/Button/ActionAccountButton';
+import { ProfileFooter, ProfileHeader, ProfileItem, ProfileSection } from '@/components/Profile';
 import FText from '@/components/Text';
 import { resetLogoutState } from '@/server/auth.helper';
 import { useAuth } from '@/server/hooks/useAuth';
+import { useCurrentUser } from '@/server/hooks/useCurrentUser';
 import { useCallback, useState } from 'react';
-import { ActivityIndicator, TouchableOpacity, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { ActivityIndicator, View } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function ProfileScreen() {
   const [loading, setLoading] = useState(false);
-  const insets = useSafeAreaInsets();
   const { logout } = useAuth();
+  const user = useCurrentUser();
 
   const handleLogout = useCallback(async () => {
     if (loading) return; // Prevent multiple logout calls
@@ -26,6 +30,11 @@ export default function ProfileScreen() {
     }
   }, [logout, loading]);
 
+  const handleEditProfile = useCallback(() => {
+    // TODO: Implement edit profile functionality
+    console.log('Edit profile pressed');
+  }, []);
+
   if (loading) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -36,15 +45,32 @@ export default function ProfileScreen() {
   }
 
   return (
-    <View style={{ flex: 1, paddingTop: insets.top, paddingBottom: insets.bottom }}>
-      <FText>Profile</FText>
-      <TouchableOpacity
-        style={[styles.logoutButton, loading && { opacity: 0.5 }]}
-        onPress={handleLogout}
-        disabled={loading}
-      >
-        <FText style={{ color: '#000' }}>Logout</FText>
-      </TouchableOpacity>
-    </View>
+    <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <ProfileHeader user={user} onEditPress={handleEditProfile} />
+
+        <ProfileSection title="Cá nhân">
+          <ProfileItem text="Hồ sơ" />
+          <ProfileItem text="Địa chỉ giao hàng" />
+          <ProfileItem text="Phương thức thanh toán" />
+        </ProfileSection>
+
+        <ProfileSection title="Thiết lập">
+          <ProfileItem text="Quốc gia" value="Việt Nam" />
+          <ProfileItem text="Tiền tệ" value="VND" />
+          <ProfileItem text="Điều khoản và điều kiện" />
+        </ProfileSection>
+
+        <ProfileSection title="Tài khoản">
+          <ProfileItem text="Ngôn ngữ" value="vietnamese" />
+          <ProfileItem text="Về chúng tôi" />
+        </ProfileSection>
+
+        <ActionAccountButton text="Đăng xuất" onPress={handleLogout} />
+
+        {/* Footer */}
+        <ProfileFooter />
+      </ScrollView>
+    </SafeAreaView>
   );
 }
