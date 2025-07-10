@@ -10,7 +10,7 @@ import ProductStore from './ProductStore';
 function ProductListStore() {
   const [products, setProducts] = useState<productResType[]>([]);
   const [page, setPage] = useState(1);
-  const [limit] = useState(20);
+  const [limit] = useState(12);
   const [loading, setLoading] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
