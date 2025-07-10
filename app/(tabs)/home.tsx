@@ -1,5 +1,6 @@
 import styles from '@/assets/styles/Screen/HomeScreen.styles';
 import { CategoryList } from '@/components/categories/categoryList';
+import IconOnlOff from '@/components/IconOnlOff';
 import ProductCard from '@/components/products/ProductCard';
 import FText from '@/components/Text';
 import { productType } from '@/interfaces/product.type';
@@ -110,7 +111,7 @@ export default function HomeScreen() {
               <Image
                 style={styles.tinyLogo}
                 source={{
-                  uri: userInfo?.avatar?.url || 'https://via.placeholder.com/50x50.png?text=Avatar',
+                  uri: userInfo?.avatar?.url || '@/assets/images/placeholder.png',
                 }}
               />
               <View style={styles.headerInfo}>
@@ -118,15 +119,12 @@ export default function HomeScreen() {
                 <FText style={styles.SubText}>Let&#39;s go shopping</FText>
               </View>
             </View>
-            {/* <IconShoppingCart /> */}
+            <IconOnlOff />
           </View>
           <View style={styles.body}>
             <Image style={styles.bannerImage} source={require('@/assets/images/banner/banner17.png')} />
 
             <View>
-              {/*               <View style={styles.sectionHeader}>
-                <FText style={styles.sectionTitle}>Danh mục</FText>
-              </View> */}
               <CategoryList handleSubmit={handleRouterStore} />
             </View>
             <View>

@@ -21,8 +21,7 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'flex-start',
-    marginTop: 12,
+    alignItems: 'center',
   },
   headerLeft: {
     flex: 1,
