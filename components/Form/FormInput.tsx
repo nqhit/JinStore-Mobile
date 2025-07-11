@@ -19,11 +19,14 @@ interface InputConfig {
   onChangeText: (text: string) => void;
   onBlur?: (e: NativeSyntheticEvent<TextInputFocusEventData>) => void;
   secureTextEntry?: boolean;
-  keyboardType?: 'default' | 'email-address';
+  keyboardType?: 'default' | 'email-address' | 'number-pad';
   autoCapitalize?: 'none' | 'words';
   editable?: boolean;
   error?: string;
   touched?: boolean;
+  maxLength?: number;
+  inputMode?: 'text' | 'email' | 'numeric' | 'tel' | 'url';
+  style?: any;
 }
 
 interface ButtonConfig {
@@ -37,6 +40,7 @@ interface FormInputGroupProps {
   button: ButtonConfig;
   placeholderTextColor?: string;
   text: string;
+  children?: React.ReactNode;
 }
 
 const FormInputGroup: React.FC<FormInputGroupProps> = ({
@@ -44,6 +48,7 @@ const FormInputGroup: React.FC<FormInputGroupProps> = ({
   button: { isFormValid, isLoading, handleFunc },
   placeholderTextColor = '#999',
   text = 'Submit',
+  children,
 }) => {
   // State để lưu trạng thái hiển thị/ẩn mật khẩu cho từng input
   const [showPasswords, setShowPasswords] = useState(inputs.map(() => false));
@@ -62,7 +67,7 @@ const FormInputGroup: React.FC<FormInputGroupProps> = ({
       <View style={[styles.inputGroup]}>
         {inputs.map((input, index) => (
           <View
-            style={[styles.inputContainer, input.error && input.touched ? { marginBottom: 0 } : { marginBottom: 23.3 }]}
+            style={[styles.inputContainer, input.error && input.touched ? { marginBottom: 0 } : { marginBottom: 23 }]}
             key={index}
           >
             <View style={{ position: 'relative' }}>
@@ -80,7 +85,6 @@ const FormInputGroup: React.FC<FormInputGroupProps> = ({
                 autoCorrect={false}
                 editable={input.editable}
               />
-              {/* Nếu là trường mật khẩu thì hiển thị icon show/hide */}
               {input.secureTextEntry && (
                 <TouchableOpacity style={styles.eyeIcon} onPress={() => toggleShowPassword(index)} activeOpacity={0.7}>
                   {showPasswords[index] ? (
@@ -94,12 +98,9 @@ const FormInputGroup: React.FC<FormInputGroupProps> = ({
             {input.error && input.touched && <FText style={styles.errorText}>{input.error}</FText>}
           </View>
         ))}
+        {children}
       </View>
-      <TouchableOpacity
-        style={[styles.btnSuccess /* , (!isFormValid || isLoading) && styles.btnDisabled */]}
-        onPress={handleFunc}
-        disabled={!isFormValid || isLoading}
-      >
+      <TouchableOpacity style={[styles.btnSuccess]} onPress={handleFunc}>
         {isLoading ? (
           <ActivityIndicator size="small" color={COLORS.white} />
         ) : (

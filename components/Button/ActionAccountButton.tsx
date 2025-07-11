@@ -10,7 +10,7 @@ interface DeleteAccountButtonProps {
 
 export default function ActionAccountButton({ onPress, text = 'Xóa tài khoản' }: DeleteAccountButtonProps) {
   return (
-    <TouchableOpacity onPress={onPress}>
+    <TouchableOpacity style={styles.deleteAccountButton} onPress={onPress}>
       <FText style={styles.deleteAccount}>{text}</FText>
     </TouchableOpacity>
   );

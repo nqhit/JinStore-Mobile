@@ -1,6 +1,6 @@
 import FText from '@/components/Text';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import React from 'react';
+import React, { memo } from 'react';
 import { Image, TouchableOpacity, View } from 'react-native';
 import styles from '../../assets/styles/profile/ProfileHeader.styles';
 
@@ -14,8 +14,7 @@ interface ProfileHeaderProps {
   };
   onEditPress?: () => void;
 }
-
-export default function ProfileHeader({ user, onEditPress }: ProfileHeaderProps) {
+function ProfileHeader({ user, onEditPress }: ProfileHeaderProps) {
   return (
     <View style={styles.profile}>
       <View style={styles.avatarWrapper}>
@@ -34,3 +33,5 @@ export default function ProfileHeader({ user, onEditPress }: ProfileHeaderProps)
     </View>
   );
 }
+
+export default memo(ProfileHeader);
