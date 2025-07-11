@@ -16,14 +16,11 @@ const IconOnlOff: React.FC<IconOnlOffProps> = ({ size = 20, showText = false, te
   const [pulseAnim] = useState(new Animated.Value(1));
 
   useEffect(() => {
-    // Kiểm tra trạng thái mạng ban đầu
     const unsubscribe = NetInfo.addEventListener((state) => {
       const online = state.isConnected && state.isInternetReachable;
       setIsOnline(online ?? false);
 
-      // Hiệu ứng khi thay đổi trạng thái
       if (online) {
-        // Hiệu ứng khi online
         Animated.sequence([
           Animated.timing(scaleAnim, {
             toValue: 1.3,
@@ -37,7 +34,6 @@ const IconOnlOff: React.FC<IconOnlOffProps> = ({ size = 20, showText = false, te
           }),
         ]).start();
 
-        // Hiệu ứng pulse cho online
         Animated.loop(
           Animated.timing(pulseAnim, {
             toValue: 1.1,
@@ -47,7 +43,6 @@ const IconOnlOff: React.FC<IconOnlOffProps> = ({ size = 20, showText = false, te
           }),
         ).start();
       } else {
-        // Hiệu ứng khi offline
         Animated.sequence([
           Animated.timing(fadeAnim, {
             toValue: 0.5,
@@ -61,7 +56,6 @@ const IconOnlOff: React.FC<IconOnlOffProps> = ({ size = 20, showText = false, te
           }),
         ]).start();
 
-        // Dừng pulse animation
         pulseAnim.setValue(1);
       }
     });

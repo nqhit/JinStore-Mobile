@@ -19,6 +19,8 @@ const styles = StyleSheet.create({
   },
   // COMMENT: HEADER
   header: {
+    paddingTop: 10,
+    paddingBottom: 20,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
@@ -59,7 +61,6 @@ const styles = StyleSheet.create({
   body: {
     justifyContent: 'flex-start',
     backgroundColor: 'transparent',
-    paddingTop: 20,
     gap: 20,
   },
 
