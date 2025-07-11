@@ -2,7 +2,7 @@ import { COLORS } from '@/constants/Colors';
 import { StyleSheet, View } from 'react-native';
 
 import FText from '../Text';
-import Checkbox from './checkbox';
+import Checkbox from '../checkbox';
 
 export const FormikCheckbox = ({ values, setFieldValue, isLoading, errors, touched }: any) => {
   return (
