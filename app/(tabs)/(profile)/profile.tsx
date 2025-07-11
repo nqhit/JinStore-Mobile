@@ -1,6 +1,6 @@
-import { FormBirthday } from '@/components/Form/FormBirthday';
-import { FormCheckboxGender } from '@/components/Form/FormCheckboxGender';
 import FormInputGroup from '@/components/Form/FormInput';
+import { FormikBirthday } from '@/components/Formik/FormBirthday';
+import { FormikCheckbox } from '@/components/Formik/FormCheckbox';
 import { COLORS } from '@/constants/Colors';
 import { useKeyboardPadding } from '@/hooks/useKeyboardPadding';
 import { useCurrentUser } from '@/server/hooks/useCurrentUser';
@@ -152,14 +152,14 @@ export default function ProfileScreen() {
                       button={{ isFormValid: isValid, isLoading, handleFunc: handleSubmit }}
                       text="Câp nhật"
                     >
-                      <FormBirthday
+                      <FormikBirthday
                         values={values}
                         showDatePicker={showDatePicker}
                         isLoading={isLoading}
                         errors={errors}
                         touched={touched}
                       />
-                      <FormCheckboxGender
+                      <FormikCheckbox
                         values={values}
                         setFieldValue={setFieldValue}
                         isLoading={isLoading}

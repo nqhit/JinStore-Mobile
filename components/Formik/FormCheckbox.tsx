@@ -2,27 +2,15 @@ import { COLORS } from '@/constants/Colors';
 import { StyleSheet, View } from 'react-native';
 
 import FText from '../Text';
-import CheckboxGender from '../checkboxGender';
+import Checkbox from './checkbox';
 
-export const FormCheckboxGender = ({ values, setFieldValue, isLoading, errors, touched }: any) => {
+export const FormikCheckbox = ({ values, setFieldValue, isLoading, errors, touched }: any) => {
   return (
     <View style={{ width: '100%' }}>
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 15 }}>
-        <CheckboxGender
-          gender="male"
-          values={values}
-          textGender="Nam"
-          setFieldValue={setFieldValue}
-          isLoading={isLoading}
-        />
-        <CheckboxGender
-          gender="female"
-          values={values}
-          textGender="Nữ"
-          setFieldValue={setFieldValue}
-          isLoading={isLoading}
-        />
-        <CheckboxGender
+        <Checkbox gender="male" values={values} textGender="Nam" setFieldValue={setFieldValue} isLoading={isLoading} />
+        <Checkbox gender="female" values={values} textGender="Nữ" setFieldValue={setFieldValue} isLoading={isLoading} />
+        <Checkbox
           gender="other"
           values={values}
           textGender="Khác"

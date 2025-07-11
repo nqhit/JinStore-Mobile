@@ -3,7 +3,7 @@ import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import FText from '../Text';
 
-export const FormBirthday = ({ values, showDatePicker, isLoading, errors, touched }: any) => {
+export const FormikBirthday = ({ values, showDatePicker, isLoading, errors, touched }: any) => {
   return (
     <View
       style={[

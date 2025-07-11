@@ -2,7 +2,7 @@ import { COLORS } from '@/constants/Colors';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React from 'react';
 import { TouchableOpacity, View } from 'react-native';
-import FText from './Text';
+import FText from '../Text';
 
 type Props = {
   gender: string;
@@ -12,7 +12,7 @@ type Props = {
   isLoading: boolean;
 };
 
-const CheckboxGender: React.FC<Props> = ({ gender, values, textGender, setFieldValue, isLoading }) => {
+const Checkbox: React.FC<Props> = ({ gender, values, textGender, setFieldValue, isLoading }) => {
   return (
     <TouchableOpacity
       style={{ flexDirection: 'row', alignItems: 'center', marginRight: 16 }}
@@ -31,4 +31,4 @@ const CheckboxGender: React.FC<Props> = ({ gender, values, textGender, setFieldV
   );
 };
 
-export default CheckboxGender;
+export default Checkbox;
