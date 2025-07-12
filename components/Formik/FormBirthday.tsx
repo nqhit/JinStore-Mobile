@@ -8,7 +8,7 @@ export const FormikBirthday = ({ values, showDatePicker, isLoading, errors, touc
     <View
       style={[
         styles.inputContainer,
-        errors.birthday && touched.birthday ? { marginBottom: 0 } : { marginBottom: 22.3 },
+        errors.dateBirth && touched.dateBirth ? { marginBottom: 0 } : { marginBottom: 22.3 },
       ]}
     >
       <TouchableOpacity
@@ -16,7 +16,7 @@ export const FormikBirthday = ({ values, showDatePicker, isLoading, errors, touc
           styles.btnContainer,
           {
             backgroundColor: isLoading ? COLORS.gray200 : 'white',
-            borderColor: errors.birthday && touched.birthday ? 'red' : COLORS.gray200,
+            borderColor: errors.dateBirth && touched.dateBirth ? 'red' : COLORS.gray200,
           },
         ]}
         onPress={showDatePicker}
@@ -25,14 +25,14 @@ export const FormikBirthday = ({ values, showDatePicker, isLoading, errors, touc
         <FText
           style={{
             textAlign: 'left',
-            color: values.birthday ? COLORS.black : COLORS.gray500,
+            color: values.dateBirth ? COLORS.black : COLORS.gray500,
           }}
         >
-          {values.birthday || 'Ngày sinh (dd/mm/yyyy)'}
+          {values.dateBirth || 'Ngày sinh (dd/mm/yyyy)'}
         </FText>
       </TouchableOpacity>
 
-      {errors.birthday && touched.birthday && <FText style={styles.errorText}>{errors.birthday}</FText>}
+      {errors.dateBirth && touched.dateBirth && <FText style={styles.errorText}>{errors.dateBirth}</FText>}
     </View>
   );
 };

@@ -1,4 +1,3 @@
-import styles from '@/assets/styles/Screen/CartScreen.styles';
 import { useCouponStore } from '@/hooks/useCouponStore';
 import { Ionicons } from '@expo/vector-icons';
 import { router, Stack } from 'expo-router';
@@ -17,14 +16,14 @@ function ProfileScreen() {
       <Stack
         screenOptions={{
           gestureEnabled: false,
-          headerTitleAlign: 'center',
+          headerTitleAlign: 'left',
           headerBackVisible: false,
           headerShown: false,
+          headerTitleStyle: { fontSize: 18, fontWeight: '600' },
           animation: 'slide_from_right',
-          headerTitleStyle: styles.title,
           headerLeft: () => {
             return (
-              <TouchableOpacity onPress={handleBack}>
+              <TouchableOpacity style={{ marginRight: 15 }} onPress={handleBack}>
                 <Ionicons name="chevron-back" size={26} color="black" />
               </TouchableOpacity>
             );
@@ -32,7 +31,13 @@ function ProfileScreen() {
         }}
       >
         <Stack.Screen name="index" />
-        <Stack.Screen name="profile" />
+        <Stack.Screen
+          name="profile"
+          options={{
+            headerShown: true,
+            title: 'Thông tin cá nhân',
+          }}
+        />
       </Stack>
     </SafeAreaProvider>
   );

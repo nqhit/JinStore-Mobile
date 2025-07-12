@@ -7,7 +7,9 @@ export const ENDPOINTS = {
   SEND_OTP: '/otp/send-otp',
   VERIFY_OTP: '/otp/verify-otp',
   RESET_PASSWORD: '/users/reset-password',
+
   INFO_USER: (id: string) => `/mobile/users/info-user/${id}`,
+  UPDATE_INFO_USER: 'mobile/users/info-user/update',
 
   // NOTE: Sản phẩm
   PRODUCTS_ALL: '/products',

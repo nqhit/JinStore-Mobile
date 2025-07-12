@@ -3,19 +3,19 @@ import { CategoryList } from '@/components/categories/categoryList';
 import IconOnlOff from '@/components/IconOnlOff';
 import ProductCard from '@/components/products/ProductCard';
 import FText from '@/components/Text';
+import { COLORS } from '@/constants/Colors';
 import { productType } from '@/interfaces/product.type';
 import { userType } from '@/interfaces/user.type';
 import { useProduct } from '@/server/hooks/useProduct';
 import { useUser } from '@/server/hooks/useUser';
 import { router } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
-import { ActivityIndicator, FlatList, Image, ScrollView, TouchableOpacity, View } from 'react-native';
+import { FlatList, Image, ScrollView, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function HomeScreen() {
   const [userInfo, setUserInfo] = useState<userType | null>(null);
   const [products, setProducts] = useState<productType[]>([]);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const { getInfoUser } = useUser();
@@ -23,17 +23,13 @@ export default function HomeScreen() {
 
   const handleFetchData = useCallback(async () => {
     try {
-      setLoading(true);
-      setError(null);
       await Promise.all([
         getProductsAll(1, 10).then((res) => setProducts(res.data)),
-        getInfoUser(setLoading, setError).then((res) => setUserInfo(res)),
+        getInfoUser().then((res) => setUserInfo(res)),
       ]);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Có lỗi xảy ra';
       setError(errorMessage);
-    } finally {
-      setLoading(false);
     }
   }, [getInfoUser, getProductsAll]);
 
@@ -65,21 +61,6 @@ export default function HomeScreen() {
 
   const keyExtractorProduct = (item: productType, index: number) => item._id?.toString() || index.toString();
 
-  // FIXED: Added loading and error states
-  if (loading) {
-    return (
-      <SafeAreaView style={{ flex: 1 }} edges={['top', 'bottom']}>
-        <View style={styles.loadingContainer}>
-          <Image
-            source={require('@/assets/images/ic_launcher.png')}
-            style={{ width: 200, height: 200, resizeMode: 'contain' }}
-          />
-          <ActivityIndicator size="large" color="#8B5CF6" />
-        </View>
-      </SafeAreaView>
-    );
-  }
-
   if (error) {
     return (
       <SafeAreaView style={{ flex: 1 }} edges={['top', 'bottom']}>
@@ -88,7 +69,7 @@ export default function HomeScreen() {
             <FText>Lỗi: {error}</FText>
             <TouchableOpacity
               onPress={handleFetchData}
-              style={{ marginTop: 10, padding: 10, backgroundColor: '#EA4335', borderRadius: 5 }}
+              style={{ marginTop: 10, padding: 10, backgroundColor: COLORS.error, borderRadius: 5 }}
             >
               <FText style={{ color: 'white', textAlign: 'center' }}>Thử lại</FText>
             </TouchableOpacity>

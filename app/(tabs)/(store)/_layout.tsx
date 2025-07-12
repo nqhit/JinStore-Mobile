@@ -1,4 +1,3 @@
-import styles from '@/assets/styles/Screen/CartScreen.styles';
 import { useCouponStore } from '@/hooks/useCouponStore';
 import { Ionicons } from '@expo/vector-icons';
 import { router, Stack } from 'expo-router';
@@ -20,7 +19,6 @@ function CartScreen() {
           headerTitleAlign: 'center',
           headerBackVisible: false,
           animation: 'slide_from_right',
-          headerTitleStyle: styles.title,
           headerLeft: () => {
             return (
               <TouchableOpacity onPress={handleBack}>

@@ -16,7 +16,7 @@ export const useAuth = () => {
     if (!id) {
       console.log('User not logged in');
     }
-    return await AuthService.logOut(dispatch, id);
+    return await AuthService.logOut(id);
   };
 
   const register = async (formData: registerFormData) => {

@@ -38,14 +38,13 @@ export const AuthService = {
       }
 
       if (user.rememberMe) {
-        const tokens = {
-          accessToken: res.data.accessToken,
-          refreshToken: res.data.refreshToken,
-        };
-
         await StorageService.setItem(AUTH_STORAGE_KEYS.USER, res.data);
-        await StorageService.setAuthTokens(tokens);
       }
+      const tokens = {
+        accessToken: res.data.accessToken,
+        refreshToken: res.data.refreshToken,
+      };
+      await StorageService.setAuthTokens(tokens);
 
       dispatch(loginSuccess(res.data));
       console.log('Đăng nhập thành công!');
@@ -59,7 +58,7 @@ export const AuthService = {
     }
   },
 
-  logOut: async (dispatch: Dispatch, id: string) => {
+  logOut: async (id: string) => {
     try {
       const httpClient = HttpService.getInstance();
       const res = await httpClient.post(ENDPOINTS.LOGOUT, { userId: id });

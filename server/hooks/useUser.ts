@@ -1,7 +1,9 @@
+import { ProfileFormValues } from '@/interfaces/user.type';
 import { loginSuccess } from '@/redux/slices/authSlice';
 import { createAxios } from '@/server/axiosInstance';
 import { useCurrentUser } from '@/server/hooks/useCurrentUser';
 import { userService } from '@/server/services/user.service';
+import moment from 'moment';
 import { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 
@@ -12,31 +14,25 @@ export const useUser = () => {
   const dispatch = useDispatch();
   const axiosJWT = createAxios(user, dispatch, loginSuccess);
 
-  const getInfoUser = useCallback(
-    async (setLoading: (loading: boolean) => void, setError: (error: string | null) => void) => {
-      if (!id || !accessToken) {
-        console.log('Missing credentials:', { id: !!id, accessToken: !!accessToken });
-        setError('Thiếu thông tin đăng nhập');
-        setLoading(false);
-        return;
-      }
+  const getInfoUser = useCallback(async () => {
+    try {
+      const res = await userService.getInfoUser(id, accessToken, axiosJWT);
 
-      try {
-        setLoading(true);
-        setError(null);
+      return res.user;
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Có lỗi xảy ra';
+      console.log('Error in fetchInfoUser:', errorMessage);
+    }
+  }, []);
 
-        const res = await userService.getInfoUser(id, accessToken, axiosJWT);
+  const updateInfoUser = useCallback(async (formData: ProfileFormValues) => {
+    const formattedValues = {
+      ...formData,
+      dateBirth: moment(formData.dateBirth, 'DD/MM/YYYY').format('YYYY-MM-DD'),
+    };
 
-        return res.user;
-      } catch (err) {
-        const errorMessage = err instanceof Error ? err.message : 'Có lỗi xảy ra';
-        console.log('Error in fetchInfoUser:', errorMessage);
-        setError(errorMessage);
-      } finally {
-        setLoading(false);
-      }
-    },
-    [],
-  );
-  return { getInfoUser };
+    return await userService.updateInfoUser(formattedValues, accessToken, axiosJWT, dispatch);
+  }, []);
+
+  return { getInfoUser, updateInfoUser };
 };
