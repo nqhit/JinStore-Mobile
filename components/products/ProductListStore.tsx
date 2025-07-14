@@ -5,7 +5,7 @@ import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { FlatList, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Loading from '../loading';
-import ProductStore from './ProductStore';
+import ProductCard from './ProductCard';
 
 function ProductListStore() {
   const [products, setProducts] = useState<productResType[]>([]);
@@ -80,7 +80,7 @@ function ProductListStore() {
 
   const renderProductItem = useCallback(
     ({ item }: { item: productType }) => (
-      <ProductStore handleRouterDetail={() => handleRouterStore(item._id)} product={item} />
+      <ProductCard handleRouterDetail={() => handleRouterStore(item._id)} product={item} />
     ),
     [handleRouterStore],
   );

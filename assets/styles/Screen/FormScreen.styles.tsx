@@ -59,6 +59,14 @@ export const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
 
+  rememberMeContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 5,
+    marginBottom: 10,
+  },
+
   forgotPasswordContainer: {
     justifyContent: 'center',
   },

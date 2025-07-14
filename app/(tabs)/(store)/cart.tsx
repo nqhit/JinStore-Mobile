@@ -319,7 +319,12 @@ function CartDetails() {
           </View>
 
           <View style={styles.footerLeft}>
-            <View style={styles.totalContainer}>
+            <View
+              style={[
+                styles.totalContainer,
+                selectedItems.length > 0 && couponDiscount > 0 && { alignItems: 'flex-end' },
+              ]}
+            >
               <FText style={styles.total}>{formatCurrency(total)}</FText>
               {selectedItems.length > 0 && couponDiscount > 0 && (
                 <View style={styles.amountSaveContainer}>

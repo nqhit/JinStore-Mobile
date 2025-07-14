@@ -3,7 +3,7 @@ import { useCoupon } from '@/server/hooks/useCoupon';
 import { useEffect, useState } from 'react';
 import { FlatList, View } from 'react-native';
 import FText from '../Text';
-import { CouponItem } from './CouponItem';
+import { CouponItem } from './CouponCard';
 
 export const CouponList = () => {
   const [data, setData] = useState<CouponType[]>([]);

@@ -2,7 +2,7 @@ import { categoryType } from '@/interfaces/category.type';
 import useCategory from '@/server/hooks/useCategory';
 import { useEffect, useState } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
-import CategoryCard from './categoryCard';
+import CategoryCard from './CategoryCard';
 
 export const CategoryList = ({ handleSubmit }: { handleSubmit: () => void }) => {
   const [categories, setCategories] = useState<categoryType[]>([]);

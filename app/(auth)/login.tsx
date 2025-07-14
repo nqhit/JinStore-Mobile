@@ -139,32 +139,32 @@ const LoginScreen = () => {
                     ]}
                     button={{ isFormValid: isValid, isLoading, handleFunc: handleSubmit }}
                     text="Đăng nhập"
-                  />
+                  >
+                    <View style={styles.bottomForm}>
+                      <View style={styles.rememberMeContainer}>
+                        <TouchableOpacity
+                          onPress={() => setRememberMe((prev) => !prev)}
+                          style={{ marginRight: 5 }}
+                          accessibilityRole="checkbox"
+                          accessibilityState={{ checked: rememberMe }}
+                        >
+                          <Ionicons
+                            name={rememberMe ? 'checkbox-sharp' : 'square-outline'}
+                            size={20}
+                            color={rememberMe ? COLORS.primary : '#8E8E93'}
+                          />
+                        </TouchableOpacity>
+                        <FText>Lưu đăng nhập</FText>
+                      </View>
+                      <View style={styles.forgotPasswordContainer}>
+                        <TouchableOpacity onPress={handleNavigateToForgot}>
+                          <FText style={styles.forgotPasswordText}>Quên mật khẩu?</FText>
+                        </TouchableOpacity>
+                      </View>
+                    </View>
+                  </FormInputGroup>
                 )}
               </Formik>
-
-              <View style={styles.bottomForm}>
-                <View style={styles.forgotPasswordContainer}>
-                  <TouchableOpacity onPress={handleNavigateToForgot}>
-                    <FText style={styles.forgotPasswordText}>Quên mật khẩu?</FText>
-                  </TouchableOpacity>
-                </View>
-                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-                  <TouchableOpacity
-                    onPress={() => setRememberMe((prev) => !prev)}
-                    style={{ marginRight: 5 }}
-                    accessibilityRole="checkbox"
-                    accessibilityState={{ checked: rememberMe }}
-                  >
-                    <Ionicons
-                      name={rememberMe ? 'checkbox-sharp' : 'square-outline'}
-                      size={20}
-                      color={rememberMe ? COLORS.primary : '#8E8E93'}
-                    />
-                  </TouchableOpacity>
-                  <FText>Ghi nhớ đăng nhập</FText>
-                </View>
-              </View>
             </View>
 
             <View style={styles.footer}>

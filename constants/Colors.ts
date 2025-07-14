@@ -4,6 +4,7 @@ const tintColorDark = '#fff';
 export const COLORS = {
   primary: '#8B5CF6',
   primary500: '#7a5af8',
+
   white: '#FFFFFF',
   whiteMint: '#F0FFF0',
 
@@ -14,8 +15,10 @@ export const COLORS = {
   gray300: '#ccc',
   gray500: '#8E8E93',
 
-  greenBase: '#4CAF50',
+  green100: '#e6ffee',
   green800: '#2E7D32',
+  greenBase: '#4CAF50',
+  greenDefault: '#389e0d',
 
   error: '#F44336',
 

@@ -1,11 +1,12 @@
 import styles from '@/assets/styles/Screen/HomeScreen.styles';
-import { CategoryList } from '@/components/categories/categoryList';
+import { CategoryList } from '@/components/categories/CategoryList';
 import IconOnlOff from '@/components/IconOnlOff';
 import ProductCard from '@/components/products/ProductCard';
 import FText from '@/components/Text';
 import { COLORS } from '@/constants/Colors';
 import { productType } from '@/interfaces/product.type';
 import { userType } from '@/interfaces/user.type';
+import { useCurrentUser } from '@/server/hooks/useCurrentUser';
 import { useProduct } from '@/server/hooks/useProduct';
 import { useUser } from '@/server/hooks/useUser';
 import { router } from 'expo-router';
@@ -14,7 +15,8 @@ import { FlatList, Image, ScrollView, TouchableOpacity, View } from 'react-nativ
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function HomeScreen() {
-  const [userInfo, setUserInfo] = useState<userType | null>(null);
+  const user = useCurrentUser();
+  const [userInfo, setUserInfo] = useState<userType | null>(user ? user : null);
   const [products, setProducts] = useState<productType[]>([]);
   const [error, setError] = useState<string | null>(null);
 
@@ -25,13 +27,13 @@ export default function HomeScreen() {
     try {
       await Promise.all([
         getProductsAll(1, 10).then((res) => setProducts(res.data)),
-        getInfoUser().then((res) => setUserInfo(res)),
+        !user && getInfoUser().then((res) => setUserInfo(res)),
       ]);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Có lỗi xảy ra';
       setError(errorMessage);
     }
-  }, [getInfoUser, getProductsAll]);
+  }, [getInfoUser, getProductsAll, user]);
 
   const handleRouterProdDetail = useCallback(() => {
     router.push('/(tabs)/(store)/ProdDetail');
@@ -119,6 +121,8 @@ export default function HomeScreen() {
                   keyExtractor={keyExtractorProduct}
                   horizontal
                   showsHorizontalScrollIndicator={false}
+                  ItemSeparatorComponent={() => <View style={{ width: 10 }} />}
+                  contentContainerStyle={{ paddingHorizontal: 10 }}
                 />
               </View>
             </View>

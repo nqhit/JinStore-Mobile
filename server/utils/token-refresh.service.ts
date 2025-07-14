@@ -22,7 +22,6 @@ export const TokenRefreshService = {
       }
       return response.data;
     } catch (error) {
-      // Nếu refresh token không hợp lệ, xóa auth data
       console.error('Refresh token failed:', error);
       await this.handleRefreshFailure();
       throw error;

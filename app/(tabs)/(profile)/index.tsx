@@ -51,7 +51,7 @@ export default function ProfileScreen() {
 
         <ProfileSection title="Cá nhân">
           <ProfileItem text="Hồ sơ" pathname="/profile" />
-          <ProfileItem text="Địa chỉ giao hàng" />
+          <ProfileItem text="Sổ địa chỉ" pathname="/address" />
           <ProfileItem text="Phương thức thanh toán" />
           <ProfileItem text="Đổi mật khẩu" />
         </ProfileSection>
@@ -59,7 +59,7 @@ export default function ProfileScreen() {
         <ProfileSection title="Thiết lập">
           <ProfileItem text="Quốc gia" value="Việt Nam" />
           <ProfileItem text="Tiền tệ" value="VND" />
-          <ProfileItem text="Điều khoản và điều kiện" />
+          <ProfileItem text="Điều khoản dịch vụ" />
         </ProfileSection>
 
         <ProfileSection title="Tài khoản">
