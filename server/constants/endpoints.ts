@@ -8,6 +8,7 @@ export const ENDPOINTS = {
   VERIFY_OTP: '/otp/verify-otp',
   RESET_PASSWORD: '/users/reset-password',
 
+  // NOTE: USER
   INFO_USER: (id: string) => `/mobile/users/info-user/${id}`,
   UPDATE_INFO_USER: 'mobile/users/info-user/update',
 
@@ -25,4 +26,7 @@ export const ENDPOINTS = {
 
   // NOTE: Mã giảm giá
   ALL_COUPONS_BY_USER: (id: string) => `/discounts/by-user/${id}`,
+
+  // NOTE: ADDRESS
+  ADDRESS_USER: '/addresses/user/all',
 } as const;
