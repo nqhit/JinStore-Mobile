@@ -7,21 +7,6 @@ interface AuthState {
     isFetching: boolean;
     error: boolean;
   };
-  register: {
-    isFetching: boolean;
-    error: boolean;
-    success: boolean;
-  };
-  resetPassword: {
-    isFetching: boolean;
-    error: boolean;
-    success: boolean;
-  };
-  otp: {
-    isFetching: boolean;
-    error: boolean;
-    success: boolean;
-  };
 }
 
 const initialState: AuthState = {
@@ -29,21 +14,6 @@ const initialState: AuthState = {
     currentUser: null,
     isFetching: false,
     error: false,
-  },
-  register: {
-    isFetching: false,
-    error: false,
-    success: false,
-  },
-  resetPassword: {
-    isFetching: false,
-    error: false,
-    success: false,
-  },
-  otp: {
-    isFetching: false,
-    error: false,
-    success: false,
   },
 };
 
@@ -64,76 +34,9 @@ const authSlice = createSlice({
       state.login.isFetching = false;
       state.login.error = true;
     },
-    registerStart: (state) => {
-      state.register.isFetching = true;
-      state.register.error = false;
-      state.register.success = false;
-    },
-    registerSuccess: (state) => {
-      state.register.isFetching = false;
-      state.register.error = false;
-      state.register.success = true;
-    },
-    registerFailed: (state) => {
-      state.register.isFetching = false;
-      state.register.error = true;
-      state.register.success = false;
-    },
-
-    resetPasswordStart: (state) => {
-      state.resetPassword.isFetching = true;
-      state.resetPassword.error = false;
-      state.resetPassword.success = false;
-    },
-    resetPasswordSuccess: (state) => {
-      state.resetPassword.isFetching = false;
-      state.resetPassword.error = false;
-      state.resetPassword.success = true;
-    },
-    resetPasswordFailed: (state) => {
-      state.resetPassword.isFetching = false;
-      state.resetPassword.error = true;
-      state.resetPassword.success = false;
-    },
-
-    otpStart: (state) => {
-      state.otp.isFetching = true;
-      state.otp.error = false;
-      state.otp.success = false;
-    },
-    otpSuccess: (state) => {
-      state.otp.isFetching = false;
-      state.otp.error = false;
-      state.otp.success = true;
-    },
-    otpFailed: (state) => {
-      state.otp.isFetching = false;
-      state.otp.error = true;
-      state.otp.success = false;
-    },
-
-    resetAuthState: (state) => {
-      state.register = initialState.register;
-      state.resetPassword = initialState.resetPassword;
-      state.otp = initialState.otp;
-    },
   },
 });
 
-export const {
-  loginStart,
-  loginFailed,
-  loginSuccess,
-  registerStart,
-  registerSuccess,
-  registerFailed,
-  resetPasswordStart,
-  resetPasswordSuccess,
-  resetPasswordFailed,
-  otpStart,
-  otpSuccess,
-  otpFailed,
-  resetAuthState,
-} = authSlice.actions;
+export const { loginStart, loginFailed, loginSuccess } = authSlice.actions;
 
 export default authSlice.reducer;

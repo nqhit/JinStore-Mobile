@@ -29,4 +29,6 @@ export const ENDPOINTS = {
 
   // NOTE: ADDRESS
   ADDRESS_USER: '/addresses/user/all',
+  ADD_ADDRESS_CUSTOMER: '/addresses/add',
+  DELETE_ADDRESS_CUSTOMER: (id: string) => `/addresses/${id}`,
 } as const;

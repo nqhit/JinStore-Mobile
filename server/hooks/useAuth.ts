@@ -20,7 +20,7 @@ export const useAuth = () => {
   };
 
   const register = async (formData: registerFormData) => {
-    return await AuthService.register(formData, dispatch);
+    return await AuthService.register(formData);
   };
 
   const sendOtp = async (email: string) => {

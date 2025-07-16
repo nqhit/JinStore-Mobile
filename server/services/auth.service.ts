@@ -7,14 +7,7 @@ import { ValidationUtils } from '@/utils/validation';
 import axios from 'axios';
 import { router } from 'expo-router';
 import { Dispatch } from 'redux';
-import {
-  loginFailed,
-  loginStart,
-  loginSuccess,
-  registerFailed,
-  registerStart,
-  registerSuccess,
-} from '../../redux/slices/authSlice';
+import { loginFailed, loginStart, loginSuccess } from '../../redux/slices/authSlice';
 import { AUTH_STORAGE_KEYS } from '../constants/auth.constants';
 import { HttpService } from '../utils/http.service';
 import { StorageService } from '../utils/storage.service';
@@ -74,14 +67,13 @@ export const AuthService = {
     }
   },
 
-  register: async (user: registerFormData, dispatch: Dispatch) => {
+  register: async (user: registerFormData) => {
     const validationError = ValidationUtils.validateRegisterForm(user);
     if (validationError) {
       ErrorHandler.showError(validationError);
       return;
     }
 
-    dispatch(registerStart());
     try {
       const httpClient = HttpService.getInstance();
       const res = await httpClient.post(ENDPOINTS.REGISTER, user);
@@ -89,11 +81,9 @@ export const AuthService = {
       if (!res.data) {
         throw new Error('Đăng ký thất bại');
       }
-      dispatch(registerSuccess());
       ErrorHandler.showSuccess('Đăng ký tài khoản thành công!');
       router.replace('/login');
     } catch (error) {
-      dispatch(registerFailed());
       ErrorHandler.handleAuthError(error);
       throw error;
     }
