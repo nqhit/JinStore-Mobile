@@ -38,13 +38,7 @@ function ProfileScreen() {
             title: 'Thông tin cá nhân',
           }}
         />
-        <Stack.Screen
-          name="address"
-          options={{
-            headerShown: true,
-            title: 'Địa chỉ của tôi',
-          }}
-        />
+        <Stack.Screen name="(address)" />
       </Stack>
     </SafeAreaProvider>
   );

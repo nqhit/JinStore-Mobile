@@ -18,7 +18,7 @@ function IconShoppingCart() {
   const { getCart } = useCart();
 
   const handleFetchData = useCallback(() => {
-    getCart().then((res) => {
+    getCart().then((res: { itemCount: number }) => {
       setLengthItems(res?.itemCount || 0);
     });
   }, [getCart]);

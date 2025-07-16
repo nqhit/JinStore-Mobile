@@ -9,9 +9,10 @@ import { useNavigation } from 'expo-router';
 import { memo, useCallback, useLayoutEffect, useMemo, useRef } from 'react';
 import { TouchableOpacity, View } from 'react-native';
 import { Modalize } from 'react-native-modalize';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 function StoreScreen() {
+  const insets = useSafeAreaInsets();
   const tabBarHeight = useBottomTabBarHeight();
   const modalRef = useRef<Modalize>(null);
   const navigation = useNavigation();
@@ -34,7 +35,7 @@ function StoreScreen() {
 
   return (
     <SafeAreaView
-      style={{ flex: 1, backgroundColor: 'white', paddingBottom: tabBarHeight / 2 }}
+      style={{ flex: 1, backgroundColor: 'white', paddingBottom: tabBarHeight }}
       edges={['top', 'bottom', 'left', 'right']}
     >
       <View style={styles.header}>
@@ -60,7 +61,11 @@ function StoreScreen() {
           </TouchableOpacity>
         ))}
 
-        <TouchableOpacity style={styles.closeButton} onPress={onClose} activeOpacity={0.8}>
+        <TouchableOpacity
+          style={{ ...styles.closeButton, marginBottom: insets.bottom + 40 }}
+          onPress={onClose}
+          activeOpacity={0.8}
+        >
           <FText style={styles.closeButtonText}>Áp dụng</FText>
         </TouchableOpacity>
       </FModalize>

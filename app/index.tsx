@@ -1,5 +1,7 @@
-import { loginSuccess } from '@/redux/slices/authSlice';
-import { checkAndHandleToken, handleLogout, validateAuthData } from '@/server/auth.helper';
+import { userType } from '@/interfaces/user.type';
+import { handleLogout } from '@/server/auth.helper';
+import { AUTH_STORAGE_KEYS } from '@/server/constants/auth.constants';
+import { StorageService } from '@/server/utils/storage.service';
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, View } from 'react-native';
@@ -11,26 +13,13 @@ export default function IndexPage() {
 
   const checkAuthStatus = async () => {
     try {
-      const { isValid, userData, accessToken } = await validateAuthData();
-
-      if (!isValid || !userData || !accessToken) {
+      const userData = await StorageService.getItem<userType>(AUTH_STORAGE_KEYS.USER);
+      if (!userData) {
         await handleLogout();
         return;
       }
 
-      // Check and handle token
-      const { success, shouldNavigateToHome } = await checkAndHandleToken(
-        userData,
-        accessToken,
-        dispatch,
-        loginSuccess,
-      );
-
-      if (success && shouldNavigateToHome) {
-        router.replace('/(tabs)/home');
-      } else {
-        router.replace('/(auth)/login');
-      }
+      router.replace('/(tabs)/home');
     } catch (error) {
       console.error('Auth check error:', error);
       await handleLogout();

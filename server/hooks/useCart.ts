@@ -1,5 +1,6 @@
 // hooks/useCart.ts
 import { productType } from '@/interfaces/product.type';
+import { userType } from '@/interfaces/user.type';
 import { loginSuccess } from '@/redux/slices/authSlice';
 import { createAxios } from '@/server/axiosInstance';
 import { CartService } from '@/server/services/cart.service';
@@ -9,9 +10,9 @@ import { useDispatch } from 'react-redux';
 import { useCurrentUser } from './useCurrentUser';
 
 export const useCart = () => {
-  const user = useCurrentUser();
-  const accessToken = user?.accessToken;
   const dispatch = useDispatch();
+  const user = useCurrentUser() as userType;
+  const accessToken = user?.accessToken;
   const axiosJWT = createAxios(user, dispatch, loginSuccess);
 
   const getCart = async () => {

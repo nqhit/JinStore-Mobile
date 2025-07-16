@@ -1,17 +1,15 @@
 import FText from '@/components/Text';
 import { COLORS } from '@/constants/Colors';
+import { useSingledPush } from '@/hooks/useSignlePush';
 import { Entypo } from '@expo/vector-icons';
-import { router } from 'expo-router';
 import React, { useCallback } from 'react';
 import { TouchableOpacity, View } from 'react-native';
 import styles from '../../assets/styles/profile/ProfileItem.styles';
 
-type ValidPathname = '/profile' | '/settings' | '/orders' | '/address'; // Thêm route tùy theo dự án của bạn
-
 interface ProfileItemProps {
   text: string;
   value?: string;
-  pathname?: ValidPathname;
+  pathname?: string;
   showChevron?: boolean;
   testID?: string;
   accessibilityLabel?: string;
@@ -25,11 +23,13 @@ export default function ProfileItem({
   testID,
   accessibilityLabel,
 }: ProfileItemProps) {
+  const singlePush = useSingledPush();
+
   const handleRouter = useCallback(() => {
     if (pathname) {
-      router.push(pathname as any);
+      singlePush(pathname);
     }
-  }, [pathname]);
+  }, [singlePush, pathname]);
 
   const isNavigable = !!pathname;
 

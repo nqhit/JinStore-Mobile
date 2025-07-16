@@ -7,6 +7,7 @@ import { useCurrentUser } from './useCurrentUser';
 export const useCoupon = () => {
   const user = useCurrentUser();
   const dispatch = useDispatch();
+  if (!user) return;
   const accessToken = user?.accessToken;
   const id = user?._id;
   const axiosJWT = createAxios(user, dispatch, loginSuccess);

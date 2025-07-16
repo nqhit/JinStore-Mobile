@@ -14,7 +14,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 export default function ProfileScreen() {
   const [loading, setLoading] = useState(false);
   const { logout } = useAuth();
-  const user = useCurrentUser();
+  const user = useCurrentUser() || {};
 
   const handleLogout = useCallback(async () => {
     if (loading) return; // Prevent multiple logout calls
@@ -45,13 +45,13 @@ export default function ProfileScreen() {
   }
 
   return (
-    <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}>
+    <SafeAreaView style={styles.container} edges={['top', 'left', 'right', 'bottom']}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <ProfileHeader user={user} onEditPress={handleUpdateAvatar} />
 
         <ProfileSection title="Cá nhân">
           <ProfileItem text="Hồ sơ" pathname="/profile" />
-          <ProfileItem text="Sổ địa chỉ" pathname="/address" />
+          <ProfileItem text="Sổ địa chỉ" pathname="/(address)" />
           <ProfileItem text="Phương thức thanh toán" />
           <ProfileItem text="Đổi mật khẩu" />
         </ProfileSection>

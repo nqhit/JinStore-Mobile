@@ -6,7 +6,7 @@ import { useCurrentUser } from './useCurrentUser';
 export const useAuth = () => {
   const dispatch = useDispatch();
   const user = useCurrentUser();
-  const id = user?._id;
+  const id = user?._id as string;
 
   const login = async (formData: loginFormData) => {
     return await AuthService.login(formData, dispatch);

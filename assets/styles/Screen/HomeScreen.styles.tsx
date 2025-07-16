@@ -100,6 +100,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'flex-start',
     marginLeft: -10,
+    paddingBottom: 60,
   },
 });
 

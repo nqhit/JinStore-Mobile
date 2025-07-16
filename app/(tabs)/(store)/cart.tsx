@@ -3,8 +3,8 @@ import CartItem from '@/components/carts/CartItem';
 import FText from '@/components/Text';
 import { COLORS } from '@/constants/Colors';
 import { COUPON_MESSAGES } from '@/constants/message';
+import { useTabBarVisibility } from '@/Context/TabBarVisibilityContext';
 import { useCouponStore } from '@/hooks/useCouponStore';
-import { useHideTabBar } from '@/hooks/useHideTabBar';
 import { CartItemType } from '@/interfaces/cart.type';
 import { CouponValidation } from '@/interfaces/coupon.type';
 import { useCart } from '@/server/hooks/useCart';
@@ -16,7 +16,13 @@ import { Alert, FlatList, Image, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 function CartDetails() {
-  useHideTabBar();
+  const { setVisible } = useTabBarVisibility();
+
+  useEffect(() => {
+    setVisible(false);
+
+    return () => setVisible(true);
+  }, []);
 
   // State
   const [data, setData] = useState<CartItemType[]>([]);
