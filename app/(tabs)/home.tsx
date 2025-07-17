@@ -4,6 +4,7 @@ import IconOnlOff from '@/components/IconOnlOff';
 import ProductCard from '@/components/products/ProductCard';
 import FText from '@/components/Text';
 import { COLORS } from '@/constants/Colors';
+import { useSingledPush } from '@/hooks/useSignlePush';
 import { productType } from '@/interfaces/product.type';
 import { userType } from '@/interfaces/user.type';
 import { useCurrentUser } from '@/server/hooks/useCurrentUser';
@@ -16,7 +17,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function HomeScreen() {
   const user = useCurrentUser();
-  const [userInfo, setUserInfo] = useState<userType | null>(user ? user : null);
+  const singlePush = useSingledPush();
+  const [userInfo, setUserInfo] = useState<userType | null>(user ?? null);
   const [products, setProducts] = useState<productType[]>([]);
   const [error, setError] = useState<string | null>(null);
 
@@ -35,9 +37,12 @@ export default function HomeScreen() {
     }
   }, [getInfoUser, getProductsAll, user]);
 
-  const handleRouterProdDetail = useCallback(() => {
-    router.push('/(tabs)/(store)/ProdDetail');
-  }, []);
+  const handleRouterProdDetail = useCallback(
+    (productId: string) => {
+      singlePush('/(tabs)/(store)/ProdDetail', { id: productId });
+    },
+    [singlePush],
+  );
 
   const handleRouterStore = useCallback(() => {
     router.push('/(tabs)/(store)');
@@ -58,7 +63,7 @@ export default function HomeScreen() {
     : [];
 
   const renderProductItem = ({ item }: { item: productType }) => (
-    <ProductCard handleRouterDetail={handleRouterProdDetail} product={item} />
+    <ProductCard handleRouterDetail={() => handleRouterProdDetail(item._id)} product={item} />
   );
 
   const keyExtractorProduct = (item: productType, index: number) => item._id?.toString() || index.toString();

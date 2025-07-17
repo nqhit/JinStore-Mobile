@@ -1,4 +1,5 @@
 import { AuthTokens } from '@/interfaces/auth.type';
+import { userType } from '@/interfaces/user.type';
 import { AUTH_STORAGE_KEYS } from '../constants/auth.constants';
 import { ENDPOINTS } from '../constants/endpoints';
 import { HttpService } from './http.service';
@@ -6,7 +7,8 @@ import { StorageService } from './storage.service';
 
 export const TokenRefreshService = {
   async refreshTokens(): Promise<AuthTokens> {
-    const refreshToken = await StorageService.getItem<string>(AUTH_STORAGE_KEYS.REFRESH_TOKEN);
+    const userData = await StorageService.getItem<userType>(AUTH_STORAGE_KEYS.USER);
+    const refreshToken = userData?.refreshToken as string;
 
     if (!refreshToken) {
       throw new Error('Không có refresh token');

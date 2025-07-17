@@ -1,6 +1,6 @@
+import { useSingledPush } from '@/hooks/useSignlePush';
 import { productResType, productType } from '@/interfaces/product.type';
 import { useProduct } from '@/server/hooks/useProduct';
-import { router } from 'expo-router';
 import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { FlatList, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -16,6 +16,7 @@ function ProductListStore() {
   const [refreshing, setRefreshing] = useState(false);
   const [hasNextPage, setHasNextPage] = useState(true);
   const { getProductsAll } = useProduct();
+  const singlePush = useSingledPush();
   const insets = useSafeAreaInsets();
 
   const handleFetchData = useCallback(async () => {
@@ -63,12 +64,12 @@ function ProductListStore() {
   }, [handleFetchData]);
 
   // Memoize router handler với useCallback
-  const handleRouterStore = useCallback((productId: string) => {
-    router.push({
-      pathname: '/ProdDetail',
-      params: { id: productId },
-    });
-  }, []);
+  const handleRouterProdDetail = useCallback(
+    (productId: string) => {
+      singlePush('/ProdDetail', { id: productId });
+    },
+    [singlePush],
+  );
 
   // Memoize featured products
   const featuredProducts = useMemo(() => products.filter((product: productType) => product.isActive), [products]);
@@ -80,9 +81,9 @@ function ProductListStore() {
 
   const renderProductItem = useCallback(
     ({ item }: { item: productType }) => (
-      <ProductCard handleRouterDetail={() => handleRouterStore(item._id)} product={item} />
+      <ProductCard handleRouterDetail={() => handleRouterProdDetail(item._id)} product={item} />
     ),
-    [handleRouterStore],
+    [handleRouterProdDetail],
   );
 
   return (

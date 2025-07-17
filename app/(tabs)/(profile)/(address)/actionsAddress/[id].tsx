@@ -10,7 +10,7 @@ import Toast from 'react-native-toast-message';
 function AddAddress() {
   const { actionsAddressCustomer } = useAddress();
   const params = useLocalSearchParams();
-  const id = params.id as string;
+  const id = params._id as string;
 
   const navigation = useNavigation();
 

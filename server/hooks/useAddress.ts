@@ -17,10 +17,11 @@ export const useAddress = () => {
   };
 
   const actionsAddressCustomer = async (address: AddressFormValues, id?: string) => {
+    console.log('id: ', id);
     if (id) {
-      return await AddressService.actionsAddress(address, accessToken, axiosJWT);
-    } else {
       return await AddressService.actionsAddress(address, accessToken, axiosJWT, id);
+    } else {
+      return await AddressService.actionsAddress(address, accessToken, axiosJWT);
     }
   };
 

@@ -5,6 +5,7 @@ import { COLORS } from '@/constants/Colors';
 import { COUPON_MESSAGES } from '@/constants/message';
 import { useTabBarVisibility } from '@/Context/TabBarVisibilityContext';
 import { useCouponStore } from '@/hooks/useCouponStore';
+import { useSingledPush } from '@/hooks/useSignlePush';
 import { CartItemType } from '@/interfaces/cart.type';
 import { CouponValidation } from '@/interfaces/coupon.type';
 import { useCart } from '@/server/hooks/useCart';
@@ -16,6 +17,7 @@ import { Alert, FlatList, Image, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 function CartDetails() {
+  const singlePush = useSingledPush();
   const { setVisible } = useTabBarVisibility();
 
   useEffect(() => {
@@ -206,13 +208,10 @@ function CartDetails() {
     }
 
     setIsNavigating(true);
-    router.push({
-      pathname: '/coupon',
-      params: { total: subtotal },
-    });
+    singlePush('/coupon', { total: subtotal });
 
     setTimeout(() => setIsNavigating(false), 1000);
-  }, [isNavigating, selectedItems.length, subtotal]);
+  }, [isNavigating, selectedItems.length, subtotal, singlePush]);
 
   const handleNavigateToCheckout = useCallback(() => {
     if (selectedItems.length === 0) {

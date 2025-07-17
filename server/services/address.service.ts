@@ -28,6 +28,7 @@ export const AddressService = {
         response = await axiosJWT.put(ENDPOINTS.UPDATE_ADDRESS_CUSTOMER(id), formData, {
           ...HttpService.setAuthHeader(accessToken),
         });
+        console.log('id: ', id);
       } else {
         response = await axiosJWT.post(ENDPOINTS.ADD_ADDRESS_CUSTOMER, formData, {
           ...HttpService.setAuthHeader(accessToken),
