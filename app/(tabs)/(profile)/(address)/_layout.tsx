@@ -30,7 +30,6 @@ function AddressScreen() {
         }}
       >
         <Stack.Screen name="index" options={{ title: 'Địa chỉ giao hàng' }} />
-        <Stack.Screen name="actionsAddress" options={{ title: 'Thêm địa chỉ' }} />
       </Stack>
     </SafeAreaProvider>
   );

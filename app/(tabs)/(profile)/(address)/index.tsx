@@ -41,13 +41,27 @@ function Address() {
     }
   }, []);
 
+  const handleEdit = useCallback(
+    (address: AddressType) => {
+      singlePush(`/actionsAddress/[id]`, {
+        ...address,
+        action: 'edit',
+      });
+    },
+    [singlePush],
+  );
+
+  const handleAddNew = useCallback(() => {
+    singlePush('/actionsAddress/[id]', { action: 'add' });
+  }, [singlePush]);
+
   const keyExtractorAddress = (item: AddressType, index: number) => {
     const id = item._id?.toString() || `temp-${index}`;
     return `${id}-${index}`;
   };
 
   const renderItem = ({ item }: { item: AddressType }) => (
-    <AddressCard value={item} onDelete={() => handleDeleteAddress(item._id || '')} />
+    <AddressCard value={item} onDelete={() => handleDeleteAddress(item._id || '')} onEdit={() => handleEdit(item)} />
   );
 
   useEffect(() => {
@@ -63,12 +77,12 @@ function Address() {
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <TouchableOpacity onPress={() => singlePush('/actionsAddress')}>
+        <TouchableOpacity onPress={handleAddNew}>
           <Ionicons name="add" size={26} color="black" />
         </TouchableOpacity>
       ),
     });
-  }, [navigation, singlePush]);
+  }, [handleAddNew, navigation]);
   return (
     <SafeAreaView
       style={{ flex: 1, paddingHorizontal: 15, backgroundColor: 'white' }}

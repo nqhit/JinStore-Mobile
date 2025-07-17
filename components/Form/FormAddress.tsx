@@ -9,6 +9,7 @@ import AddressSelector from '../address/AddressSelector';
 import FormInputGroup from './FormInput';
 
 interface FormAddressProps {
+  valuesDefault?: AddressFormValues;
   isLoading: boolean;
   onSubmit: (values: AddressFormValues) => void;
 }
@@ -29,9 +30,9 @@ const AddressSchema = yup.object().shape({
   isDefault: yup.boolean(),
 });
 
-export const FormAddress: React.FC<FormAddressProps> = ({ isLoading, onSubmit }) => {
+export const FormAddress: React.FC<FormAddressProps> = ({ valuesDefault = initialValues, isLoading, onSubmit }) => {
   return (
-    <Formik initialValues={initialValues} validationSchema={AddressSchema} validateOnMount onSubmit={onSubmit}>
+    <Formik initialValues={valuesDefault} validationSchema={AddressSchema} validateOnMount onSubmit={onSubmit}>
       {({ handleChange, handleBlur, handleSubmit, setFieldValue, values, errors, touched, isValid }) => {
         return (
           <FormInputGroup
@@ -46,9 +47,14 @@ export const FormAddress: React.FC<FormAddressProps> = ({ isLoading, onSubmit })
               },
             ]}
             button={{ isFormValid: isValid, isLoading, handleFunc: handleSubmit }}
-            text="Thêm"
+            text="Xác nhận"
           >
             <AddressSelector
+              valuesDefault={{
+                province: values.province,
+                city: values.city,
+                district: values.district,
+              }}
               onProvinceChange={(value) => setFieldValue('province', value)}
               onCityChange={(value) => setFieldValue('city', value)}
               onDistrictChange={(value) => setFieldValue('district', value)}

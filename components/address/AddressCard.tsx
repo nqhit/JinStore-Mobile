@@ -12,9 +12,7 @@ function AddressCard({ value, onEdit, onDelete }: { value: AddressType; onEdit?:
         {value.isDefault ? (
           <FText style={styles.default}>Mặc định</FText>
         ) : (
-          <TouchableOpacity style={styles.undefault}>
-            <FText>Sử dụng</FText>
-          </TouchableOpacity>
+          <FText style={styles.undefault}>Lựa chọn</FText>
         )}
         <FText>{value.detailed}</FText>
         <FText>{`${value.district}, ${value.city}, ${value.province}`}</FText>

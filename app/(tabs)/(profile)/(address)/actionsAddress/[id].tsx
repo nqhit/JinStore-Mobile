@@ -1,24 +1,41 @@
 import { FormAddress } from '@/components/Form/FormAddress';
-import { useKeyboardPadding } from '@/hooks/useKeyboardPadding';
 import { AddressFormValues } from '@/interfaces/address.type';
 import { useAddress } from '@/server/hooks/useAddress';
-import { router } from 'expo-router';
-import { useCallback, useState } from 'react';
+import { router, useLocalSearchParams, useNavigation } from 'expo-router';
+import { useCallback, useEffect, useState } from 'react';
 import { KeyboardAvoidingView, Platform, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Toast from 'react-native-toast-message';
 
 function AddAddress() {
-  const keyboardPadding = useKeyboardPadding(20);
-  const { addAddressCustomer } = useAddress();
+  const { actionsAddressCustomer } = useAddress();
+  const params = useLocalSearchParams();
+  const id = params.id as string;
+
+  const navigation = useNavigation();
 
   const [isLoading, setIsLoading] = useState(false);
+  const isEditMode = params.action === 'edit';
+  const addressData: AddressFormValues | undefined = isEditMode
+    ? {
+        detailed: params.detailed as string,
+        province: params.province as string,
+        city: params.city as string,
+        district: params.district as string,
+        isDefault: params.isDefault === 'true',
+      }
+    : undefined;
 
-  const handleAddAddress = useCallback(
-    async (address: AddressFormValues) => {
+  const handleActionsAddress = useCallback(
+    async (address: AddressFormValues, id?: string) => {
+      let res = null;
       try {
         setIsLoading(true);
-        const res = await addAddressCustomer(address);
+        if (id) {
+          res = await actionsAddressCustomer(address, id);
+        } else {
+          res = await actionsAddressCustomer(address);
+        }
         if (res.success) {
           Toast.show({
             type: 'success',
@@ -41,13 +58,23 @@ function AddAddress() {
         setIsLoading(false);
       }
     },
-    [addAddressCustomer],
+    [actionsAddressCustomer],
   );
+
+  useEffect(() => {
+    navigation.setOptions({
+      title: isEditMode ? 'Chỉnh sửa địa chỉ' : 'Thêm địa chỉ',
+    });
+  }, [isEditMode, navigation]);
 
   return (
     <SafeAreaView style={styles.container} edges={['bottom', 'left', 'right']}>
       <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-        <FormAddress onSubmit={(values) => handleAddAddress(values)} isLoading={isLoading} />
+        <FormAddress
+          valuesDefault={addressData as AddressFormValues}
+          onSubmit={(values) => (id ? handleActionsAddress(values, id) : handleActionsAddress(values))}
+          isLoading={isLoading}
+        />
       </KeyboardAvoidingView>
     </SafeAreaView>
   );

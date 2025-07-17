@@ -18,19 +18,40 @@ export const AddressService = {
     }
   },
 
-  addAddress: async (formData: AddressFormValues, accessToken: string, axiosJWT: AxiosInstance) => {
+  actionsAddress: async (formData: AddressFormValues, accessToken: string, axiosJWT: AxiosInstance, id?: string) => {
     if (!accessToken) {
       return handleLogout();
     }
+    let response = null;
     try {
-      const response = await axiosJWT.post(ENDPOINTS.ADD_ADDRESS_CUSTOMER, formData, {
-        ...HttpService.setAuthHeader(accessToken),
-      });
+      if (id) {
+        response = await axiosJWT.put(ENDPOINTS.UPDATE_ADDRESS_CUSTOMER(id), formData, {
+          ...HttpService.setAuthHeader(accessToken),
+        });
+      } else {
+        response = await axiosJWT.post(ENDPOINTS.ADD_ADDRESS_CUSTOMER, formData, {
+          ...HttpService.setAuthHeader(accessToken),
+        });
+      }
       return response.data;
     } catch (error) {
       ErrorHandler.handleAuthError(error);
     }
   },
+
+  // updateAddress: async (id: string, formData: AddressFormValues, accessToken: string, axiosJWT: AxiosInstance) => {
+  //   if (!accessToken) {
+  //     return handleLogout();
+  //   }
+  //   try {
+  //     const response = await axiosJWT.put(ENDPOINTS.UPDATE_ADDRESS_CUSTOMER(id), formData, {
+  //       ...HttpService.setAuthHeader(accessToken),
+  //     });
+  //     return response.data;
+  //   } catch (error) {
+  //     ErrorHandler.handleAuthError(error);
+  //   }
+  // },
 
   deleteAddress: async (id: string, accessToken: string, axiosJWT: AxiosInstance) => {
     if (!accessToken) {

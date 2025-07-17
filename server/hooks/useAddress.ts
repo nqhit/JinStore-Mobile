@@ -16,12 +16,16 @@ export const useAddress = () => {
     return await AddressService.getCustomerAddress(axiosJWT, accessToken);
   };
 
-  const addAddressCustomer = async (address: AddressFormValues) => {
-    return await AddressService.addAddress(address, accessToken, axiosJWT);
+  const actionsAddressCustomer = async (address: AddressFormValues, id?: string) => {
+    if (id) {
+      return await AddressService.actionsAddress(address, accessToken, axiosJWT);
+    } else {
+      return await AddressService.actionsAddress(address, accessToken, axiosJWT, id);
+    }
   };
 
   const deleteAddress = async (id: string) => {
     return await AddressService.deleteAddress(id, accessToken, axiosJWT);
   };
-  return { getCustomerAddress, addAddressCustomer, deleteAddress };
+  return { getCustomerAddress, actionsAddressCustomer, deleteAddress };
 };

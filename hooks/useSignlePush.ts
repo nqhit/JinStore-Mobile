@@ -8,9 +8,9 @@ export const useSingledPush = (delay: number = 1000) => {
 
   return useMemo(() => {
     return throttle(
-      (to: string) => {
+      (to: string, params?: Record<string, any>) => {
         if (pathname !== to) {
-          router.push(to as any);
+          router.push({ pathname: to as any, params });
         }
       },
       delay,
