@@ -73,7 +73,6 @@ const useSocketConnection = () => {
       socket.connect();
     }
 
-    // Cleanup function to disconnect socket when component unmounts
     return () => {
       if (socket.connected) {
         socket.disconnect();
