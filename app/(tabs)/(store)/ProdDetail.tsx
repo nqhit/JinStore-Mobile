@@ -1,5 +1,5 @@
 import FText from '@/components/Text';
-import { useTabBarVisibility } from '@/Context/TabBarVisibilityContext';
+import { useTabBarVisibility } from '@/context/TabBarVisibilityContext';
 import { Ionicons } from '@expo/vector-icons';
 import { router, useLocalSearchParams, useNavigation } from 'expo-router';
 import { useCallback, useEffect, useLayoutEffect } from 'react';

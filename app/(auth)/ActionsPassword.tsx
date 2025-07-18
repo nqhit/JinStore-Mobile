@@ -4,7 +4,9 @@ import { FormOtp } from '@/components/Form/FormOTP';
 import { FormPassword } from '@/components/Form/FormPassword';
 import FText from '@/components/Text';
 import { useAuth } from '@/server/hooks/useAuth';
+import { useUser } from '@/server/hooks/useUser';
 import { router, useFocusEffect, useNavigation } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router/build/hooks';
 import React, { useCallback, useEffect, useState } from 'react';
 import {
   Alert,
@@ -28,13 +30,17 @@ interface OtpFormData {
 }
 
 interface ResetPasswordFormData {
+  currentPassword?: string;
   password: string;
   confirmPassword: string;
 }
 
-const ForgotPasswordScreen = () => {
+const ActionsPasswordScreen = () => {
   const navigation = useNavigation();
   const { sendOtp, verifyOtp, resetPassword } = useAuth();
+  const { changePassword } = useUser();
+  const params = useLocalSearchParams();
+  const showCurrentPassword = params.showCurrentPassword === 'true';
 
   // Form states
   const [email, setEmail] = useState('');
@@ -103,20 +109,29 @@ const ForgotPasswordScreen = () => {
     async (values: ResetPasswordFormData) => {
       setIsLoading(true);
       try {
-        await resetPassword(email, values.password, values.confirmPassword);
-        Alert.alert('Thành công', 'Đặt lại mật khẩu thành công', [
+        if (values.currentPassword) {
+          const formData = {
+            currentPassword: values.currentPassword,
+            newPassword: values.password,
+            confirmPassword: values.confirmPassword,
+          };
+          await changePassword(formData);
+        } else {
+          await resetPassword(email, values.password, values.confirmPassword);
+        }
+        Alert.alert('Thành công', 'Đổi mật khẩu thành công', [
           {
             text: 'OK',
             onPress: () => router.push('/login'),
           },
         ]);
       } catch (error: any) {
-        Alert.alert('Lỗi', error.message || 'Không thể đặt lại mật khẩu. Vui lòng thử lại.');
+        Alert.alert('Lỗi', error.message || 'Không thể đổi mật khẩu. Vui lòng thử lại.');
       } finally {
         setIsLoading(false);
       }
     },
-    [resetPassword, email],
+    [resetPassword, email, changePassword],
   );
 
   const handleResendOtp = useCallback(() => {
@@ -156,7 +171,13 @@ const ForgotPasswordScreen = () => {
         );
 
       case 3:
-        return <FormPassword isLoading={isLoading} onSubmit={handleResetPassword} />;
+        return (
+          <FormPassword
+            isLoading={isLoading}
+            onSubmit={handleResetPassword}
+            showCurrentPassword={showCurrentPassword}
+          />
+        );
 
       default:
         return null;
@@ -211,12 +232,14 @@ const ForgotPasswordScreen = () => {
               {renderStepContent()}
             </View>
 
-            <View style={styles.registerContainer}>
-              <FText>Đã nhớ mật khẩu? </FText>
-              <TouchableOpacity onPress={handleNavigateToLogin} disabled={isNavigating} activeOpacity={0.7}>
-                <FText style={[styles.registerLink, isNavigating && { opacity: 0.5 }]}>Đăng nhập ngay</FText>
-              </TouchableOpacity>
-            </View>
+            {!showCurrentPassword && (
+              <View style={styles.registerContainer}>
+                <FText>Đã nhớ mật khẩu? </FText>
+                <TouchableOpacity onPress={handleNavigateToLogin} disabled={isNavigating} activeOpacity={0.7}>
+                  <FText style={[styles.registerLink, isNavigating && { opacity: 0.5 }]}>Đăng nhập ngay</FText>
+                </TouchableOpacity>
+              </View>
+            )}
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -224,4 +247,4 @@ const ForgotPasswordScreen = () => {
   );
 };
 
-export default ForgotPasswordScreen;
+export default ActionsPasswordScreen;
