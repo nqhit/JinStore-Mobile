@@ -3,7 +3,7 @@ import CartItem from '@/components/carts/CartItem';
 import FText from '@/components/Text';
 import { COLORS } from '@/constants/Colors';
 import { COUPON_MESSAGES } from '@/constants/message';
-import { useTabBarVisibility } from '@/Context/TabBarVisibilityContext';
+import { useTabBarVisibility } from '@/context/TabBarVisibilityContext';
 import { useCouponStore } from '@/hooks/useCouponStore';
 import { useSingledPush } from '@/hooks/useSignlePush';
 import { CartItemType } from '@/interfaces/cart.type';

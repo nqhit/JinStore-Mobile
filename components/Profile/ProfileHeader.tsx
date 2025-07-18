@@ -15,6 +15,19 @@ interface ProfileHeaderProps {
   onEditPress?: () => void;
 }
 function ProfileHeader({ user, onEditPress }: ProfileHeaderProps) {
+  const maskEmail = (email: string) => {
+    const [username, domain] = email.split('@');
+
+    if (username.length <= 3) {
+      return username[0] + '*'.repeat(username.length - 1) + '@' + domain;
+    }
+
+    const firstTwo = username.slice(0, 2);
+    const lastChar = username.slice(-1);
+    const maskedMiddle = '*'.repeat(username.length - username.length + 3);
+
+    return `${firstTwo}${maskedMiddle}${lastChar}@${domain}`;
+  };
   return (
     <View style={styles.profile}>
       <View style={styles.avatarWrapper}>
@@ -29,7 +42,7 @@ function ProfileHeader({ user, onEditPress }: ProfileHeaderProps) {
         </TouchableOpacity>
       </View>
       <FText style={styles.name}>{user?.fullname || 'Tên người dùng'}</FText>
-      <FText style={styles.email}>{user?.email || 'email@example.com'}</FText>
+      <FText style={styles.email}>{maskEmail(user?.email as string) || 'email@example.com'}</FText>
     </View>
   );
 }
