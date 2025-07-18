@@ -1,7 +1,7 @@
 import { BottomTabBar, BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import React, { useEffect, useRef } from 'react';
 import { Animated, StyleSheet } from 'react-native';
-import { useTabBarVisibility } from '../../context/TabBarVisibilityContext';
+import { useTabBarVisibility } from '../../Context/TabBarVisibilityContext';
 
 export const AnimatedTabBar: React.FC<BottomTabBarProps> = (props) => {
   const { visible } = useTabBarVisibility();

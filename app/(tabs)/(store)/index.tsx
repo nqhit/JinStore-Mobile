@@ -36,7 +36,7 @@ function StoreScreen() {
   return (
     <SafeAreaView
       style={{ flex: 1, backgroundColor: 'white', paddingBottom: tabBarHeight }}
-      edges={['top', 'bottom', 'left', 'right']}
+      edges={['top', 'left', 'right']}
     >
       <View style={styles.header}>
         <SearchFilter onOpen={onOpen} />

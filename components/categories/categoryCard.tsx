@@ -4,9 +4,9 @@ import { categoryType } from '@/interfaces/category.type';
 import { memo } from 'react';
 import { Image, TouchableOpacity } from 'react-native';
 
-function CategoryCard({ category, handleRouterStore }: { category: categoryType; handleRouterStore: () => void }) {
+function CategoryCard({ category, onSubmit }: { category: categoryType; onSubmit: (id: string) => void }) {
   return (
-    <TouchableOpacity style={styles.categoryContainer} onPress={handleRouterStore}>
+    <TouchableOpacity style={styles.categoryContainer} onPress={() => onSubmit(category._id)}>
       <Image
         source={{ uri: category.image?.url || '@/assets/images/placeholder.png' }}
         style={styles.image}

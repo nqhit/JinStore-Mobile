@@ -1,9 +1,10 @@
 import { useSingledPush } from '@/hooks/useSignlePush';
 import { productResType, productType } from '@/interfaces/product.type';
 import { useProduct } from '@/server/hooks/useProduct';
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
+import { useLocalSearchParams } from 'expo-router';
 import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { FlatList, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Loading from '../loading';
 import ProductCard from './ProductCard';
 
@@ -17,7 +18,8 @@ function ProductListStore() {
   const [hasNextPage, setHasNextPage] = useState(true);
   const { getProductsAll } = useProduct();
   const singlePush = useSingledPush();
-  const insets = useSafeAreaInsets();
+  const tabBarHeight = useBottomTabBarHeight();
+  const { id } = useLocalSearchParams();
 
   const handleFetchData = useCallback(async () => {
     try {
@@ -72,7 +74,10 @@ function ProductListStore() {
   );
 
   // Memoize featured products
-  const featuredProducts = useMemo(() => products.filter((product: productType) => product.isActive), [products]);
+  const featuredProducts = useMemo(
+    () => products.filter((product: productType) => (product.isActive && id ? product._idCategory._id === id : true)),
+    [products, id],
+  );
 
   // Tối ưu hóa keyExtractor
   const keyExtractorProduct = useCallback((item: productType, index: number) => {
@@ -103,7 +108,7 @@ function ProductListStore() {
           refreshing={refreshing}
           onRefresh={onRefresh}
           contentContainerStyle={{
-            paddingBottom: insets.bottom,
+            paddingBottom: tabBarHeight,
             backgroundColor: 'white',
           }}
           ListFooterComponent={loadingMore && hasNextPage ? <Loading /> : null}

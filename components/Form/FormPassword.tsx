@@ -11,33 +11,62 @@ interface ResetPasswordFormData {
 interface FormPasswordProps {
   isLoading: boolean;
   onSubmit: (values: ResetPasswordFormData) => void;
+  showCurrentPassword?: boolean;
 }
 
-const ResetPasswordSchema = yup.object().shape({
-  password: yup
-    .string()
-    .matches(
-      passwordRegex,
-      'Mật khẩu phải có ít nhất 8 ký tự, ít nhất 1 ký tự hoa, 1 ký tự thường, 1 ký tự số, 1 ký tự đặc biệt',
-    )
-    .min(8, 'Mật khẩu phải có ít nhất 8 ký tự')
-    .required('Vui lòng nhập mật khẩu'),
-  confirmPassword: yup
-    .string()
-    .oneOf([yup.ref('password')], 'Mật khẩu xác nhận không trùng khớp')
-    .required('Vui lòng nhập xác nhận mật khẩu'),
-});
+const getResetPasswordSchema = (showCurrentPassword: boolean) =>
+  yup.object().shape({
+    ...(showCurrentPassword && {
+      currentPassword: yup
+        .string()
+        .matches(
+          passwordRegex,
+          'Mật khẩu phải có ít nhất 8 ký tự, ít nhất 1 ký tự hoa, 1 ký tự thường, 1 ký tự số, 1 ký tự đặc biệt',
+        )
+        .min(8, 'Mật khẩu phải có ít nhất 8 ký tự')
+        .required('Vui lòng nhập mật khẩu hiện tại'),
+    }),
+    password: yup
+      .string()
+      .matches(
+        passwordRegex,
+        'Mật khẩu phải có ít nhất 8 ký tự, ít nhất 1 ký tự hoa, 1 ký tự thường, 1 ký tự số, 1 ký tự đặc biệt',
+      )
+      .min(8, 'Mật khẩu phải có ít nhất 8 ký tự')
+      .required('Vui lòng nhập mật khẩu mới'),
+    confirmPassword: yup
+      .string()
+      .oneOf([yup.ref('password')], 'Mật khẩu xác nhận không trùng khớp')
+      .required('Vui lòng nhập xác nhận mật khẩu'),
+  });
 
-export const FormPassword: React.FC<FormPasswordProps> = ({ isLoading, onSubmit }) => (
+export const FormPassword: React.FC<FormPasswordProps> = ({ isLoading, onSubmit, showCurrentPassword }) => (
   <Formik
-    initialValues={{ password: '', confirmPassword: '' }}
-    validationSchema={ResetPasswordSchema}
+    initialValues={{
+      currentPassword: '',
+      password: '',
+      confirmPassword: '',
+    }}
+    validationSchema={getResetPasswordSchema(showCurrentPassword || false)}
     validateOnMount
     onSubmit={onSubmit}
   >
     {({ handleChange, handleBlur, handleSubmit, values, errors, touched, isValid }) => (
       <FormInputGroup
         inputs={[
+          ...(showCurrentPassword
+            ? [
+                {
+                  placeholder: 'Mật khẩu hiện tại',
+                  value: values.currentPassword,
+                  onChangeText: handleChange('currentPassword'),
+                  onBlur: handleBlur('currentPassword'),
+                  error: errors.currentPassword,
+                  touched: touched.currentPassword,
+                  secureTextEntry: true,
+                },
+              ]
+            : []),
           {
             placeholder: 'Mật khẩu mới',
             value: values.password,
