@@ -5,10 +5,8 @@ import { StorageService } from '@/server/utils/storage.service';
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, View } from 'react-native';
-import { useDispatch } from 'react-redux';
 
 export default function IndexPage() {
-  const dispatch = useDispatch();
   const [isChecking, setIsChecking] = useState(true);
 
   const checkAuthStatus = async () => {

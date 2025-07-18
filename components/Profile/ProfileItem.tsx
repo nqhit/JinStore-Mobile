@@ -10,6 +10,7 @@ interface ProfileItemProps {
   text: string;
   value?: string;
   pathname?: string;
+  params?: any;
   showChevron?: boolean;
   testID?: string;
   accessibilityLabel?: string;
@@ -19,6 +20,7 @@ export default function ProfileItem({
   text,
   value,
   pathname,
+  params,
   showChevron = true,
   testID,
   accessibilityLabel,
@@ -27,9 +29,9 @@ export default function ProfileItem({
 
   const handleRouter = useCallback(() => {
     if (pathname) {
-      singlePush(pathname);
+      singlePush(pathname, params);
     }
-  }, [singlePush, pathname]);
+  }, [singlePush, pathname, params]);
 
   const isNavigable = !!pathname;
 

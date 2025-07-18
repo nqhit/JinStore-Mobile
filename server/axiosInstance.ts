@@ -55,9 +55,6 @@ export const createAxios = (user: userType, dispatch: Dispatch, stateSuccess: an
   newInstance.interceptors.response.use(
     (response) => response,
     async (error) => {
-      if (isLoggingOut) {
-        return Promise.reject(error);
-      }
       const originalRequest = error.config;
 
       if ((error.response?.status === 401 || error.response?.status === 403) && !originalRequest._retry) {

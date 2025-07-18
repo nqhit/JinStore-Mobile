@@ -10,7 +10,7 @@ import { userType } from '@/interfaces/user.type';
 import { useCurrentUser } from '@/server/hooks/useCurrentUser';
 import { useProduct } from '@/server/hooks/useProduct';
 import { useUser } from '@/server/hooks/useUser';
-import { router } from 'expo-router';
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { useCallback, useEffect, useState } from 'react';
 import { FlatList, Image, ScrollView, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -21,6 +21,7 @@ export default function HomeScreen() {
   const [userInfo, setUserInfo] = useState<userType | null>(user ?? null);
   const [products, setProducts] = useState<productType[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const tabBarHeight = useBottomTabBarHeight();
 
   const { getInfoUser } = useUser();
   const { getProductsAll } = useProduct();
@@ -44,9 +45,12 @@ export default function HomeScreen() {
     [singlePush],
   );
 
-  const handleRouterStore = useCallback(() => {
-    router.push('/(tabs)/(store)');
-  }, []);
+  const handleRouterStore = useCallback(
+    (id: string) => {
+      singlePush('/(tabs)/(store)', { id });
+    },
+    [singlePush],
+  );
 
   useEffect(() => {
     handleFetchData();
@@ -127,7 +131,7 @@ export default function HomeScreen() {
                   horizontal
                   showsHorizontalScrollIndicator={false}
                   ItemSeparatorComponent={() => <View style={{ width: 10 }} />}
-                  contentContainerStyle={{ paddingHorizontal: 10 }}
+                  contentContainerStyle={{ paddingHorizontal: 10, paddingBottom: tabBarHeight }}
                 />
               </View>
             </View>
