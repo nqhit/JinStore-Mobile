@@ -2,7 +2,7 @@ import { Tabs } from 'expo-router';
 
 import { AnimatedTabBar } from '@/components/animated/AnimatedTabBar';
 import { COLORS } from '@/constants/Colors';
-import { TabBarVisibilityProvider } from '@/Context/TabBarVisibilityContext';
+import { TabBarVisibilityProvider } from '@/context/TabBarVisibilityContext';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 export default function TabLayout() {
