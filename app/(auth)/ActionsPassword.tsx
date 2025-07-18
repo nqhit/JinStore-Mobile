@@ -52,8 +52,9 @@ const ActionsPasswordScreen = () => {
   useEffect(() => {
     navigation.setOptions({
       gestureEnabled: false,
+      title: showCurrentPassword ? 'Đổi mật khẩu' : 'Quên mật khẩu',
     });
-  }, [navigation]);
+  }, [navigation, showCurrentPassword]);
 
   useFocusEffect(
     useCallback(() => {
