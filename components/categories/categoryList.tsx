@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 import CategoryCard from './CategoryCard';
 
-export const CategoryList = ({ handleSubmit }: { handleSubmit: () => void }) => {
+export const CategoryList = ({ handleSubmit }: { handleSubmit: (id: string) => void }) => {
   const [categories, setCategories] = useState<categoryType[]>([]);
   const { getCategoriesAll } = useCategory();
 
@@ -17,7 +17,7 @@ export const CategoryList = ({ handleSubmit }: { handleSubmit: () => void }) => 
     : [];
 
   const renderCategoryItem = ({ item }: { item: categoryType }) => (
-    <CategoryCard handleRouterStore={handleSubmit} category={item} />
+    <CategoryCard onSubmit={() => handleSubmit(item._id)} category={item} />
   );
 
   const keyExtractorCategory = (item: categoryType, index: number) => item._id?.toString() || index.toString();

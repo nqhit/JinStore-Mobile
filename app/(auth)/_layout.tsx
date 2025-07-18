@@ -25,12 +25,6 @@ export default function AuthLayout() {
         }}
       />
       <Stack.Screen
-        name="forgotPassword"
-        options={{
-          headerShown: false,
-        }}
-      />
-      <Stack.Screen
         name="register"
         options={{
           title: 'Đăng ký',

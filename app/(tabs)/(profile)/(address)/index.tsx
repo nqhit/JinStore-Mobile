@@ -1,7 +1,7 @@
 import AddressCard from '@/components/address/AddressCard';
 import Loading from '@/components/loading';
 import FText from '@/components/Text';
-import { useTabBarVisibility } from '@/context/TabBarVisibilityContext';
+import { useTabBarVisibility } from '@/Context/TabBarVisibilityContext';
 import { useSingledPush } from '@/hooks/useSignlePush';
 import { AddressType } from '@/interfaces/address.type';
 import { useAddress } from '@/server/hooks/useAddress';

@@ -10,7 +10,7 @@ import { userType } from '@/interfaces/user.type';
 import { useCurrentUser } from '@/server/hooks/useCurrentUser';
 import { useProduct } from '@/server/hooks/useProduct';
 import { useUser } from '@/server/hooks/useUser';
-import { router } from 'expo-router';
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { useCallback, useEffect, useState } from 'react';
 import { FlatList, Image, ScrollView, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -21,21 +21,34 @@ export default function HomeScreen() {
   const [userInfo, setUserInfo] = useState<userType | null>(user ?? null);
   const [products, setProducts] = useState<productType[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const tabBarHeight = useBottomTabBarHeight();
 
   const { getInfoUser } = useUser();
   const { getProductsAll } = useProduct();
-
-  const handleFetchData = useCallback(async () => {
+  const fetchUser = async () => {
     try {
-      await Promise.all([
-        getProductsAll(1, 10).then((res) => setProducts(res.data)),
-        !user && getInfoUser().then((res) => setUserInfo(res)),
-      ]);
+      const res = await getInfoUser();
+      setUserInfo(res);
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Có lỗi xảy ra';
+      const errorMessage = err instanceof Error ? err.message : 'Lỗi khi lấy thông tin người dùng';
       setError(errorMessage);
     }
-  }, [getInfoUser, getProductsAll, user]);
+  };
+
+  const fetchProducts = async () => {
+    try {
+      const res = await getProductsAll(1, 10);
+      setProducts(res.data);
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Lỗi khi lấy sản phẩm';
+      setError(errorMessage);
+    }
+  };
+
+  const handleFetchData = async () => {
+    setError(null);
+    await Promise.all([fetchProducts(), !userInfo && fetchUser()]);
+  };
 
   const handleRouterProdDetail = useCallback(
     (productId: string) => {
@@ -44,13 +57,22 @@ export default function HomeScreen() {
     [singlePush],
   );
 
-  const handleRouterStore = useCallback(() => {
-    router.push('/(tabs)/(store)');
-  }, []);
+  const handleRouterStore = useCallback(
+    (id: string) => {
+      singlePush('/(tabs)/(store)', { id });
+    },
+    [singlePush],
+  );
 
   useEffect(() => {
     handleFetchData();
-  }, [handleFetchData]);
+  }, []);
+
+  useEffect(() => {
+    if (user) {
+      setUserInfo(user);
+    }
+  }, [user]);
 
   const featuredProducts = Array.isArray(products)
     ? products.filter((product: productType) => product.averageRating > 4)
@@ -127,7 +149,7 @@ export default function HomeScreen() {
                   horizontal
                   showsHorizontalScrollIndicator={false}
                   ItemSeparatorComponent={() => <View style={{ width: 10 }} />}
-                  contentContainerStyle={{ paddingHorizontal: 10 }}
+                  contentContainerStyle={{ paddingHorizontal: 10, paddingBottom: tabBarHeight }}
                 />
               </View>
             </View>

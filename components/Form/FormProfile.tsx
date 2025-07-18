@@ -1,4 +1,4 @@
-import { useTabBarVisibility } from '@/context/TabBarVisibilityContext';
+import { useTabBarVisibility } from '@/Context/TabBarVisibilityContext';
 import { ProfileFormValues } from '@/interfaces/user.type';
 import { useCurrentUser } from '@/server/hooks/useCurrentUser';
 import { formatDateForDisplay } from '@/utils/FormatDate';
