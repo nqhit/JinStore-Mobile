@@ -1,4 +1,4 @@
-import { ProfileFormValues } from '@/interfaces/user.type';
+import { ChangePasswordFormValues, ProfileFormValues } from '@/interfaces/user.type';
 import { loginSuccess } from '@/redux/slices/authSlice';
 import { createAxios } from '@/server/axiosInstance';
 import { useCurrentUser } from '@/server/hooks/useCurrentUser';
@@ -40,5 +40,9 @@ export const useUser = () => {
     return await userService.updateInfoUser(formattedValues, accessToken, axiosJWT, dispatch);
   }, []);
 
-  return { getInfoUser, updateInfoUser };
+  const changePassword = useCallback(async (formData: ChangePasswordFormValues) => {
+    return await userService.changePassword(formData, accessToken, axiosJWT);
+  }, []);
+
+  return { getInfoUser, updateInfoUser, changePassword };
 };

@@ -27,3 +27,9 @@ export type ProfileFormValues = {
   dateBirth: string;
   gender: string;
 };
+
+export type ChangePasswordFormValues = {
+  currentPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+};
