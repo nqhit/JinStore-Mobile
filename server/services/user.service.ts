@@ -1,5 +1,5 @@
 import { API_URL } from '@/constants/env';
-import { ProfileFormValues } from '@/interfaces/user.type';
+import { ChangePasswordFormValues, ProfileFormValues } from '@/interfaces/user.type';
 import { loginSuccess } from '@/redux/slices/authSlice';
 import { ENDPOINTS } from '@/server/constants/endpoints';
 import { Dispatch } from '@reduxjs/toolkit';
@@ -39,6 +39,18 @@ export const userService = {
         ...HttpService.setAuthHeader(accessToken),
       });
       dispatch(loginSuccess(response.data.user));
+      return response.data;
+    } catch (error) {
+      ErrorHandler.handleAuthError(error);
+      throw error;
+    }
+  },
+
+  changePassword: async (formData: ChangePasswordFormValues, accessToken: string, axiosJWT: AxiosInstance) => {
+    try {
+      const response = await axiosJWT.patch(ENDPOINTS.CHANGE_PASSWORD, formData, {
+        ...HttpService.setAuthHeader(accessToken),
+      });
       return response.data;
     } catch (error) {
       ErrorHandler.handleAuthError(error);

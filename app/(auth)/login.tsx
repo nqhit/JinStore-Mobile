@@ -3,11 +3,12 @@ import ButtonLoginSocial from '@/components/Button/LoginSocial';
 import FormInputGroup from '@/components/Form/FormInput';
 import FText from '@/components/Text';
 import { COLORS } from '@/constants/Colors';
+import { useSingledPush } from '@/hooks/useSignlePush';
 import { loginFormData } from '@/interfaces/auth.type';
 import { useAuth } from '@/server/hooks/useAuth';
 import { passwordRegex, validateEmail, validateUsername } from '@/utils/regex';
 import { Ionicons } from '@expo/vector-icons';
-import { router, useFocusEffect, useNavigation } from 'expo-router';
+import { useFocusEffect, useNavigation } from 'expo-router';
 import { Formik } from 'formik';
 import React, { useCallback, useEffect, useState } from 'react';
 import { BackHandler, Image, KeyboardAvoidingView, Platform, ScrollView, TouchableOpacity, View } from 'react-native';
@@ -38,6 +39,7 @@ const LoginScreen = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isNavigating, setIsNavigating] = useState(false);
   const [rememberMe, setRememberMe] = useState(false); // Thêm state ghi nhớ đăng nhập
+  const singlePush = useSingledPush();
 
   useEffect(() => {
     navigation.setOptions({
@@ -55,26 +57,14 @@ const LoginScreen = () => {
   );
 
   const handleNavigateToRegister = useCallback(() => {
-    if (isNavigating) return;
-
-    setIsNavigating(true);
-    router.push('/register');
-
-    setTimeout(() => {
-      setIsNavigating(false);
-    }, 1000);
-  }, [isNavigating]);
+    singlePush('/register');
+  }, [singlePush]);
 
   const handleNavigateToForgot = useCallback(() => {
-    if (isNavigating) return;
-
-    setIsNavigating(true);
-    router.push('/forgotPassword');
-
-    setTimeout(() => {
-      setIsNavigating(false);
-    }, 1000);
-  }, [isNavigating]);
+    singlePush('/ActionsPassword', {
+      showCurrentPassword: false,
+    });
+  }, [singlePush]);
 
   const handleLogin = useCallback(
     async (values: loginFormData) => {
@@ -173,8 +163,8 @@ const LoginScreen = () => {
 
             <View style={styles.registerContainer}>
               <FText>Chưa có tài khoản? </FText>
-              <TouchableOpacity onPress={handleNavigateToRegister} disabled={isNavigating} activeOpacity={0.7}>
-                <FText style={[styles.registerLink, isNavigating && { opacity: 0.5 }]}>Đăng ký ngay</FText>
+              <TouchableOpacity onPress={handleNavigateToRegister}>
+                <FText style={styles.registerLink}>Đăng ký ngay</FText>
               </TouchableOpacity>
             </View>
           </View>
