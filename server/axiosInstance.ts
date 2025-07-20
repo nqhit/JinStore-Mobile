@@ -2,22 +2,17 @@
 import { userType } from '@/interfaces/user.type';
 import { Dispatch } from '@reduxjs/toolkit';
 import { AxiosInstance } from 'axios';
-import { handleLogoutWithToast, handleTokenRefresh } from './auth.helper';
+import { handleTokenRefresh } from './auth.helper';
 import { AUTH_STORAGE_KEYS } from './constants/auth.constants';
 import { HttpService } from './utils/http.service';
 import { StorageService } from './utils/storage.service';
 import { TokenService } from './utils/token.service';
-
-let isLoggingOut = false;
 
 export const createAxios = (user: userType, dispatch: Dispatch, stateSuccess: any): AxiosInstance => {
   const newInstance = HttpService.createAuthenticatedInstance();
 
   newInstance.interceptors.request.use(
     async (config) => {
-      if (isLoggingOut) {
-        return Promise.reject(new Error('User is logging out'));
-      }
       const accessToken = await StorageService.getItem<string>(AUTH_STORAGE_KEYS.ACCESS_TOKEN);
 
       if (!accessToken) {
@@ -37,10 +32,7 @@ export const createAxios = (user: userType, dispatch: Dispatch, stateSuccess: an
           }
         } catch (error) {
           console.error('Request interceptor error:', error);
-          if (!isLoggingOut) {
-            isLoggingOut = true;
-            await handleLogoutWithToast();
-          }
+
           return Promise.reject(error);
         }
       } else {
@@ -72,10 +64,6 @@ export const createAxios = (user: userType, dispatch: Dispatch, stateSuccess: an
             throw new Error('Token refresh failed');
           }
         } catch (err) {
-          if (!isLoggingOut) {
-            isLoggingOut = true;
-            await StorageService.clearAuthData();
-          }
           return Promise.reject(err);
         }
       }
@@ -85,9 +73,4 @@ export const createAxios = (user: userType, dispatch: Dispatch, stateSuccess: an
   );
 
   return newInstance;
-};
-
-// Function để reset logout state khi user login lại
-export const resetLogoutState = () => {
-  isLoggingOut = false;
 };

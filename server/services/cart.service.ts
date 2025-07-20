@@ -59,8 +59,8 @@ export const CartService = {
 
   deleteItemInCart: async (id: string, accessToken: string, axiosJWT: AxiosInstance) => {
     try {
-      const response = await axiosJWT.delete(ENDPOINTS.REMOVE_ITEM_IN_CART + `/${id}`, {
-        headers: HttpService.setAuthHeader(accessToken),
+      const response = await axiosJWT.delete(ENDPOINTS.REMOVE_ITEM_IN_CART(id), {
+        ...HttpService.setAuthHeader(accessToken),
       });
       return response.data;
     } catch (error) {
