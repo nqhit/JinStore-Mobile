@@ -23,7 +23,7 @@ export const ENDPOINTS = {
   CARTS: '/carts',
   ADD_ITEM_TO_CART: '/carts/add',
   UPDATE_ITEM_IN_CART: '/carts/update',
-  REMOVE_ITEM_IN_CART: '/carts/remove',
+  REMOVE_ITEM_IN_CART:(id: string) =>  `/carts/remove/${id}`,
 
   // NOTE: Mã giảm giá
   ALL_COUPONS_BY_USER: (id: string) => `/discounts/by-user/${id}`,
