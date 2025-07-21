@@ -2,13 +2,12 @@ import { useSingledPush } from '@/hooks/useSignlePush';
 import { productResType, productType } from '@/interfaces/product.type';
 import { useProduct } from '@/server/hooks/useProduct';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
-import { useLocalSearchParams } from 'expo-router';
 import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { FlatList, View } from 'react-native';
 import Loading from '../loading';
 import ProductCard from './ProductCard';
 
-function ProductListStore() {
+function ProductListStore({ _idCate }: { _idCate?: string }) {
   const [products, setProducts] = useState<productResType[]>([]);
   const [page, setPage] = useState(1);
   const [limit] = useState(12);
@@ -19,7 +18,6 @@ function ProductListStore() {
   const { getProductsAll } = useProduct();
   const singlePush = useSingledPush();
   const tabBarHeight = useBottomTabBarHeight();
-  const { id } = useLocalSearchParams();
 
   const handleFetchData = useCallback(async () => {
     try {
@@ -75,8 +73,11 @@ function ProductListStore() {
 
   // Memoize featured products
   const featuredProducts = useMemo(
-    () => products.filter((product: productType) => (product.isActive && id ? product._idCategory._id === id : true)),
-    [products, id],
+    () =>
+      products.filter((product: productType) =>
+        product.isActive && _idCate ? product._idCategory._id === _idCate : true,
+      ),
+    [products, _idCate],
   );
 
   // Tối ưu hóa keyExtractor
@@ -92,7 +93,7 @@ function ProductListStore() {
   );
 
   return (
-    <View style={{ marginTop: 10, flex: 1 }}>
+    <View style={{ flex: 1 }}>
       {loading && products.length === 0 ? (
         <View style={{ marginTop: 10, flex: 1 }}>
           <Loading />
@@ -110,6 +111,7 @@ function ProductListStore() {
           contentContainerStyle={{
             paddingBottom: tabBarHeight,
             backgroundColor: 'white',
+            paddingTop: 10,
           }}
           ListFooterComponent={loadingMore && hasNextPage ? <Loading /> : null}
           columnWrapperStyle={{

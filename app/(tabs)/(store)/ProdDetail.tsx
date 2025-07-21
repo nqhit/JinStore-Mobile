@@ -11,16 +11,11 @@ function ProductDetail() {
   const params = useLocalSearchParams();
   const navigation = useNavigation();
 
-  const screenStart = params.screenStart as string;
   const id = params.id as string;
 
   const handleBack = useCallback(() => {
-    if (screenStart === 'home') {
-      router.replace('/(tabs)/home');
-    } else {
-      router.replace('/(tabs)/(store)');
-    }
-  }, [screenStart]);
+    router.back();
+  }, []);
 
   useEffect(() => {
     setVisible(false);
@@ -36,7 +31,7 @@ function ProductDetail() {
         </TouchableOpacity>
       ),
     });
-  }, [navigation, screenStart, handleBack]);
+  }, [navigation, handleBack]);
 
   return (
     <SafeAreaView edges={['bottom', 'left', 'right']}>

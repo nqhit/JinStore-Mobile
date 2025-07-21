@@ -13,7 +13,6 @@ interface ProductCardProps {
 }
 
 function ProductCard({ product, handleRouterDetail }: ProductCardProps) {
-  const [isNavigating, setIsNavigating] = useState(false);
   const [isAddingToCart, setIsAddingToCart] = useState(false);
   const { addItemToCart } = useCart();
 
@@ -65,25 +64,8 @@ function ProductCard({ product, handleRouterDetail }: ProductCardProps) {
     [addItemToCart, isAddingToCart],
   );
 
-  const safeHandleRouterDetail = useCallback(() => {
-    if (isNavigating) return; // Prevent multiple navigation
-
-    setIsNavigating(true);
-    handleRouterDetail();
-
-    // Reset sau 1 giây
-    setTimeout(() => {
-      setIsNavigating(false);
-    }, 1000);
-  }, [handleRouterDetail, isNavigating]);
-
   return (
-    <TouchableOpacity
-      style={styles.product}
-      onPress={safeHandleRouterDetail}
-      disabled={isNavigating} // Disable khi đang navigate
-      activeOpacity={isNavigating ? 1 : 0.7}
-    >
+    <TouchableOpacity style={styles.product} onPress={handleRouterDetail}>
       <View style={styles.productImage}>
         <Image
           source={imageSource}

@@ -149,7 +149,7 @@ export default function HomeScreen() {
                   horizontal
                   showsHorizontalScrollIndicator={false}
                   ItemSeparatorComponent={() => <View style={{ width: 10 }} />}
-                  contentContainerStyle={{ paddingHorizontal: 10, paddingBottom: tabBarHeight }}
+                  contentContainerStyle={{ paddingBottom: tabBarHeight }}
                 />
               </View>
             </View>

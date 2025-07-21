@@ -99,7 +99,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'flex-start',
-    marginLeft: -10,
     marginVertical: 10,
   },
 });
