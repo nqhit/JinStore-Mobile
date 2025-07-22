@@ -52,7 +52,7 @@ export default function HomeScreen() {
 
   const handleRouterProdDetail = useCallback(
     (productId: string) => {
-      singlePush('/(tabs)/(store)/ProdDetail', { id: productId });
+      singlePush('/(store)/ProdDetail/[id]', { id: productId });
     },
     [singlePush],
   );

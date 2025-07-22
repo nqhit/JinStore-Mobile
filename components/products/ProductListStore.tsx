@@ -66,7 +66,7 @@ function ProductListStore({ _idCate }: { _idCate?: string }) {
   // Memoize router handler với useCallback
   const handleRouterProdDetail = useCallback(
     (productId: string) => {
-      singlePush('/ProdDetail', { id: productId });
+      singlePush('/ProdDetail/[id]', { id: productId });
     },
     [singlePush],
   );
@@ -95,7 +95,7 @@ function ProductListStore({ _idCate }: { _idCate?: string }) {
   return (
     <View style={{ flex: 1 }}>
       {loading && products.length === 0 ? (
-        <View style={{ marginTop: 10, flex: 1 }}>
+        <View style={{ paddingTop: 10, flex: 1 }}>
           <Loading />
         </View>
       ) : (

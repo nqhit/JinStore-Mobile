@@ -9,12 +9,7 @@ export interface productType {
     _id: string;
     name: string;
   };
-  images: [
-    {
-      url: string;
-      publicId: string;
-    },
-  ];
+  images: imageUrlType[];
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
@@ -36,4 +31,9 @@ export interface productResType extends productType {
 export interface productToCartType {
   productId: string;
   quantity: number;
+}
+
+export interface imageUrlType {
+  url: string;
+  publicId: string;
 }

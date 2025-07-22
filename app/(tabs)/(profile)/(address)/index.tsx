@@ -43,7 +43,7 @@ function Address() {
 
   const handleEdit = useCallback(
     (address: AddressType) => {
-      singlePush(`/actionsAddress/[id]`, {
+      singlePush('/actionsAddress/[id]', {
         ...address,
         action: 'edit',
       });

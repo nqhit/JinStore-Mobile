@@ -1,20 +1,20 @@
-// navigationUtils.ts
 import { router, usePathname } from 'expo-router';
-import { throttle } from 'lodash';
-import { useMemo } from 'react';
+import { useCallback, useRef } from 'react';
 
-export const useSingledPush = (delay: number = 1000) => {
+export const useSingledPush = () => {
   const pathname = usePathname();
+  const isNavigating = useRef(false);
 
-  return useMemo(() => {
-    return throttle(
-      (to: string, params?: Record<string, any>) => {
-        if (pathname !== to) {
-          router.push({ pathname: to as any, params });
-        }
-      },
-      delay,
-      { leading: true, trailing: false },
-    );
-  }, [pathname, delay]);
+  return useCallback(
+    (to: string, params?: Record<string, any>) => {
+      if (pathname !== to && !isNavigating.current) {
+        isNavigating.current = true;
+        router.push({ pathname: to as any, params });
+        setTimeout(() => {
+          isNavigating.current = false;
+        }, 500);
+      }
+    },
+    [pathname],
+  );
 };

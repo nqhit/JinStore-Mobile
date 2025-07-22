@@ -37,7 +37,7 @@ function CartScreen() {
         />
         <Stack.Screen name="payment" options={{ title: 'Thanh toán' }} />
         <Stack.Screen name="coupon" options={{ title: 'Mã giảm giá' }} />
-        <Stack.Screen name="ProdDetail" options={{ title: 'Chi tiết sản phẩm' }} />
+        <Stack.Screen name="ProdDetail/[id]" options={{ headerBackground: () => null }} />
       </Stack>
     </SafeAreaProvider>
   );

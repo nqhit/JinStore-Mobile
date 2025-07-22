@@ -1,5 +1,5 @@
 import styles from '@/assets/styles/Screen/CouponScreen.styles';
-import { CouponList } from '@/components/coupons/CouponList';
+import CouponList from '@/components/coupons/CouponList';
 import SearchFilter from '@/components/SearchFilter';
 import { COLORS } from '@/constants/Colors';
 import { useTabBarVisibility } from '@/Context/TabBarVisibilityContext';
