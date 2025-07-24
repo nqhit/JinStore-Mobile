@@ -14,7 +14,7 @@ export const ENDPOINTS = {
   UPDATE_INFO_USER: 'mobile/users/info-user/update',
 
   // NOTE: Sản phẩm
-  PRODUCTS_ALL: '/products',
+  PRODUCTS_ALL: (page: number, limit: number) => `/products?page=${page}&size=${limit}`,
   PRODUCT_DETAIL: (id: string) => `/products/${id}`,
 
   // NOTE: Danh mục

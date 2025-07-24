@@ -5,15 +5,19 @@ export interface productType {
   price: number;
   discount: number;
   unit: string;
+  quantity: number;
+  countBuy: number;
   _idCategory: {
     _id: string;
     name: string;
   };
+  _idReview?: string;
   images: imageUrlType[];
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
   averageRating: number;
+  information: { key: string; value: string }[];
   __v: number;
 }
 

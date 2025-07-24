@@ -6,8 +6,8 @@ import { birthdayRegex, fullnameRegex, phoneNumberRegex } from '@/utils/regex';
 import { Formik } from 'formik';
 import moment from 'moment';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import DatePicker from 'react-native-date-picker';
 import * as yup from 'yup';
+import { CustomDatePicker } from '../CustomDatePicker';
 import { FormikBirthday } from '../Formik/FormBirthday';
 import { FormikCheckbox } from '../Formik/FormCheckbox';
 import FormInputGroup from './FormInput';
@@ -137,20 +137,28 @@ export const FormProfile: React.FC<FormSetupProps> = ({ isLoading, onSubmit }) =
               errors={errors}
               touched={touched}
             />
-            <DatePicker
-              modal
-              open={isDatePickerVisible}
+          </FormInputGroup>
+          {/*           <DatePicker
+            modal
+            open={isDatePickerVisible}
+            date={date}
+            mode="date"
+            title="Chọn ngày sinh"
+            confirmText="Xác nhận"
+            cancelText="Hủy"
+            maximumDate={new Date()}
+            onConfirm={(selectedDate: Date) => handleConfirmDate(selectedDate, setFieldValue)}
+            onCancel={handleCancelDatePicker}
+            locale="vi-VN"
+          /> */}
+          {isDatePickerVisible && (
+            <CustomDatePicker
+              isVisible={isDatePickerVisible}
               date={date}
-              mode="date"
-              title="Chọn ngày sinh"
-              confirmText="Xác nhận"
-              cancelText="Hủy"
-              maximumDate={new Date()}
               onConfirm={(selectedDate: Date) => handleConfirmDate(selectedDate, setFieldValue)}
               onCancel={handleCancelDatePicker}
-              locale="vi-VN"
             />
-          </FormInputGroup>
+          )}
         </>
       )}
     </Formik>

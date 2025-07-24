@@ -65,12 +65,12 @@ function CartItem({
                   <Ionicons
                     name="remove-circle-outline"
                     size={28}
-                    color={itemCart.quantity <= 1 ? '#ccc' : COLORS.primary}
+                    color={itemCart.quantity <= 1 ? COLORS.gray200 : COLORS.primary}
                   />
                 </TouchableOpacity>
                 <FText style={styles.quantity}>{itemCart.quantity}</FText>
                 <TouchableOpacity onPress={() => handleQuantityChange(itemCart._id, 1, itemCart.quantity)}>
-                  <Ionicons name="add-circle-outline" size={28} color="#8B5CF6" />
+                  <Ionicons name="add-circle-outline" size={28} color={COLORS.primary} />
                 </TouchableOpacity>
               </View>
             </View>

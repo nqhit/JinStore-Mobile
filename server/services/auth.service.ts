@@ -33,6 +33,7 @@ export const AuthService = {
       if (user.rememberMe) {
         await StorageService.setItem(AUTH_STORAGE_KEYS.USER, res.data);
         await StorageService.setItem(AUTH_STORAGE_KEYS.ACCESS_TOKEN, res.data.accessToken);
+        await StorageService.setItem(AUTH_STORAGE_KEYS.REFRESH_TOKEN, res.data.refreshToken);
       }
 
       dispatch(loginSuccess(res.data));

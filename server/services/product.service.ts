@@ -11,7 +11,7 @@ export const productService = {
   getProductsAll: async (page: number, limit: number) => {
     try {
       const httpClient = HttpService.getInstance();
-      const response = await httpClient.get(ENDPOINTS.PRODUCTS_ALL + `?page=${page}&size=${limit}`, {
+      const response = await httpClient.get(ENDPOINTS.PRODUCTS_ALL(page, limit), {
         timeout: 10000,
       });
 
@@ -20,6 +20,8 @@ export const productService = {
       ErrorHandler.handleAuthError(error);
     }
   },
+
+  getProductCategory: async (id: string) => {},
 
   getProdDetail: async (id: string) => {
     if (!id) {
