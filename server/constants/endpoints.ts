@@ -14,7 +14,8 @@ export const ENDPOINTS = {
   UPDATE_INFO_USER: 'mobile/users/info-user/update',
 
   // NOTE: Sản phẩm
-  PRODUCTS_ALL: '/products',
+  PRODUCTS_ALL: (page: number, limit: number) => `/products?page=${page}&size=${limit}`,
+  PRODUCT_DETAIL: (id: string) => `/products/${id}`,
 
   // NOTE: Danh mục
   CATEGORIES_ALL: '/categories',
@@ -23,7 +24,7 @@ export const ENDPOINTS = {
   CARTS: '/carts',
   ADD_ITEM_TO_CART: '/carts/add',
   UPDATE_ITEM_IN_CART: '/carts/update',
-  REMOVE_ITEM_IN_CART:(id: string) =>  `/carts/remove/${id}`,
+  REMOVE_ITEM_IN_CART: (id: string) => `/carts/remove/${id}`,
 
   // NOTE: Mã giảm giá
   ALL_COUPONS_BY_USER: (id: string) => `/discounts/by-user/${id}`,

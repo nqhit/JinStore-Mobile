@@ -5,20 +5,19 @@ export interface productType {
   price: number;
   discount: number;
   unit: string;
+  quantity: number;
+  countBuy: number;
   _idCategory: {
     _id: string;
     name: string;
   };
-  images: [
-    {
-      url: string;
-      publicId: string;
-    },
-  ];
+  _idReview?: string;
+  images: imageUrlType[];
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
   averageRating: number;
+  information: { key: string; value: string }[];
   __v: number;
 }
 
@@ -36,4 +35,9 @@ export interface productResType extends productType {
 export interface productToCartType {
   productId: string;
   quantity: number;
+}
+
+export interface imageUrlType {
+  url: string;
+  publicId: string;
 }

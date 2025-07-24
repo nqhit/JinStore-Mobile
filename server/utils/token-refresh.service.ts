@@ -46,6 +46,9 @@ export const TokenRefreshService = {
       } else if (error.code === 'NETWORK_ERROR') {
         console.error('Lỗi kết nối mạng');
         throw new Error('Lỗi kết nối mạng');
+      } else if (error.response?.status === 403) {
+        console.error('Refresh token không hợp lệ');
+        throw new Error('Refresh token không hợp lệ');
       }
 
       await this.handleRefreshFailure();

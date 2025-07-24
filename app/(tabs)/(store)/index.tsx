@@ -5,21 +5,27 @@ import FModalize from '@/components/Modal';
 import ProductListStore from '@/components/products/ProductListStore';
 import SearchFilter from '@/components/SearchFilter';
 import FText from '@/components/Text';
+import { useTabBarVisibility } from '@/Context/TabBarVisibilityContext';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
-import { useLocalSearchParams, useNavigation } from 'expo-router';
-import { memo, useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import { TouchableOpacity, View } from 'react-native';
+import { useFocusEffect, useLocalSearchParams, useNavigation } from 'expo-router';
+import { memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { BackHandler, TouchableOpacity, View } from 'react-native';
 import { Modalize } from 'react-native-modalize';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 function StoreScreen() {
   const insets = useSafeAreaInsets();
+  const { setVisible } = useTabBarVisibility();
   const tabBarHeight = useBottomTabBarHeight();
   const modalRef = useRef<Modalize>(null);
   const [hasUserSelected, setHasUserSelected] = useState(false);
   const [_idCategory, setIdCategory] = useState<string>('');
   const navigation = useNavigation();
   const { id } = useLocalSearchParams();
+
+  useEffect(() => {
+    setVisible(true);
+  }, []);
 
   const idCategory = useMemo(() => {
     if (hasUserSelected) return _idCategory;
@@ -47,13 +53,28 @@ function StoreScreen() {
   useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: false,
+      gestureEnabled: false,
     });
   }, [navigation]);
 
+  useFocusEffect(
+    useCallback(() => {
+      const onBackPress = () => true;
+      const subscription = BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+      return () => subscription.remove();
+    }, []),
+  );
+
+  useEffect(() => {
+    setHasUserSelected(false);
+    setIdCategory('');
+  }, [id]);
+
   return (
     <SafeAreaView
-      style={{ flex: 1, backgroundColor: 'white', paddingBottom: tabBarHeight * 2 }}
-      edges={['top', 'left', 'right', 'bottom']}
+      style={{ flex: 1, backgroundColor: 'white', paddingTop: insets.top, paddingBottom: tabBarHeight + insets.bottom }}
+      edges={['left', 'right', 'bottom']}
     >
       <View style={styles.header}>
         <SearchFilter onOpen={onOpen} />

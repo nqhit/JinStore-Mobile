@@ -3,12 +3,11 @@ import ActionAccountButton from '@/components/Button/ActionAccountButton';
 import Loading from '@/components/loading';
 import { ProfileFooter, ProfileHeader, ProfileItem, ProfileSection } from '@/components/Profile';
 import { COLORS } from '@/constants/Colors';
-import { resetLogoutState } from '@/server/auth.helper';
 import { useAuth } from '@/server/hooks/useAuth';
 import { useCurrentUser } from '@/server/hooks/useCurrentUser';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { useCallback, useState } from 'react';
-import { StyleSheet } from 'react-native';
+import { Alert, StyleSheet } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -19,17 +18,26 @@ export default function ProfileScreen() {
   const tabBarHeight = useBottomTabBarHeight();
 
   const handleLogout = useCallback(async () => {
-    if (loading) return; // Prevent multiple logout calls
+    if (loading) return;
 
-    setLoading(true);
-    try {
-      await logout();
-    } catch (error) {
-      console.error('Logout error:', error);
-    } finally {
-      setLoading(false);
-      resetLogoutState();
-    }
+    Alert.alert('Xác nhận', 'Bạn có chắc chắn muốn đăng xuất?', [
+      { text: 'Hủy', style: 'cancel' },
+      {
+        text: 'Đăng xuất',
+        style: 'destructive',
+        onPress: async () => {
+          setLoading(true);
+          try {
+            await logout();
+          } catch (error) {
+            console.error('Lỗi đăng xuất:', error);
+            Alert.alert('Lỗi', 'Không thể đăng xuất');
+          } finally {
+            setLoading(false);
+          }
+        },
+      },
+    ]);
   }, [logout, loading]);
 
   const handleUpdateAvatar = useCallback(() => {
