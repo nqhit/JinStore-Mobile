@@ -3,7 +3,6 @@ import { CategoryList } from '@/components/categories/CategoryList';
 import IconOnlOff from '@/components/IconOnlOff';
 import ProductCard from '@/components/products/ProductCard';
 import FText from '@/components/Text';
-import { COLORS } from '@/constants/Colors';
 import { useSingledPush } from '@/hooks/useSignlePush';
 import { productType } from '@/interfaces/product.type';
 import { userType } from '@/interfaces/user.type';
@@ -91,21 +90,7 @@ export default function HomeScreen() {
   const keyExtractorProduct = (item: productType, index: number) => item._id?.toString() || index.toString();
 
   if (error) {
-    return (
-      <SafeAreaView style={{ flex: 1 }} edges={['top', 'bottom']}>
-        <View style={styles.container}>
-          <View style={styles.contentContainer}>
-            <FText>Lỗi: {error}</FText>
-            <TouchableOpacity
-              onPress={handleFetchData}
-              style={{ marginTop: 10, padding: 10, backgroundColor: COLORS.error, borderRadius: 5 }}
-            >
-              <FText style={{ color: 'white', textAlign: 'center' }}>Thử lại</FText>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </SafeAreaView>
-    );
+    return handleFetchData();
   }
 
   return (

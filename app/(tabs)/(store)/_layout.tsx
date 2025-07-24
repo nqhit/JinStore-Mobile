@@ -28,16 +28,16 @@ function CartScreen() {
           },
         }}
       >
-        <Stack.Screen name="index" options={{ headerShown: false }} />
+        <Stack.Screen name="index" options={{ headerShown: false, animation: 'none' }} />
         <Stack.Screen
           name="cart"
           options={{
             headerTitle: 'Giỏ hàng',
           }}
         />
-        <Stack.Screen name="payment" options={{ title: 'Thanh toán' }} />
+        <Stack.Screen name="checkout" options={{ title: 'Thanh toán' }} />
         <Stack.Screen name="coupon" options={{ title: 'Mã giảm giá' }} />
-        <Stack.Screen name="ProdDetail/[id]" options={{ headerBackground: () => null }} />
+        <Stack.Screen name="ProdDetail/[id]" options={{ headerShown: false, animation: 'none' }} />
       </Stack>
     </SafeAreaProvider>
   );

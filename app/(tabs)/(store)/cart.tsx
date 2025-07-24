@@ -228,7 +228,7 @@ function CartDetails() {
     }
 
     router.push({
-      pathname: '/payment',
+      pathname: '/checkout',
       params: {
         data: JSON.stringify(selectedItems),
         feeDiscount: finalDiscount,
