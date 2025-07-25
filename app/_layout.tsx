@@ -2,7 +2,7 @@ import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import { useEffect } from 'react';
-import { Dimensions, StatusBar, StyleSheet, View } from 'react-native';
+import { Dimensions, Image, StatusBar, StyleSheet, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import 'react-native-reanimated';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -138,7 +138,15 @@ export default function RootLayout() {
   const toastConfig = createToastConfig();
 
   if (!fontsLoaded) {
-    return <Loading />;
+    return (
+      <View style={{ flex: 1 }}>
+        <Image
+          source={require('../assets/images/logo.png')}
+          style={{ width: '100%', height: '100%' }}
+          resizeMode="contain" // hoặc 'cover' nếu muốn phủ hết
+        />
+      </View>
+    );
   }
 
   return (

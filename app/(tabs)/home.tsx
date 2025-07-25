@@ -1,7 +1,9 @@
 import styles from '@/assets/styles/Screen/HomeScreen.styles';
 import { CategoryList } from '@/components/categories/CategoryList';
 import IconOnlOff from '@/components/IconOnlOff';
+import FullScreenLoading from '@/components/loadingGlobal';
 import ProductCard from '@/components/products/ProductCard';
+import RetryView from '@/components/retryView';
 import FText from '@/components/Text';
 import { useSingledPush } from '@/hooks/useSignlePush';
 import { productType } from '@/interfaces/product.type';
@@ -17,6 +19,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 export default function HomeScreen() {
   const user = useCurrentUser();
   const singlePush = useSingledPush();
+  const [isLoading, setIsLoading] = useState(false);
   const [userInfo, setUserInfo] = useState<userType | null>(user ?? null);
   const [products, setProducts] = useState<productType[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -45,8 +48,15 @@ export default function HomeScreen() {
   };
 
   const handleFetchData = async () => {
+    setIsLoading(true);
     setError(null);
-    await Promise.all([fetchProducts(), !userInfo && fetchUser()]);
+    try {
+      await Promise.all([fetchProducts(), !userInfo && fetchUser()]);
+    } catch (err) {
+      // đã xử lý error trong từng hàm rồi
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleRouterProdDetail = useCallback(
@@ -89,8 +99,12 @@ export default function HomeScreen() {
 
   const keyExtractorProduct = (item: productType, index: number) => item._id?.toString() || index.toString();
 
+  if (isLoading) {
+    return <FullScreenLoading visible={isLoading} />;
+  }
+
   if (error) {
-    return handleFetchData();
+    return <RetryView handleRetry={handleFetchData} error={error} />;
   }
 
   return (

@@ -1,9 +1,9 @@
 import { FormAddress } from '@/components/Form/FormAddress';
 import { AddressFormValues } from '@/interfaces/address.type';
 import { useAddress } from '@/server/hooks/useAddress';
-import { router, useLocalSearchParams, useNavigation } from 'expo-router';
+import { router, useFocusEffect, useLocalSearchParams, useNavigation } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
-import { KeyboardAvoidingView, Platform, StyleSheet } from 'react-native';
+import { BackHandler, KeyboardAvoidingView, Platform, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Toast from 'react-native-toast-message';
 
@@ -59,6 +59,15 @@ function AddAddress() {
       }
     },
     [actionsAddressCustomer],
+  );
+
+  useFocusEffect(
+    useCallback(() => {
+      const onBackPress = () => true;
+      const subscription = BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+      return () => subscription.remove();
+    }, []),
   );
 
   useEffect(() => {
