@@ -17,7 +17,7 @@ export default function TabLayout() {
           tabBarActiveTintColor: COLORS.primary,
           tabBarInactiveTintColor: COLORS.gray500,
           tabBarStyle: { backgroundColor: COLORS.white },
-          unmountOnBlur: route.name === 'some-tab-you-want-to-unmount' ? true : false,
+          unmountOnBlur: true,
           tabBarLabelStyle: { fontSize: 13, fontWeight: '500' },
         })}
       >

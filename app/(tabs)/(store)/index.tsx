@@ -1,21 +1,36 @@
 import styles from '@/assets/styles/Screen/StoreScreen.styles';
+import { CategoryList } from '@/components/categories/CategoryList';
 import IconShoppingCart from '@/components/IconShoppingCart';
 import FModalize from '@/components/Modal';
 import ProductListStore from '@/components/products/ProductListStore';
 import SearchFilter from '@/components/SearchFilter';
 import FText from '@/components/Text';
+import { useTabBarVisibility } from '@/Context/TabBarVisibilityContext';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
-import { useNavigation } from 'expo-router';
-import { memo, useCallback, useLayoutEffect, useMemo, useRef } from 'react';
-import { TouchableOpacity, View } from 'react-native';
+import { useFocusEffect, useLocalSearchParams, useNavigation } from 'expo-router';
+import { memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { BackHandler, TouchableOpacity, View } from 'react-native';
 import { Modalize } from 'react-native-modalize';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 function StoreScreen() {
   const insets = useSafeAreaInsets();
+  const { setVisible } = useTabBarVisibility();
   const tabBarHeight = useBottomTabBarHeight();
   const modalRef = useRef<Modalize>(null);
+  const [hasUserSelected, setHasUserSelected] = useState(false);
+  const [_idCategory, setIdCategory] = useState<string>('');
   const navigation = useNavigation();
+  const { id } = useLocalSearchParams();
+
+  useEffect(() => {
+    setVisible(true);
+  }, []);
+
+  const idCategory = useMemo(() => {
+    if (hasUserSelected) return _idCategory;
+    return id || '';
+  }, [hasUserSelected, _idCategory, id]);
 
   const onOpen = useCallback(() => {
     modalRef.current?.open();
@@ -27,16 +42,39 @@ function StoreScreen() {
 
   const filterOptions = useMemo(() => ['Giá: Thấp đến cao', 'Giá: Cao đến thấp', 'Mới nhất'], []);
 
+  const handleSelectId = useCallback(
+    (id: string) => {
+      if (!hasUserSelected) setHasUserSelected(true);
+      setIdCategory((prev) => (prev === id ? '' : id));
+    },
+    [hasUserSelected],
+  );
+
   useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: false,
+      gestureEnabled: false,
     });
   }, [navigation]);
 
+  useFocusEffect(
+    useCallback(() => {
+      const onBackPress = () => true;
+      const subscription = BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+      return () => subscription.remove();
+    }, []),
+  );
+
+  useEffect(() => {
+    setHasUserSelected(false);
+    setIdCategory('');
+  }, [id]);
+
   return (
     <SafeAreaView
-      style={{ flex: 1, backgroundColor: 'white', paddingBottom: tabBarHeight }}
-      edges={['top', 'left', 'right']}
+      style={{ flex: 1, backgroundColor: 'white', paddingTop: insets.top, paddingBottom: tabBarHeight + insets.bottom }}
+      edges={['left', 'right', 'bottom']}
     >
       <View style={styles.header}>
         <SearchFilter onOpen={onOpen} />
@@ -44,11 +82,18 @@ function StoreScreen() {
       </View>
 
       <View style={styles.body}>
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <FText style={{ flex: 1, fontSize: 32, fontWeight: 'bold' }}>Danh sách sản phẩm</FText>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            borderBottomColor: '#e5e5e5',
+            borderBottomWidth: 1,
+          }}
+        >
+          <CategoryList handleSubmit={handleSelectId} selectedId={idCategory as string} />
         </View>
         <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-          <ProductListStore />
+          <ProductListStore _idCate={idCategory as string} />
         </View>
       </View>
 

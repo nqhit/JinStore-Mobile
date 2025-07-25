@@ -2,6 +2,7 @@ import styles from '@/assets/styles/products/ProductStore.styles';
 import FText from '@/components/Text';
 import { productType } from '@/interfaces/product.type';
 import { useCart } from '@/server/hooks/useCart';
+import { formatCurrency } from '@/utils/FormatCurrency';
 import { memo, useCallback, useMemo, useState } from 'react';
 import { ActivityIndicator, Alert, Image, TouchableOpacity, View } from 'react-native';
 import { StarRatingDisplay } from 'react-native-star-rating-widget';
@@ -13,7 +14,6 @@ interface ProductCardProps {
 }
 
 function ProductCard({ product, handleRouterDetail }: ProductCardProps) {
-  const [isNavigating, setIsNavigating] = useState(false);
   const [isAddingToCart, setIsAddingToCart] = useState(false);
   const { addItemToCart } = useCart();
 
@@ -22,21 +22,17 @@ function ProductCard({ product, handleRouterDetail }: ProductCardProps) {
   }, [product.images]);
 
   const discountedPrice = useMemo(() => {
-    return product.price * (1 - product.discount / 100);
-  }, [product.price, product.discount]);
+    const price = product?.price as number;
+    const discount = product?.discount as number;
+    return price * (1 - discount / 100);
+  }, [product?.price, product?.discount]);
 
   const formattedDiscountedPrice = useMemo(() => {
-    return new Intl.NumberFormat('vi-VN', {
-      style: 'currency',
-      currency: 'VND',
-    }).format(discountedPrice);
+    return formatCurrency(discountedPrice);
   }, [discountedPrice]);
 
   const formattedOriginalPrice = useMemo(() => {
-    return new Intl.NumberFormat('vi-VN', {
-      style: 'currency',
-      currency: 'VND',
-    }).format(product.price);
+    return formatCurrency(product.price);
   }, [product.price]);
 
   const handleAddToCart = useCallback(
@@ -65,25 +61,8 @@ function ProductCard({ product, handleRouterDetail }: ProductCardProps) {
     [addItemToCart, isAddingToCart],
   );
 
-  const safeHandleRouterDetail = useCallback(() => {
-    if (isNavigating) return; // Prevent multiple navigation
-
-    setIsNavigating(true);
-    handleRouterDetail();
-
-    // Reset sau 1 giây
-    setTimeout(() => {
-      setIsNavigating(false);
-    }, 1000);
-  }, [handleRouterDetail, isNavigating]);
-
   return (
-    <TouchableOpacity
-      style={styles.product}
-      onPress={safeHandleRouterDetail}
-      disabled={isNavigating} // Disable khi đang navigate
-      activeOpacity={isNavigating ? 1 : 0.7}
-    >
+    <TouchableOpacity style={styles.product} onPress={handleRouterDetail}>
       <View style={styles.productImage}>
         <Image
           source={imageSource}
@@ -99,12 +78,29 @@ function ProductCard({ product, handleRouterDetail }: ProductCardProps) {
         <FText numberOfLines={1} ellipsizeMode="tail" style={styles.productTitle}>
           {product.name}
         </FText>
-        <StarRatingDisplay
-          maxStars={5}
-          starSize={20}
-          starStyle={{ marginHorizontal: 0, marginBottom: 5 }}
-          rating={product.averageRating}
-        />
+        {product.averageRating > 0 ? (
+          <StarRatingDisplay
+            maxStars={5}
+            starSize={20}
+            starStyle={{ marginHorizontal: 0, marginBottom: 5, height: 20 }}
+            rating={product.averageRating}
+          />
+        ) : (
+          <FText
+            numberOfLines={1}
+            ellipsizeMode="tail"
+            style={{
+              marginBottom: 5,
+              fontSize: 12,
+              height: 20,
+              textAlign: 'left',
+              alignContent: 'center',
+              color: 'red',
+            }}
+          >
+            Chưa có đánh giá!
+          </FText>
+        )}
         <View style={styles.productPriceContainer}>
           <FText style={styles.productPrice}>{formattedDiscountedPrice}</FText>
           <FText style={styles.productPriceOld}>{formattedOriginalPrice}</FText>

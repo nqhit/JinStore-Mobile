@@ -38,7 +38,7 @@ const LoginScreen = () => {
   const { login } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [isNavigating, setIsNavigating] = useState(false);
-  const [rememberMe, setRememberMe] = useState(false); // Thêm state ghi nhớ đăng nhập
+  const [rememberMe, setRememberMe] = useState(false);
   const singlePush = useSingledPush();
 
   useEffect(() => {

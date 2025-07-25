@@ -26,6 +26,7 @@ export const handleTokenRefresh = async (
     const refreshData = await TokenRefreshService.refreshTokens();
 
     if (!refreshData || !refreshData.accessToken) {
+      console.error('Refresh data không hợp lệ:', refreshData);
       throw new Error('Invalid refresh data');
     }
 
@@ -48,7 +49,21 @@ export const handleTokenRefresh = async (
     dispatch(stateSuccess(updatedUserData));
 
     return updatedUserData;
-  } catch (error) {
+  } catch (error: any) {
+    console.error('Token refresh failed:', error);
+
+    if (
+      error.message.includes('Refresh token đã hết hạn') ||
+      error.message.includes('Không có refresh token') ||
+      error.response?.status === 401
+    ) {
+      await handleLogoutWithToast('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại!');
+    } else if (error.message.includes('Lỗi kết nối mạng') || error.code === 'NETWORK_ERROR') {
+      console.error('Network error during token refresh');
+    } else {
+      await handleLogoutWithToast('Có lỗi xảy ra. Vui lòng đăng nhập lại!');
+    }
+
     return null;
   }
 };
@@ -113,7 +128,6 @@ export const checkAndHandleToken = async (
   } catch (tokenError) {
     console.error('Token validation error:', tokenError);
 
-    // Fallback: thử refresh token
     try {
       const updatedUserData = await handleTokenRefresh(userData, stateSuccess, dispatch);
 

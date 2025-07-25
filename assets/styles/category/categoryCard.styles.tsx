@@ -2,12 +2,10 @@ import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
   categoryContainer: {
-    width: 120,
-    height: 100,
+    width: 100,
     alignItems: 'center',
     justifyContent: 'center',
-    margin: 10,
-    borderRadius: 10,
+    marginHorizontal: 10,
     /*   backgroundColor: '#fff', // Bắt buộc cho iOS bóng hiển thị
     shadowColor: '#000', // Thêm dòng này
     shadowOffset: {
@@ -20,17 +18,18 @@ const styles = StyleSheet.create({
   },
 
   image: {
-    width: 80,
-    height: 80,
+    width: 50,
+    height: 50,
     borderRadius: 10,
   },
   name: {
     fontSize: 16,
     fontWeight: 'bold',
-    marginBottom: 10,
+    paddingBottom: 5,
     color: '#333',
     width: 100,
     textAlign: 'center',
+    lineHeight: 18,
   },
 });
 

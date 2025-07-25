@@ -19,7 +19,7 @@ export const useCart = () => {
     return await CartService.getCart(accessToken, axiosJWT);
   };
 
-  const addItemToCart = async (product: productType) => {
+  const addItemToCart = async (product: productType, quantityChange?: number) => {
     if (!accessToken || user === null) {
       Alert.alert('Vui lòng đăng nhập');
       router.push('/(auth)/login');
@@ -29,7 +29,7 @@ export const useCart = () => {
 
     const formData = {
       productId: product._id,
-      quantity: 1,
+      quantity: quantityChange ? quantityChange : 1,
     };
     return await CartService.addItemToCart(formData, dispatch, accessToken, axiosJWT);
   };

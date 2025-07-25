@@ -1,9 +1,10 @@
 import styles from '@/assets/styles/Screen/HomeScreen.styles';
 import { CategoryList } from '@/components/categories/CategoryList';
 import IconOnlOff from '@/components/IconOnlOff';
+import FullScreenLoading from '@/components/loadingGlobal';
 import ProductCard from '@/components/products/ProductCard';
+import RetryView from '@/components/retryView';
 import FText from '@/components/Text';
-import { COLORS } from '@/constants/Colors';
 import { useSingledPush } from '@/hooks/useSignlePush';
 import { productType } from '@/interfaces/product.type';
 import { userType } from '@/interfaces/user.type';
@@ -18,6 +19,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 export default function HomeScreen() {
   const user = useCurrentUser();
   const singlePush = useSingledPush();
+  const [isLoading, setIsLoading] = useState(false);
   const [userInfo, setUserInfo] = useState<userType | null>(user ?? null);
   const [products, setProducts] = useState<productType[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -46,13 +48,20 @@ export default function HomeScreen() {
   };
 
   const handleFetchData = async () => {
+    setIsLoading(true);
     setError(null);
-    await Promise.all([fetchProducts(), !userInfo && fetchUser()]);
+    try {
+      await Promise.all([fetchProducts(), !userInfo && fetchUser()]);
+    } catch (err) {
+      // đã xử lý error trong từng hàm rồi
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleRouterProdDetail = useCallback(
     (productId: string) => {
-      singlePush('/(tabs)/(store)/ProdDetail', { id: productId });
+      singlePush('/(store)/ProdDetail/[id]', { id: productId });
     },
     [singlePush],
   );
@@ -90,22 +99,12 @@ export default function HomeScreen() {
 
   const keyExtractorProduct = (item: productType, index: number) => item._id?.toString() || index.toString();
 
+  if (isLoading) {
+    return <FullScreenLoading visible={isLoading} />;
+  }
+
   if (error) {
-    return (
-      <SafeAreaView style={{ flex: 1 }} edges={['top', 'bottom']}>
-        <View style={styles.container}>
-          <View style={styles.contentContainer}>
-            <FText>Lỗi: {error}</FText>
-            <TouchableOpacity
-              onPress={handleFetchData}
-              style={{ marginTop: 10, padding: 10, backgroundColor: COLORS.error, borderRadius: 5 }}
-            >
-              <FText style={{ color: 'white', textAlign: 'center' }}>Thử lại</FText>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </SafeAreaView>
-    );
+    return <RetryView handleRetry={handleFetchData} error={error} />;
   }
 
   return (
@@ -149,7 +148,7 @@ export default function HomeScreen() {
                   horizontal
                   showsHorizontalScrollIndicator={false}
                   ItemSeparatorComponent={() => <View style={{ width: 10 }} />}
-                  contentContainerStyle={{ paddingHorizontal: 10, paddingBottom: tabBarHeight }}
+                  contentContainerStyle={{ paddingBottom: tabBarHeight }}
                 />
               </View>
             </View>

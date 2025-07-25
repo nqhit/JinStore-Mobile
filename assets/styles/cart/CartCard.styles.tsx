@@ -77,8 +77,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 5,
-    backgroundColor: COLORS.gray200,
+    backgroundColor: COLORS.gray50,
     borderRadius: 10,
   },
 
@@ -105,8 +104,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     alignContent: 'center',
-    width: 20,
     textAlign: 'center',
+    minWidth: 50,
   },
 });
 

@@ -4,7 +4,7 @@ import { CouponType } from '@/interfaces/coupon.type';
 import { formatCurrency } from '@/utils/FormatCurrency';
 import * as Clipboard from 'expo-clipboard';
 import { useRouter } from 'expo-router';
-import React from 'react';
+import React, { useCallback } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import FText from '../Text';
 
@@ -19,10 +19,10 @@ export const CouponItem = ({ coupon }: { coupon: CouponType }) => {
   const total = coupon.quantityLimit;
   const percent = remaining / total;
 
-  const router = useRouter(); // hoặc navigation = useNavigation()
+  const router = useRouter();
   const { setCouponItem } = useCouponStore();
 
-  const handleApplyCoupon = async () => {
+  const handleApplyCoupon = useCallback(async () => {
     setCouponItem({
       _id: coupon._id,
       code: coupon.code,
@@ -32,7 +32,17 @@ export const CouponItem = ({ coupon }: { coupon: CouponType }) => {
     });
     await Clipboard.setStringAsync(code);
     router.back();
-  };
+  }, [
+    code,
+    coupon._id,
+    coupon.code,
+    coupon.maxPercent,
+    coupon.minOrderAmount,
+    coupon.type,
+    coupon.value,
+    router,
+    setCouponItem,
+  ]);
 
   return (
     <View style={styles.container}>
