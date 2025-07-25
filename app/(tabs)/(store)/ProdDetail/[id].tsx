@@ -1,4 +1,4 @@
-import Loading from '@/components/loading';
+import FullScreenLoading from '@/components/loadingGlobal';
 import RetryView from '@/components/retryView';
 import FText from '@/components/Text';
 import FTextInput from '@/components/TextInput';
@@ -152,7 +152,7 @@ function ProductDetail() {
   }, [fetchData, setVisible]);
 
   if (loading) {
-    return <Loading />;
+    return <FullScreenLoading visible={loading} />;
   }
 
   if (error) {
